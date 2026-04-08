@@ -1,0 +1,17 @@
+{
+  "name": "claude-code-internal-plugins",
+  "version": "1.0.0",
+  "description": "Claude Code Internal Plugins",
+  "owner": {
+    "name": "michaelniu",
+    "email": "michaelniu@tencent.com"
+  },
+  "plugins": [
+    {
+      "name": "claude-code-internal",
+      "source": "./plugins/claude-code-internal",
+      "description": "Comprehensive Git Development Workflows Specializing in Git Operations",
+      "category": "productivity"
+    }
+  ]
+}

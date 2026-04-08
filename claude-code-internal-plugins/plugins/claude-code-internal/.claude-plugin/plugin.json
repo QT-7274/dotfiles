@@ -1,0 +1,14 @@
+{
+  "name": "claude-code-internal",
+  "version": "0.0.1",
+  "description": "Claude Code Internal Official Plugin",
+  "author": {
+    "name": "michaelniu",
+    "email": "michaelniu@tencent.com",
+    "url": "https://github.com/author"
+  },
+  "homepage": "https://git.woa.com/codebuddy/claude-code-internal-plugin",
+  "repository": "https://git.woa.com/codebuddy/claude-code-internal-plugin",
+  "license": "MIT",
+  "keywords": []
+}
