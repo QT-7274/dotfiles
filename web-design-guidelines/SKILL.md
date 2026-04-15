@@ -5,8 +5,6 @@ metadata:
   author: vercel
   version: "1.0.0"
   argument-hint: <file-or-pattern>
-allowed-tools: 
-disable: false
 ---
 
 # Web Interface Guidelines
