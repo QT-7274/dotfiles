@@ -1,9 +1,10 @@
 ---
 name: codex-internal-patch
-description: Patch the codex-companion plugin scripts to work with the internal Tencent codex-internal distribution, which disables the `login`, `app-server` subcommands. Run this skill after any codex plugin update that overwrites the patches. Triggers on: "patch codex", "codex review broken", "codex not authenticated", "fix codex plugin", "codex login failed".
-allowed-tools: 
+description: "Patch the codex-companion plugin scripts to work with the internal Tencent codex-internal distribution, which disables the `login`, `app-server` subcommands. Run this skill after any codex plugin update that overwrites the patches. Triggers on: 'patch codex', 'codex review broken', 'codex not authenticated', 'fix codex plugin', 'codex login failed'."
+allowed-tools:
 disable: false
 ---
+
 
 # codex-internal-patch
 

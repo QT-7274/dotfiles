@@ -1,9 +1,10 @@
 ---
 name: worktree-orchestrator
-description: Use when a project needs parallel development across multiple git worktrees. Triggers: 'start worktree development', 'run worktree orchestration', 'parallel worktree workflow'. Works with any requirement docs.
-allowed-tools: 
+description: "Use when a project needs parallel development across multiple git worktrees. Triggers: 'start worktree development', 'run worktree orchestration', 'parallel worktree workflow'. Works with any requirement docs."
+allowed-tools:
 disable: false
 ---
+
 
 # Multi-Worktree Orchestrator
 

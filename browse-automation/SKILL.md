@@ -1,6 +1,6 @@
 ---
 name: browse-automation
-description: Operate a persistent headless Chromium browser via the `browse` CLI for web automation, content extraction, scraping, and page interaction. Use this skill whenever you need to: open a webpage, take a screenshot, extract text/links/forms from a page, fill out forms, click buttons, scrape data, monitor page changes, run JavaScript in a browser context, inspect network requests or console logs, manage cookies, or automate any multi-step browser workflow. Also use when the user asks to "browse", "open a URL", "check a website", "screenshot a page", "scrape", "crawl", or interact with any web content that requires a real browser (not just HTTP fetch). This skill is the bridge between AI and the web — it gives you eyes and hands inside a real browser.
+description: >
   Operate a persistent headless Chromium browser via the `browse` CLI for web automation,
   content extraction, scraping, and page interaction. Use this skill whenever you need to:
   open a webpage, take a screenshot, extract text/links/forms from a page, fill out forms,
@@ -8,11 +8,12 @@ description: Operate a persistent headless Chromium browser via the `browse` CLI
   inspect network requests or console logs, manage cookies, or automate any multi-step
   browser workflow. Also use when the user asks to "browse", "open a URL", "check a website",
   "screenshot a page", "scrape", "crawl", or interact with any web content that requires
-  a real browser (not just HTTP fetch). This skill is the bridge between AI and the web —
+  a real browser (not just HTTP fetch). This skill is the bridge between AI and the web -
   it gives you eyes and hands inside a real browser.
-allowed-tools: 
+allowed-tools:
 disable: false
 ---
+
 
 # Browse — Persistent Headless Browser CLI
 
