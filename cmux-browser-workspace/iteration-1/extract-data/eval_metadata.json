@@ -1,0 +1,6 @@
+{
+  "eval_id": 3,
+  "eval_name": "extract-data",
+  "prompt": "用 cmux 浏览器打开 https://news.ycombinator.com，获取当前页面的 URL 和标题，然后找到页面上第一个包含 'More' 文本的链接并点击它。点击后等待页面加载，再次获取新的 URL。",
+  "assertions": []
+}

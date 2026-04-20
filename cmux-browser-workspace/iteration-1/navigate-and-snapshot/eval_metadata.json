@@ -1,0 +1,6 @@
+{
+  "eval_id": 1,
+  "eval_name": "navigate-and-snapshot",
+  "prompt": "用 cmux 浏览器打开 https://example.com，等待页面完全加载后截取交互式快照，然后获取页面标题。",
+  "assertions": []
+}

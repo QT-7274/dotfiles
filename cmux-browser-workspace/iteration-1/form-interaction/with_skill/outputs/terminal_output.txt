@@ -1,0 +1,50 @@
+=== cmux browser form interaction ===
+
+1. Open page:
+   cmux browser open "https://httpbin.org/forms/post"
+   -> OK surface=surface:52 pane=pane:41 placement=reuse
+
+2. Wait for load:
+   cmux browser surface:52 wait --load-state complete --timeout-ms 15000
+   -> OK
+
+3. Snapshot (first):
+   cmux browser surface:52 snapshot --interactive --compact
+   -> Found textboxes and button "Submit order"
+
+4. Fill custname:
+   cmux browser surface:52 fill "input[name='custname']" --text "Alice"
+   -> OK
+
+5. Fill custemail:
+   cmux browser surface:52 fill "input[name='custemail']" --text "alice@example.com"
+   -> OK
+
+6. Click submit (first attempt failed):
+   cmux browser surface:52 click "button[type='submit']" --snapshot-after
+   -> Error: not_found
+
+7. Re-snapshot:
+   cmux browser surface:52 snapshot --interactive --compact
+   -> Fields filled correctly, button "Submit order" visible
+
+8. Click submit (second attempt with button selector succeeded):
+   cmux browser surface:52 click "button" --snapshot-after
+   -> OK
+
+9. Post-submit snapshot:
+   cmux browser surface:52 snapshot --interactive
+   -> Page shows JSON response with form data:
+      { 'form': { 'custname': 'Alice', 'custemail': 'alice@example.com', ... } }
+
+10. Screenshot:
+    cmux browser surface:52 screenshot --out /tmp/form-submit.png
+    -> OK /tmp/form-submit.png
+
+11. Copy screenshot to outputs:
+    cp /tmp/form-submit.png .../screenshot.png
+    -> OK
+
+=== Result: SUCCESS ===
+Form submitted successfully. Page returned JSON response confirming
+custname='Alice' and custemail='alice@example.com' were received.

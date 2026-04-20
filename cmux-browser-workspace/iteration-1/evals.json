@@ -1,0 +1,74 @@
+{
+  "skill_name": "cmux-browser",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "用 cmux 浏览器打开 https://example.com，等待页面完全加载后截取交互式快照，然后获取页面标题。",
+      "expected_output": "成功打开 example.com，获取到标题 'Example Domain'，并生成包含页面结构的交互式快照",
+      "files": [],
+      "assertions": [
+        {
+          "name": "page_opened",
+          "description": "终端输出中包含 example.com 的打开记录",
+          "check": "terminal_output.txt contains 'example.com'"
+        },
+        {
+          "name": "snapshot_taken",
+          "description": "执行了 snapshot 命令并产生输出",
+          "check": "terminal_output.txt contains 'snapshot' and has non-empty output after it"
+        },
+        {
+          "name": "title_extracted",
+          "description": "成功获取到页面标题 'Example Domain'",
+          "check": "title.txt contains 'Example Domain'"
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "在 cmux 浏览器中打开 https://httpbin.org/forms/post，填写表单中的 custname 字段为 'Alice'，custemail 字段为 'alice@example.com'，然后点击提交按钮。提交后等待页面跳转并截图保存到 /tmp/form-submit.png。",
+      "expected_output": "成功填写表单并提交，页面跳转后截图保存到指定路径",
+      "files": [],
+      "assertions": [
+        {
+          "name": "page_opened",
+          "description": "终端输出中包含 httpbin.org 的打开记录",
+          "check": "terminal_output.txt contains 'httpbin.org'"
+        },
+        {
+          "name": "form_filled",
+          "description": "执行了 fill 命令填写 custname 和 custemail",
+          "check": "terminal_output.txt contains 'custname' and 'custemail' in fill commands"
+        },
+        {
+          "name": "screenshot_saved",
+          "description": "截图文件成功保存到 outputs 目录",
+          "check": "screenshot.png exists in outputs directory"
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "用 cmux 浏览器打开 https://news.ycombinator.com，获取当前页面的 URL 和标题，然后找到页面上第一个包含 'More' 文本的链接并点击它。点击后等待页面加载，再次获取新的 URL。",
+      "expected_output": "成功获取初始 URL 和标题，点击 More 链接后页面导航到下一页，新 URL 包含 p=2",
+      "files": [],
+      "assertions": [
+        {
+          "name": "page_opened",
+          "description": "终端输出中包含 news.ycombinator.com 的打开记录",
+          "check": "terminal_output.txt contains 'news.ycombinator.com'"
+        },
+        {
+          "name": "url_and_title_got",
+          "description": "成功获取了初始 URL 和标题",
+          "check": "results.txt contains 'news.ycombinator.com' and a non-empty title"
+        },
+        {
+          "name": "navigation_happened",
+          "description": "点击 More 后 URL 发生了变化",
+          "check": "results.txt contains two different URLs (initial and final)"
+        }
+      ]
+    }
+  ]
+}

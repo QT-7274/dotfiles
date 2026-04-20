@@ -1,0 +1,12 @@
+$ cmux browser open "https://example.com"
+OK surface=surface:53 pane=pane:41 placement=reuse
+
+$ cmux browser surface:53 wait --load-state complete --timeout-ms 15000
+OK
+
+$ cmux browser surface:53 snapshot --interactive --compact
+- document "Example Domain"
+      - link "Learn more" [ref=e1264]
+
+$ cmux browser surface:53 get title
+Example Domain

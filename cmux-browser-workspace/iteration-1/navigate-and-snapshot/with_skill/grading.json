@@ -1,0 +1,24 @@
+{
+  "eval_name": "navigate-and-snapshot",
+  "run_type": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 3,
+  "total": 3,
+  "expectations": [
+    {
+      "text": "page_opened",
+      "passed": true,
+      "evidence": "example.com in terminal output"
+    },
+    {
+      "text": "snapshot_taken",
+      "passed": true,
+      "evidence": "snapshot command found"
+    },
+    {
+      "text": "title_extracted",
+      "passed": true,
+      "evidence": "title=Example Domain"
+    }
+  ]
+}

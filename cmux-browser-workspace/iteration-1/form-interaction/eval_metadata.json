@@ -1,0 +1,6 @@
+{
+  "eval_id": 2,
+  "eval_name": "form-interaction",
+  "prompt": "在 cmux 浏览器中打开 https://httpbin.org/forms/post，填写表单中的 custname 字段为 'Alice'，custemail 字段为 'alice@example.com'，然后点击提交按钮。提交后等待页面跳转并截图保存到 /tmp/form-submit.png。",
+  "assertions": []
+}

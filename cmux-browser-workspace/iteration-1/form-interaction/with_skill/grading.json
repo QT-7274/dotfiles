@@ -1,0 +1,24 @@
+{
+  "eval_name": "form-interaction",
+  "run_type": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 3,
+  "total": 3,
+  "expectations": [
+    {
+      "text": "page_opened",
+      "passed": true,
+      "evidence": "httpbin.org in terminal output"
+    },
+    {
+      "text": "form_filled",
+      "passed": true,
+      "evidence": "custname and custemail found in fill commands"
+    },
+    {
+      "text": "screenshot_saved",
+      "passed": true,
+      "evidence": "screenshot size=194145 bytes"
+    }
+  ]
+}

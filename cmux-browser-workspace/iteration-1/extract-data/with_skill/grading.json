@@ -1,0 +1,24 @@
+{
+  "eval_name": "extract-data",
+  "run_type": "with_skill",
+  "pass_rate": 1.0,
+  "passed": 3,
+  "total": 3,
+  "expectations": [
+    {
+      "text": "page_opened",
+      "passed": true,
+      "evidence": "news.ycombinator.com in terminal output"
+    },
+    {
+      "text": "url_and_title_got",
+      "passed": true,
+      "evidence": "URL and title found in results"
+    },
+    {
+      "text": "navigation_happened",
+      "passed": true,
+      "evidence": "multiple URLs or pagination found"
+    }
+  ]
+}

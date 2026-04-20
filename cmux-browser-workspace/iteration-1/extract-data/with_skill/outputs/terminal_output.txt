@@ -1,0 +1,35 @@
+=== Step 1: Open page ===
+Command: cmux browser open 'https://news.ycombinator.com'
+Output: OK surface=surface:56 pane=pane:44 placement=reuse
+
+=== Step 2: Wait for load ===
+Command: cmux browser surface:56 wait --load-state complete --timeout-ms 15000
+Output: OK
+
+=== Step 3: Get URL ===
+Command: cmux browser surface:56 get url
+Output: https://news.ycombinator.com/
+
+=== Step 4: Get Title ===
+Command: cmux browser surface:56 get title
+Output: Hacker News
+
+=== Step 5: Find More link (find text failed, used snapshot) ===
+Command: cmux browser surface:56 find text 'More'
+Output: Exit code 1 - Error: js_error: 发生了JavaScript异常
+Fallback: Used snapshot to locate 'More' link at CSS selector a.morelink
+
+=== Step 6: Click More link ===
+Command: cmux browser surface:56 click 'a.morelink' --snapshot-after
+Output: OK (snapshot showed page updated)
+
+=== Step 7: Wait for navigation ===
+Command: cmux browser surface:56 wait --load-state complete --timeout-ms 15000
+Output: OK
+
+=== Step 8: Get new URL ===
+Command: cmux browser surface:56 get url
+Output: https://news.ycombinator.com/?p=2
+
+=== Final Verification ===
+Snapshot confirmed page 2 content loaded successfully.

@@ -1,0 +1,118 @@
+=== cmux browser --help ===
+cmux browser
+
+Usage: cmux browser [--surface <id|ref|index> | <surface>] <subcommand> [args]
+
+Browser automation commands. Most subcommands require a surface handle.
+A surface can be passed as --surface <handle> or as the first positional token.
+open/open-split/new/identify can run without an explicit surface.
+
+Subcommands:
+  open|open-split|new [url] [--workspace <id|ref|index>] [--window <id|ref|index>]
+  goto|navigate <url> [--snapshot-after]
+  back|forward|reload [--snapshot-after]
+  url|get-url
+  focus-webview | is-webview-focused
+  snapshot [--interactive|-i] [--cursor] [--compact] [--max-depth <n>] [--selector <css>]
+  eval [--script <js> | <js>]
+  wait [--selector <css>] [--text <text>] [--url-contains <text>|--url <text>] [--load-state <interactive|complete>] [--function <js>] [--timeout-ms <ms>|--timeout <seconds>]
+  click|dblclick|hover|focus|check|uncheck|scroll-into-view [--selector <css> | <css>] [--snapshot-after]
+  type|fill [--selector <css> | <css>] [--text <text> | <text>] [--snapshot-after]
+  press|key|keydown|keyup [--key <key> | <key>] [--snapshot-after]
+  select [--selector <css> | <css>] [--value <value> | <value>] [--snapshot-after]
+  scroll [--selector <css>] [--dx <n>] [--dy <n>] [--snapshot-after]
+  screenshot [--out <path>]
+  get <url|title|text|html|value|attr|count|box|styles> [...]
+  is <visible|enabled|checked> [--selector <css> | <css>]
+  find <role|text|label|placeholder|alt|title|testid|first|last|nth> [...]
+  frame <main|selector> [--selector <css>]
+  dialog <accept|dismiss> [text]
+  download [wait] [--path <path>] [--timeout-ms <ms>|--timeout <seconds>]
+  cookies <get|set|clear> [...]
+  storage <local|session> <get|set|clear> [...]
+  tab <new|list|switch|close|<index>> [...]
+  console <list|clear>
+  errors <list|clear>
+  highlight [--selector <css> | <css>]
+  state <save|load> <path>
+  addinitscript|addscript [--script <js> | <js>]
+  addstyle [--css <css> | <css>]
+  viewport <width> <height>
+  geolocation|geo <latitude> <longitude>
+  offline <true|false>
+  trace <start|stop> [path]
+  network <route|unroute|requests> ...
+  screencast <start|stop>
+  input <mouse|keyboard|touch> [args...]
+  identify [--surface <id|ref|index>]
+
+=== Step 1: Open page ===
+$ cmux browser open https://httpbin.org/forms/post
+OK surface=surface:51 pane=pane:41 placement=reuse
+
+=== Step 2: Identify surface ===
+$ cmux browser identify
+OK
+
+=== Step 3: Snapshot page ===
+$ cmux browser surface:51 snapshot
+- document "page"
+        - textbox [ref=e1238]
+        - textbox [ref=e1239]
+        - textbox [ref=e1240]
+          - radio "small" [ref=e1241]
+          - radio "medium" [ref=e1242]
+          - radio "large" [ref=e1243]
+          - checkbox "bacon" [ref=e1244]
+          - checkbox "cheese" [ref=e1245]
+          - checkbox "onion" [ref=e1246]
+          - checkbox "mushroom" [ref=e1247]
+        - textbox [ref=e1248]
+        - textbox [ref=e1249]
+      - button "Submit order" [ref=e1250]
+
+=== Step 4: Inspect form inputs ===
+$ cmux browser surface:51 eval "document.querySelector('input[name=\"custname\"]')?.outerHTML"
+<input name="custname">
+
+$ cmux browser surface:51 eval "document.querySelector('input[name=\"custemail\"]')?.outerHTML"
+<input type="email" name="custemail">
+
+=== Step 5: Fill custname field ===
+$ cmux browser surface:51 fill --selector "input[name='custname']" --text "Alice"
+OK
+
+=== Step 6: Fill custemail field ===
+$ cmux browser surface:51 fill --selector "input[name='custemail']" --text "alice@example.com"
+OK
+
+=== Step 7: Attempt to click submit button (failed with selector) ===
+$ cmux browser surface:51 click --selector "button[type='submit']"
+Error: not_found: Element "button[type='submit']" not found or not visible.
+
+$ cmux browser surface:51 click --selector "button:has-text('Submit order')"
+Error: js_error: 发生了JavaScript异常
+
+$ cmux browser surface:51 click "button:has-text('Submit order')"
+Error: js_error: 发生了JavaScript异常
+
+=== Step 8: Click submit button via JavaScript eval (worked) ===
+$ cmux browser surface:51 eval "document.querySelector('button').click()"
+undefined
+
+=== Step 9: Wait for navigation ===
+$ cmux browser surface:51 wait --url-contains "/post" --timeout 10
+OK
+
+=== Step 10: Confirm URL ===
+$ cmux browser surface:51 url
+https://httpbin.org/post
+
+=== Step 11: Take screenshot ===
+$ cmux browser surface:51 screenshot --out /tmp/form-submit.png
+OK /tmp/form-submit.png
+
+=== Step 12: Copy screenshot to outputs ===
+$ cp /tmp/form-submit.png .../outputs/screenshot.png
+(success)
+
