@@ -75,7 +75,7 @@ export const LAYER_LABELS = {
 export const LAYER_DESCRIPTIONS = {
   cli: 'Deterministic. Runs from `npx impeccable detect` on files, no browser required.',
   browser: 'Deterministic, but needs real browser layout. Runs via the browser extension or Puppeteer, not the plain CLI.',
-  llm: 'Not caught by any deterministic detector. Flagged by /critique during its LLM design review.',
+  llm: 'Not caught by any deterministic detector. Flagged by /impeccable critique during its LLM design review.',
 };
 
 // ─── Visual examples ─────────────────────────────────────────────────

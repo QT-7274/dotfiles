@@ -4,6 +4,7 @@ export const FILE_DOWNLOAD_PROVIDER_CONFIG_DIRS = Object.freeze({
   gemini: '.gemini',
   codex: '.codex',
   agents: '.agents',
+  github: '.github',
   kiro: '.kiro',
   opencode: '.opencode',
   pi: '.pi',
@@ -15,7 +16,6 @@ export const FILE_DOWNLOAD_PROVIDERS = Object.freeze(
 
 export const BUNDLE_DOWNLOAD_PROVIDERS = Object.freeze([
   'universal',
-  'universal-prefixed',
 ]);
 
 export const DOWNLOAD_PROVIDERS = Object.freeze([

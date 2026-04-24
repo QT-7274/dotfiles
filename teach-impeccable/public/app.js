@@ -8,6 +8,7 @@ import { initScrollReveal } from "./js/utils/reveal.js";
 import { initAnchorScroll, initHashTracking } from "./js/utils/scroll.js";
 import { initSectionNav } from "./js/components/section-nav.js";
 import { initFoundationGrid } from "./js/components/foundation-grid.js";
+import { initLiveDemo } from "./js/components/live-demo.js";
 
 // ============================================
 // STATE
@@ -152,7 +153,10 @@ function renderPatternsWithTabs(patterns, antipatterns) {
 		</div>`;
 	}).join('');
 
-	container.innerHTML = `<div class="patterns-tabs">${tabsHTML}</div>${panelsHTML}`;
+	container.innerHTML = `<div class="patterns-tabs-wrap"><div class="patterns-tabs" data-scroll="start">${tabsHTML}</div></div>${panelsHTML}`;
+
+	const tabsEl = container.querySelector('.patterns-tabs');
+	const tabsWrap = container.querySelector('.patterns-tabs-wrap');
 
 	container.addEventListener('click', (e) => {
 		const tab = e.target.closest('.patterns-tab');
@@ -162,7 +166,34 @@ function renderPatternsWithTabs(patterns, antipatterns) {
 		container.querySelectorAll('.patterns-content').forEach(p => p.classList.remove('is-active'));
 		tab.classList.add('is-active');
 		container.querySelector(`.patterns-content[data-index="${index}"]`).classList.add('is-active');
+		// Center the clicked tab inside the tabs strip (not the page). Using
+		// scrollBy on the container keeps the page scroll untouched.
+		if (tabsEl) {
+			const tabRect = tab.getBoundingClientRect();
+			const stripRect = tabsEl.getBoundingClientRect();
+			const offset = (tabRect.left + tabRect.width / 2) - (stripRect.left + stripRect.width / 2);
+			tabsEl.scrollBy({ left: offset, behavior: 'smooth' });
+		}
 	});
+
+	// Track scroll position so the edge-fade mask only appears on sides where
+	// there's actually more content. At the start, no left fade; at the end,
+	// no right fade; if no overflow, no fade at all.
+	const updateScrollState = () => {
+		if (!tabsEl) return;
+		const { scrollLeft, scrollWidth, clientWidth } = tabsEl;
+		const max = scrollWidth - clientWidth;
+		let state;
+		if (max <= 1) state = 'none';
+		else if (scrollLeft <= 1) state = 'start';
+		else if (scrollLeft >= max - 1) state = 'end';
+		else state = 'middle';
+		tabsEl.dataset.scroll = state;
+		if (tabsWrap) tabsWrap.dataset.scroll = state;
+	};
+	tabsEl?.addEventListener('scroll', updateScrollState, { passive: true });
+	window.addEventListener('resize', updateScrollState);
+	updateScrollState();
 }
 
 // ============================================
@@ -170,8 +201,8 @@ function renderPatternsWithTabs(patterns, antipatterns) {
 // ============================================
 
 // Handle bundle download clicks via event delegation.
-// Each download button carries the full bundle name in data-bundle (e.g.
-// "universal" or "universal-prefixed") so the handler is just a redirect.
+// Each download button carries the full bundle name in data-bundle
+// (currently just "universal") so the handler is just a redirect.
 document.addEventListener("click", (e) => {
 	const bundleBtn = e.target.closest("[data-bundle]");
 	if (bundleBtn) {
@@ -214,9 +245,160 @@ function init() {
 	initFrameworkViz();
 	initFoundationGrid();
 	initSectionNav();
+	initWhyTabs();
+	initLanguageTabs();
+	initLiveDemo();
 	loadContent();
 
 	document.body.classList.add("loaded");
+}
+
+function initLanguageTabs() {
+	const toggle = document.querySelector('.language-view-toggle');
+	if (!toggle) return;
+	const tabs = Array.from(toggle.querySelectorAll('.language-view-tab'));
+	const panels = Array.from(document.querySelectorAll('.language-view[data-view-panel]'));
+	if (!tabs.length || !panels.length) return;
+
+	tabs.forEach((tab) => {
+		tab.addEventListener('click', () => {
+			const view = tab.dataset.view;
+			tabs.forEach((t) => {
+				const on = t === tab;
+				t.classList.toggle('is-active', on);
+				t.setAttribute('aria-selected', on ? 'true' : 'false');
+			});
+			panels.forEach((p) => {
+				const on = p.dataset.viewPanel === view;
+				p.classList.toggle('is-active', on);
+				if (on) p.removeAttribute('hidden');
+				else p.setAttribute('hidden', '');
+			});
+		});
+	});
+}
+
+function initWhyTabs() {
+	const container = document.querySelector('.why-layout');
+	if (!container) return;
+	const tabs = Array.from(container.querySelectorAll('.why-tab'));
+	const panels = Array.from(container.querySelectorAll('.why-panel'));
+	if (!tabs.length || !panels.length) return;
+
+	const CYCLE_MS = 7000;
+	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+	let current = 0;
+	let timer = null;
+	let autoRotate = !reducedMotion;
+	let visible = false;
+
+	const tabStrip = container.querySelector('.why-tabs');
+
+	const centerActiveInStrip = (active) => {
+		// On mobile the tab list is a horizontal scroll strip. Keep the
+		// active pill visible without touching the page scroll. Using
+		// scrollTo with behavior:auto + direct scrollLeft assignment,
+		// because smooth-scroll on this container is disabled by the
+		// parent's mask-image compositing and silently no-ops.
+		if (!tabStrip || tabStrip.scrollWidth <= tabStrip.clientWidth + 1) return;
+		const tabRect = active.getBoundingClientRect();
+		const stripRect = tabStrip.getBoundingClientRect();
+		const offset = (tabRect.left + tabRect.width / 2) - (stripRect.left + stripRect.width / 2);
+		if (Math.abs(offset) < 2) return;
+		tabStrip.scrollLeft += offset;
+	};
+
+	const activate = (index, fromAuto = false) => {
+		current = index;
+		tabs.forEach((tab, i) => {
+			const on = i === index;
+			tab.classList.toggle('is-active', on);
+			tab.setAttribute('aria-selected', on ? 'true' : 'false');
+			// Reset cycling class, re-add on the new active tab so the
+			// progress indicator restarts cleanly.
+			tab.classList.remove('is-cycling');
+		});
+		panels.forEach((panel, i) => {
+			const on = i === index;
+			panel.classList.toggle('is-active', on);
+			if (on) panel.removeAttribute('hidden');
+			else panel.setAttribute('hidden', '');
+		});
+		if (autoRotate && visible) {
+			// Force reflow so the animation restart is picked up.
+			const active = tabs[index];
+			void active.offsetWidth;
+			active.classList.add('is-cycling');
+		}
+		centerActiveInStrip(tabs[index]);
+	};
+
+	const scheduleNext = () => {
+		clearTimeout(timer);
+		if (!autoRotate || !visible) return;
+		timer = setTimeout(() => {
+			const next = (current + 1) % tabs.length;
+			activate(next, true);
+			scheduleNext();
+		}, CYCLE_MS);
+	};
+
+	const stopAuto = () => {
+		autoRotate = false;
+		clearTimeout(timer);
+		tabs.forEach((t) => t.classList.remove('is-cycling'));
+	};
+
+	tabs.forEach((tab, index) => {
+		tab.addEventListener('click', () => {
+			stopAuto();
+			activate(index);
+		});
+		tab.addEventListener('keydown', (e) => {
+			if (e.key !== 'ArrowDown' && e.key !== 'ArrowUp') return;
+			e.preventDefault();
+			stopAuto();
+			const dir = e.key === 'ArrowDown' ? 1 : -1;
+			const next = (index + dir + tabs.length) % tabs.length;
+			tabs[next].focus();
+			activate(next);
+		});
+	});
+
+	container.addEventListener('mouseenter', () => {
+		// Pause auto-rotation on hover. Resume only if still allowed and
+		// user hasn't interacted (stopAuto flips autoRotate off).
+		clearTimeout(timer);
+		tabs.forEach((t) => t.classList.remove('is-cycling'));
+	});
+	container.addEventListener('mouseleave', () => {
+		if (autoRotate && visible) {
+			// Re-apply cycling class to current tab and resume the timer.
+			const active = tabs[current];
+			void active.offsetWidth;
+			active.classList.add('is-cycling');
+			scheduleNext();
+		}
+	});
+
+	// Observe visibility so we only rotate while the user can see it.
+	const io = new IntersectionObserver((entries) => {
+		entries.forEach((e) => {
+			visible = e.isIntersecting;
+			if (visible) {
+				if (autoRotate) {
+					const active = tabs[current];
+					void active.offsetWidth;
+					active.classList.add('is-cycling');
+					scheduleNext();
+				}
+			} else {
+				clearTimeout(timer);
+				tabs.forEach((t) => t.classList.remove('is-cycling'));
+			}
+		});
+	}, { threshold: 0.35 });
+	io.observe(container);
 }
 
 if (document.readyState === "loading") {

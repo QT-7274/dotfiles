@@ -1,6 +1,6 @@
 # Impeccable
 
-The vocabulary you didn't know you needed. 1 skill, 18 commands, and curated anti-patterns for impeccable frontend design.
+The vocabulary you didn't know you needed. 1 skill, 23 commands, and curated anti-patterns for impeccable frontend design.
 
 > **Quick start:** Visit [impeccable.style](https://impeccable.style) to download ready-to-use bundles.
 
@@ -12,7 +12,7 @@ Every LLM learned from the same generic templates. Without guidance, you get the
 
 Impeccable fights that bias with:
 - **An expanded skill** with 7 domain-specific reference files ([view source](source/skills/impeccable/))
-- **18 steering commands** to audit, review, polish, distill, animate, and more
+- **23 commands** to audit, review, polish, distill, animate, and more
 - **Curated anti-patterns** that explicitly tell the AI what NOT to do
 
 ## What's Included
@@ -31,65 +31,50 @@ A comprehensive design skill with 7 domain-specific references ([view skill](sou
 | [responsive-design](source/skills/impeccable/reference/responsive-design.md) | Mobile-first, fluid design, container queries |
 | [ux-writing](source/skills/impeccable/reference/ux-writing.md) | Button labels, error messages, empty states |
 
-### 18 Commands
+### 23 Commands
+
+All commands are accessed through `/impeccable`:
 
 | Command | What it does |
 |---------|--------------|
-| `/impeccable teach` | One-time setup: gather design context, save to config |
 | `/impeccable craft` | Full shape-then-build flow with visual iteration |
+| `/impeccable teach` | One-time setup: gather design context, write PRODUCT.md and DESIGN.md |
+| `/impeccable document` | Generate DESIGN.md from existing project code |
 | `/impeccable extract` | Pull reusable components and tokens into the design system |
-| `/audit` | Run technical quality checks (a11y, performance, responsive) |
-| `/critique` | UX design review: hierarchy, clarity, emotional resonance |
-| `/polish` | Final pass, design system alignment, and shipping readiness |
-| `/distill` | Strip to essence |
-| `/clarify` | Improve unclear UX copy |
-| `/optimize` | Performance improvements |
-| `/harden` | Error handling, onboarding, i18n, edge cases |
-| `/animate` | Add purposeful motion |
-| `/colorize` | Introduce strategic color |
-| `/bolder` | Amplify boring designs |
-| `/quieter` | Tone down overly bold designs |
-| `/delight` | Add moments of joy |
-| `/adapt` | Adapt for different devices |
-| `/typeset` | Fix font choices, hierarchy, sizing |
-| `/layout` | Fix layout, spacing, visual rhythm |
-| `/overdrive` | Add technically extraordinary effects |
+| `/impeccable shape` | Plan UX/UI before writing code |
+| `/impeccable critique` | UX design review: hierarchy, clarity, emotional resonance |
+| `/impeccable audit` | Run technical quality checks (a11y, performance, responsive) |
+| `/impeccable polish` | Final pass, design system alignment, and shipping readiness |
+| `/impeccable bolder` | Amplify boring designs |
+| `/impeccable quieter` | Tone down overly bold designs |
+| `/impeccable distill` | Strip to essence |
+| `/impeccable harden` | Error handling, i18n, text overflow, edge cases |
+| `/impeccable onboard` | First-run flows, empty states, activation paths |
+| `/impeccable animate` | Add purposeful motion |
+| `/impeccable colorize` | Introduce strategic color |
+| `/impeccable typeset` | Fix font choices, hierarchy, sizing |
+| `/impeccable layout` | Fix layout, spacing, visual rhythm |
+| `/impeccable delight` | Add moments of joy |
+| `/impeccable overdrive` | Add technically extraordinary effects |
+| `/impeccable clarify` | Improve unclear UX copy |
+| `/impeccable adapt` | Adapt for different devices |
+| `/impeccable optimize` | Performance improvements |
+| `/impeccable live` | Visual variant mode: iterate on elements in the browser |
+
+Use `/impeccable pin <command>` to create standalone shortcuts (e.g., `pin audit` creates `/audit`).
 
 #### Usage Examples
 
-**`/audit`** - Run quality checks, get a report (no edits)
 ```
-/audit blog              # Audit blog hub + post pages
-/audit dashboard         # Check dashboard components
-/audit checkout flow     # Focus on checkout UX
+/impeccable audit blog           # Audit blog hub + post pages
+/impeccable critique landing     # UX design review
+/impeccable polish settings      # Final pass before shipping
+/impeccable harden checkout      # Add error handling + edge cases
 ```
-*When to use:* Before making changes, to understand what needs fixing.
 
-**`/normalize`** - Align with design system
+Or use `/impeccable` directly with a description:
 ```
-/normalize blog          # Apply design tokens, fix spacing
-/normalize buttons       # Standardize button styles
-```
-*When to use:* After audit, to fix inconsistencies.
-
-**`/critique`** - UX design review
-```
-/critique landing page   # Review landing page UX
-/critique onboarding     # Check onboarding flow
-```
-*When to use:* When you want design feedback, not technical fixes.
-
-**`/polish`** - Final pass before shipping
-```
-/polish feature modal    # Clean up modal before release
-/polish settings page    # Final review of settings UI
-```
-*When to use:* Last step before deploying to production.
-
-**Combining commands:**
-```
-/audit /normalize /polish blog    # Full workflow: audit → fix → polish
-/critique /harden checkout        # UX review + add error handling
+/impeccable redo this hero section
 ```
 
 ### Anti-Patterns
@@ -158,7 +143,17 @@ cp -r dist/gemini/.gemini your-project/
 
 **Codex CLI:**
 ```bash
-cp -r dist/codex/.codex/* ~/.codex/
+# Project-local
+cp -r dist/agents/.agents your-project/
+
+# Or user-wide
+mkdir -p ~/.agents/skills
+cp -r dist/agents/.agents/skills/* ~/.agents/skills/
+```
+
+**GitHub Copilot:**
+```bash
+cp -r dist/github/.github your-project/
 ```
 
 **Trae:**
@@ -203,7 +198,7 @@ Most commands accept an optional argument to focus on a specific area:
 /polish checkout-form
 ```
 
-**Note:** Codex CLI uses a different syntax: `/prompts:audit`, `/prompts:polish`, etc.
+**Note:** Codex uses skills here, not `/prompts:` commands. Open `/skills` or type `$impeccable`. Repo-local installs live in `.agents/skills/`; user-wide installs live in `~/.agents/skills/`. GitHub Copilot uses `.github/skills/`. Restart the tool if a newly installed skill does not appear.
 
 ## CLI
 

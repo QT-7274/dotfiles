@@ -58,7 +58,7 @@ Notes:
 | Harness | Native directory | Also reads |
 |---------|-----------------|------------|
 | Claude Code | `.claude/skills/` | - |
-| Cursor | `.cursor/skills/` | `.agents/skills/`, `.claude/skills/`, `.codex/skills/` |
+| Cursor | `.cursor/skills/` | `.agents/skills/`, `.claude/skills/` |
 | Gemini CLI | `.gemini/skills/` | `.agents/skills/` |
 | Codex CLI | `.agents/skills/` (primary) | - |
 | GitHub Copilot | `.github/skills/` | `.agents/skills/`, `.claude/skills/` |

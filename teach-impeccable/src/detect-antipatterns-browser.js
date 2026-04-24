@@ -2246,6 +2246,9 @@ if (IS_BROWSER) {
       // Skip browser extension elements (Claude, etc.)
       const elId = el.id || '';
       if (elId.startsWith('claude-') || elId.startsWith('cic-')) continue;
+      // Skip the impeccable live-mode overlay (highlight, tooltip, bar, picker, toast).
+      // These are inspector chrome, not part of the user's design.
+      if (el.closest('[id^="impeccable-live-"]')) continue;
       // Skip html/body -- page-level findings go in the banner, not a full-page overlay
       if (el === document.body || el === document.documentElement) continue;
 
@@ -2299,7 +2302,14 @@ if (IS_BROWSER) {
     }
 
     // Regex-on-HTML checks (shared with Node)
-    const htmlPatternFindings = checkHtmlPatterns(document.documentElement.outerHTML);
+    // Clone the document and strip impeccable-live overlay nodes before the
+    // regex scan, so the inspector's own inline styles (transitions on top/
+    // left/width/height, etc.) don't register as page anti-patterns.
+    const docClone = document.documentElement.cloneNode(true);
+    for (const node of docClone.querySelectorAll('[id^="impeccable-live-"]')) {
+      node.remove();
+    }
+    const htmlPatternFindings = checkHtmlPatterns(docClone.outerHTML);
     if (htmlPatternFindings.length > 0) {
       const mapped = htmlPatternFindings.map(f => ({ type: f.id, detail: f.snippet })).filter(f => _ruleOk(f.type));
       pageLevelFindings.push(...mapped);

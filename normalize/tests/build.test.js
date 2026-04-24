@@ -288,10 +288,12 @@ Please audit {{target}} for technical quality. Ask {{model}} for help.`;
 
     // These should not throw
     transformers.transformAgents(skills, DIST_DIR, patterns);
+    transformers.transformGitHub(skills, DIST_DIR, patterns);
     transformers.transformKiro(skills, DIST_DIR, patterns);
 
     // Verify outputs
     expect(fs.existsSync(path.join(DIST_DIR, 'agents/.agents/skills'))).toBe(true);
+    expect(fs.existsSync(path.join(DIST_DIR, 'github/.github/skills'))).toBe(true);
     expect(fs.existsSync(path.join(DIST_DIR, 'kiro/.kiro/skills'))).toBe(true);
   });
 });

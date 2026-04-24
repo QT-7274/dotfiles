@@ -82,7 +82,7 @@ export function createRenderer({ knownSkillIds = new Set(), currentSkillId = nul
  *
  * - `http(s)://…` → unchanged, external
  * - `reference/foo.md` → `#reference-foo` on current skill page
- * - `/skill-id` (known) → `/skills/skill-id`
+ * - `/skill-id` (known) → `/docs/skill-id`
  * - `#anchor` → unchanged (in-page anchor)
  * - anything else → unchanged (will be caught by build warnings later)
  *
@@ -112,12 +112,12 @@ function resolveHref(href, { knownSkillIds, currentSkillId }) {
   // /skill-id mentioned in prose (e.g. "run /polish")
   const slashMatch = href.match(/^\/([a-z0-9-]+)$/i);
   if (slashMatch && knownSkillIds.has(slashMatch[1])) {
-    return { href: `/skills/${slashMatch[1]}`, external: false };
+    return { href: `/docs/${slashMatch[1]}`, external: false };
   }
 
-  // [text](other-skill) → /skills/other-skill
+  // [text](other-skill) → /docs/other-skill
   if (/^[a-z0-9-]+$/i.test(href) && knownSkillIds.has(href)) {
-    return { href: `/skills/${href}`, external: false };
+    return { href: `/docs/${href}`, external: false };
   }
 
   // Unknown — pass through. Generator can warn separately.

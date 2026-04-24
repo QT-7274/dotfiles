@@ -7,6 +7,7 @@
  */
 
 @import "./tokens.css";
+@import "./docs-visuals.css";
 
 /* ============================================
    SKIP LINK (a11y)
@@ -37,9 +38,8 @@
    BASE
    ============================================ */
 
-html {
-  scroll-behavior: smooth;
-}
+/* No smooth scroll — long editorial pages feel slow on anchor jumps, and
+   a secretly-smooth CSS rule also overrides JS `behavior: 'auto'` calls. */
 
 body {
   font-family: var(--font-body);
@@ -486,138 +486,291 @@ main#main {
   padding: clamp(2rem, 4vw, 3.5rem) 0 clamp(4rem, 8vw, 6rem);
 }
 
-.skills-overview-content {
-  max-width: 720px;
+/* ============================================
+   DOCS OVERVIEW — /skills page
+   ============================================ */
+
+.docs-overview {
+  max-width: 920px;
 }
 
-.skills-overview-header {
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
+.docs-overview-header {
+  margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
-.skills-overview-header .sub-page-lede a {
-  color: var(--color-ink);
-  text-decoration: underline;
-  text-decoration-thickness: 1px;
-  text-decoration-color: var(--color-accent);
-  text-underline-offset: 4px;
-  font-family: var(--font-mono);
-  font-weight: 500;
-}
-
-.skills-overview-howto {
-  padding: var(--spacing-lg) var(--spacing-lg);
-  background: var(--color-cream);
-  border: 1px solid var(--color-mist);
-  border-radius: 10px;
-  margin-bottom: clamp(2.5rem, 5vw, 4rem);
-}
-
-.skills-overview-howto-title {
-  font-family: var(--font-display);
-  font-size: 1.25rem;
-  font-style: italic;
-  font-weight: 500;
-  color: var(--color-ink);
-  margin-bottom: var(--spacing-sm);
-}
-
-.skills-overview-howto p {
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  color: var(--color-charcoal);
+.docs-overview-header .sub-page-lede {
   max-width: 60ch;
 }
 
-.skills-overview-howto a {
-  color: var(--color-ink);
-  font-family: var(--font-mono);
-  font-size: 0.875em;
-  font-weight: 500;
-  text-decoration: none;
-  border-bottom: 1px solid var(--color-accent);
-  transition: color var(--duration-fast) var(--ease-out);
+/* Home command hero — the /impeccable root card that sits above the
+   category sections. It gets special treatment because it's the entry
+   point, not just another command in a category. */
+.docs-home-card {
+  display: grid;
+  grid-template-columns: 1.1fr 1fr;
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  padding: clamp(1.5rem, 3vw, 2rem);
+  background: #ffffff;
+  border: 1px solid var(--color-mist);
+  border-radius: 12px;
+  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
 }
 
-.skills-overview-howto a:hover {
+.docs-home-card-identity {
+  min-width: 0;
+}
+
+.docs-home-card-eyebrow {
+  display: inline-block;
+  font-family: var(--font-body);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--color-accent);
+  margin-bottom: var(--spacing-sm);
+}
+
+.docs-home-card-title {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-ink);
+  letter-spacing: -0.02em;
+  line-height: 1;
+  margin: 0 0 var(--spacing-sm) 0;
+}
+
+.docs-home-card-tagline {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  line-height: 1.5;
+  margin: 0 0 var(--spacing-md) 0;
+  max-width: 32ch;
+}
+
+.docs-home-card-desc {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  max-width: 36ch;
+  margin: 0;
+}
+
+.docs-home-card-desc code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background: var(--color-accent-dim);
+  padding: 1px 6px;
+  border-radius: 3px;
+}
+
+.docs-home-card-modes {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-md);
+}
+
+.docs-home-card-modes a {
+  display: block;
+  text-decoration: none;
+  padding-left: 10px;
+  border-left: 2px solid transparent;
+  transition:
+    border-color var(--duration-fast) var(--ease-out, ease),
+    color var(--duration-fast) var(--ease-out, ease);
+}
+
+.docs-home-card-modes a:hover {
+  border-left-color: var(--color-accent);
+}
+
+.docs-home-card-modes a:hover .docs-home-mode-label {
   color: var(--color-accent);
 }
 
-.skills-overview-categories {
+.docs-home-mode-label {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 2px;
+}
+
+.docs-home-mode-slash {
+  color: var(--color-accent);
+  font-weight: 400;
+}
+
+.docs-home-mode-hint {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.8125rem;
+  color: var(--color-charcoal);
+  line-height: 1.4;
+}
+
+/* Category sections with rich command cards */
+.docs-categories {
   display: flex;
   flex-direction: column;
-  gap: clamp(2rem, 4vw, 3rem);
+  gap: clamp(2.5rem, 5vw, 3.5rem);
 }
 
-.skills-overview-category {
-  padding-bottom: clamp(2rem, 4vw, 2.5rem);
-  border-bottom: 1px solid var(--color-mist);
-}
-
-.skills-overview-category:last-child {
-  border-bottom: none;
-}
-
-.skills-overview-category-meta {
+.docs-category-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
   gap: var(--spacing-md);
-  margin-bottom: 6px;
+  margin-bottom: var(--spacing-md);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-mist);
 }
 
-.skills-overview-category-title {
+.docs-category-title {
   font-family: var(--font-display);
   font-size: clamp(1.5rem, 3vw, 2rem);
   font-weight: 500;
   font-style: italic;
   color: var(--color-ink);
   letter-spacing: -0.01em;
+  line-height: 1.1;
+  margin: 0 0 4px 0;
 }
 
-.skills-overview-category-count {
+.docs-category-desc {
+  font-size: 0.875rem;
+  line-height: 1.5;
+  color: var(--color-charcoal);
+  max-width: 58ch;
+  margin: 0;
+}
+
+.docs-category-count {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.12em;
   color: var(--color-ash);
+  white-space: nowrap;
+  flex-shrink: 0;
 }
 
-.skills-overview-category-desc {
-  font-size: 0.9375rem;
-  line-height: 1.7;
-  color: var(--color-charcoal);
-  max-width: 58ch;
-  margin-bottom: var(--spacing-md);
-}
-
-.skills-overview-chips {
+/* Dense two-column rows for each command: name on the left, description +
+   relationship on the right. Mirrors the original cheatsheet density. */
+.docs-category-rows {
   display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+  flex-direction: column;
 }
 
-.skills-overview-chip {
-  display: inline-flex;
-  align-items: center;
-  padding: 6px 12px;
+.command-row {
+  display: grid;
+  grid-template-columns: minmax(11rem, 13rem) 1fr;
+  gap: var(--spacing-lg);
+  padding: var(--spacing-md) 0;
+  border-bottom: 1px solid var(--color-mist);
+  align-items: baseline;
+}
+
+.command-row:last-child {
+  border-bottom: none;
+}
+
+.command-row-name {
   font-family: var(--font-mono);
-  font-size: 0.8125rem;
-  font-weight: 500;
+  font-size: 0.875rem;
+  font-weight: 600;
   color: var(--color-ink);
-  background: var(--color-paper);
-  border: 1px solid var(--color-mist);
-  border-radius: 99px;
-  text-decoration: none;
-  transition: border-color var(--duration-fast) var(--ease-out),
-              color var(--duration-fast) var(--ease-out),
-              background var(--duration-fast) var(--ease-out);
+  line-height: 1.4;
+  min-width: 0;
 }
 
-.skills-overview-chip:hover {
+.command-row-name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+  transition: border-color var(--duration-fast) var(--ease-out, ease);
+}
+
+.command-row-name a:hover {
+  border-bottom-color: var(--color-accent);
+}
+
+.command-row-namespace {
+  color: var(--color-ash);
+  font-weight: 400;
+}
+
+.command-row-beta {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.5625rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+  border: 1px solid var(--color-accent);
+  border-radius: 3px;
+  padding: 1px 5px;
+  vertical-align: 1px;
+  margin-left: 4px;
+}
+
+.command-row-info {
+  min-width: 0;
+}
+
+.command-row-desc {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.55;
+  color: var(--color-ink);
+  margin: 0;
+}
+
+.command-row-rel {
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  line-height: 1.5;
+  color: var(--color-ash);
+  margin-top: 4px;
+}
+
+.command-row-rel a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: var(--color-charcoal);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-mist);
+  transition: color var(--duration-fast) var(--ease-out, ease),
+              border-color var(--duration-fast) var(--ease-out, ease);
+}
+
+.command-row-rel a:hover {
   color: var(--color-accent);
   border-color: var(--color-accent);
-  background: var(--color-cream);
+}
+
+/* Narrow viewport: stack name above info */
+@media (max-width: 820px) {
+  .docs-home-card {
+    grid-template-columns: 1fr;
+  }
+
+  .command-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
 }
 
 /* ============================================
@@ -751,27 +904,135 @@ main#main {
   align-items: baseline;
   justify-content: space-between;
   gap: var(--spacing-md);
-  padding-bottom: var(--spacing-sm);
+  padding-bottom: 10px;
   border-bottom: 1px solid var(--color-mist);
-  margin-bottom: var(--spacing-lg);
+  margin-bottom: var(--spacing-md);
 }
 
+/* Catalog subsections sit under the "The catalog" h2 on /slop, so they
+   must read clearly as h3 — smaller, uppercase mono label instead of
+   display italic, to avoid competing with the parent section heading. */
 .anti-patterns-section-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 500;
-  font-style: italic;
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
   color: var(--color-ink);
-  letter-spacing: -0.01em;
 }
 
 .anti-patterns-section-count {
   font-family: var(--font-mono);
   font-size: 0.6875rem;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  color: var(--color-ash);
+}
+
+/* ============================================
+   SLOP PAGE (/slop)
+   Merger of the former /anti-patterns + /visual-mode.
+   Reuses .anti-patterns-* for the catalog and .visual-mode-*
+   for the demo / gallery / methods blocks; the rules below wire
+   the four numbered top-level sections and the nested sidebar.
+   ============================================ */
+
+.slop-content { width: 100%; }
+
+.slop-header {
+  max-width: 720px;
+}
+
+.slop-section {
+  margin-top: clamp(3rem, 6vw, 4.5rem);
+  scroll-margin-top: 80px;
+}
+
+.slop-section-heading {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 3.5vw, 2.75rem);
+  font-weight: 500;
+  font-style: italic;
+  color: var(--color-ink);
+  letter-spacing: -0.015em;
+  line-height: 1.15;
+  margin-bottom: var(--spacing-lg);
+  padding-bottom: var(--spacing-sm);
+  border-bottom: 1px solid var(--color-mist);
+  display: flex;
+  align-items: baseline;
+  gap: var(--spacing-md);
+}
+
+.slop-section-num {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
   font-weight: 600;
-  text-transform: uppercase;
+  font-style: normal;
   letter-spacing: 0.12em;
   color: var(--color-ash);
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.slop-catalog-header {
+  margin-bottom: var(--spacing-lg);
+}
+
+.slop-catalog-lede {
+  font-size: 0.9375rem;
+  line-height: 1.7;
+  color: var(--color-charcoal);
+  max-width: 72ch;
+  margin-top: var(--spacing-sm);
+}
+
+.slop-catalog-lede strong {
+  color: var(--color-ink);
+  font-weight: 600;
+}
+
+.slop-catalog-lede a {
+  color: var(--color-ink);
+  text-decoration: none;
+  border-bottom: 1px solid var(--color-accent);
+  font-family: var(--font-mono);
+  font-size: 0.875em;
+  font-weight: 500;
+}
+
+.slop-catalog-lede a:hover {
+  color: var(--color-accent);
+}
+
+/* Sidebar: nested catalog-section list under "The catalog". */
+.slop-sidebar-sublist {
+  list-style: none;
+  margin: 6px 0 4px 0;
+  padding: 0 0 0 var(--spacing-md);
+  border-left: 1px solid var(--color-mist);
+}
+
+.slop-sidebar-sublist li {
+  margin: 0;
+}
+
+.slop-sidebar-sublist a {
+  display: flex !important;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--spacing-sm);
+  font-size: 0.8125rem;
+  color: var(--color-ash);
+  padding: 4px 0;
+}
+
+.slop-sidebar-sublist a:hover {
+  color: var(--color-ink);
+}
+
+.slop-sidebar-sublist .anti-patterns-sidebar-count {
+  font-size: 0.625rem;
 }
 
 .rule-card-grid {
@@ -1122,24 +1383,6 @@ main#main {
    VISUAL MODE PAGE
    ============================================ */
 
-.visual-mode-page-body main#main {
-  /* Reset the docs-layout override; this page uses its own max-width. */
-  max-width: none;
-  margin: 0;
-  padding: 0;
-}
-
-.visual-mode-page {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: clamp(2rem, 4vw, 3.5rem) clamp(var(--spacing-md), 4vw, var(--spacing-2xl)) clamp(4rem, 8vw, 6rem);
-}
-
-.visual-mode-page-header {
-  max-width: 720px;
-  margin-bottom: clamp(2.5rem, 5vw, 3.5rem);
-}
-
 .visual-mode-demo-wrap {
   margin-bottom: clamp(3rem, 6vw, 4.5rem);
 }
@@ -1152,12 +1395,11 @@ main#main {
   text-align: center;
 }
 
-/* Mac-window chrome around the iframe. Scoped to .visual-mode-page so
-   the sub-page's preview styles don't leak onto the homepage, which
-   carries its own .visual-mode-preview rules in main.css. The auto
-   margins below would disable grid-item stretch on the homepage and
-   collapse the preview to the iframe's 300px intrinsic width. */
-.visual-mode-page .visual-mode-preview {
+/* Mac-window chrome around the iframe. Lives inside sub-pages.css, which
+   is not loaded on the homepage — the homepage has its own copy in
+   main.css. The max-width + auto margins would disable grid stretch on
+   the homepage and collapse the preview to the iframe's intrinsic width. */
+.visual-mode-preview {
   border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--color-mist);
@@ -1166,7 +1408,7 @@ main#main {
   margin: 0 auto;
 }
 
-.visual-mode-page .visual-mode-preview-header {
+.visual-mode-preview-header {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1175,18 +1417,18 @@ main#main {
   border-bottom: 1px solid var(--color-mist);
 }
 
-.visual-mode-page .visual-mode-preview-dot {
+.visual-mode-preview-dot {
   width: 10px;
   height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
 }
 
-.visual-mode-page .visual-mode-preview-dot.red { background: #ff5f56; }
-.visual-mode-page .visual-mode-preview-dot.yellow { background: #ffbd2e; }
-.visual-mode-page .visual-mode-preview-dot.green { background: #27c93f; }
+.visual-mode-preview-dot.red { background: #ff5f56; }
+.visual-mode-preview-dot.yellow { background: #ffbd2e; }
+.visual-mode-preview-dot.green { background: #27c93f; }
 
-.visual-mode-page .visual-mode-preview-title {
+.visual-mode-preview-title {
   margin-left: auto;
   font-family: var(--font-mono);
   font-size: 0.75rem;
@@ -1201,21 +1443,8 @@ main#main {
   background: white;
 }
 
-/* Three invocation methods. */
-.visual-mode-methods {
-  margin-bottom: clamp(3rem, 6vw, 4.5rem);
-}
-
-.visual-mode-methods-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 500;
-  font-style: italic;
-  color: var(--color-ink);
-  letter-spacing: -0.01em;
-  margin-bottom: var(--spacing-lg);
-}
-
+/* Three invocation methods grid. Section wrapper margins come from
+   .slop-section; this block only controls the grid of cards. */
 .visual-mode-methods-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -1300,19 +1529,10 @@ main#main {
   color: var(--color-accent);
 }
 
-/* Gallery (specimens) section */
+/* Gallery (specimens) section header. Title comes from .slop-section-heading;
+   this block just scopes the lede + spacing under the heading. */
 .visual-mode-gallery-header {
   margin-bottom: var(--spacing-lg);
-}
-
-.visual-mode-gallery-title {
-  font-family: var(--font-display);
-  font-size: clamp(1.75rem, 3vw, 2.25rem);
-  font-weight: 500;
-  font-style: italic;
-  color: var(--color-ink);
-  letter-spacing: -0.01em;
-  margin-bottom: var(--spacing-sm);
 }
 
 .visual-mode-gallery-lede {
@@ -1320,6 +1540,7 @@ main#main {
   line-height: 1.6;
   color: var(--color-charcoal);
   max-width: 60ch;
+  margin-top: var(--spacing-sm);
 }
 
 /* ============================================
@@ -1684,6 +1905,24 @@ main#main {
 .skill-detail-title-slash {
   color: var(--color-accent);
   font-weight: 300;
+}
+
+/* Sub-commands: show "/impeccable" as a smaller label above the command name
+   so it stacks and the command name stays at full display size. */
+.skill-detail-title-namespace {
+  display: block;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: var(--color-ash);
+  letter-spacing: 0.04em;
+  margin-bottom: 0.4em;
+  line-height: 1;
+}
+
+.skill-detail-title-namespace .skill-detail-title-slash {
+  color: var(--color-accent);
+  font-weight: 400;
 }
 
 .skill-detail-tagline {

@@ -17,10 +17,16 @@ export function initSectionNav() {
 
 	let ticking = false;
 
+	// Returns the element's top position relative to the document,
+	// which works even when the element is inside a positioned parent.
+	function docTop(el) {
+		return el.getBoundingClientRect().top + window.scrollY;
+	}
+
 	function updateNav() {
 		const scrollY = window.scrollY;
 		const heroBottom = hero.offsetTop + hero.offsetHeight - 100;
-		const footerTop = footer ? footer.offsetTop : Infinity;
+		const footerTop = footer ? docTop(footer) : Infinity;
 		const viewportBottom = scrollY + window.innerHeight;
 
 		// Show nav after hero, hide when footer is visible
@@ -36,7 +42,7 @@ export function initSectionNav() {
 
 		for (let i = sectionIds.length - 1; i >= 0; i--) {
 			const section = document.getElementById(sectionIds[i]);
-			if (section && section.offsetTop <= viewportMiddle) {
+			if (section && docTop(section) <= viewportMiddle) {
 				currentSection = sectionIds[i];
 				break;
 			}
@@ -47,10 +53,10 @@ export function initSectionNav() {
 		const activeSections = new Set();
 		if (currentSection) {
 			const currentEl = document.getElementById(currentSection);
-			const currentTop = currentEl?.offsetTop ?? 0;
+			const currentTop = currentEl ? docTop(currentEl) : 0;
 			sectionIds.forEach(id => {
 				const el = document.getElementById(id);
-				if (el && Math.abs(el.offsetTop - currentTop) < 4) {
+				if (el && Math.abs(docTop(el) - currentTop) < 4) {
 					activeSections.add(id);
 				}
 			});

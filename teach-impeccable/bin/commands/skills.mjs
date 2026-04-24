@@ -20,7 +20,7 @@ const __dirname = dirname(fileURLToPath(import.meta.url));
 const API_BASE = 'https://impeccable.style';
 
 // Provider folder names in project roots
-const PROVIDER_DIRS = ['.claude', '.cursor', '.gemini', '.codex', '.agents', '.kiro', '.opencode', '.pi', '.trae', '.trae-cn'];
+const PROVIDER_DIRS = ['.claude', '.cursor', '.gemini', '.agents', '.github', '.kiro', '.opencode', '.pi', '.trae', '.trae-cn'];
 
 function ask(question) {
   const rl = createInterface({ input: process.stdin, output: process.stdout });
@@ -112,7 +112,7 @@ async function downloadAndExtractBundle() {
  */
 function normalizeForHash(content) {
   return content
-    .replace(/\.(claude|cursor|agents|gemini|codex|kiro|opencode|pi|trae|trae-cn|rovodev)\/skills\//g, '.PROVIDER/skills/')
+    .replace(/\.(claude|cursor|agents|github|gemini|codex|kiro|opencode|pi|trae|trae-cn|rovodev)\/skills\//g, '.PROVIDER/skills/')
     .replace(/^version:\s*.+$/m, 'version: NORMALIZED');
 }
 

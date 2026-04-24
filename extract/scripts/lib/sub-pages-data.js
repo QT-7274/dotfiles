@@ -13,7 +13,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { pathToFileURL } from 'node:url';
-import { readSourceFiles, parseFrontmatter } from './utils.js';
+import { readSourceFiles, parseFrontmatter, replacePlaceholders } from './utils.js';
 import {
   DETECTION_LAYERS,
   VISUAL_EXAMPLES,
@@ -36,8 +36,6 @@ const EXCLUDED_SKILLS = new Set([
   'teach-impeccable',  // deprecated, folded into /impeccable teach
   'arrange',           // renamed to layout
   'normalize',         // merged into /polish
-  'onboard',           // merged into /harden
-  'extract',           // merged into /impeccable extract
 ]);
 
 /**
@@ -45,9 +43,10 @@ const EXCLUDED_SKILLS = new Set([
  * Mirrors public/js/data.js commandCategories. Validated below: the
  * generator fails if any user-invocable skill is missing from this map.
  */
-const SKILL_CATEGORIES = {
+export const SKILL_CATEGORIES = {
   // CREATE - build something new
   impeccable: 'create',
+  craft: 'create',
   shape: 'create',
   // EVALUATE - review and assess
   critique: 'evaluate',
@@ -69,9 +68,15 @@ const SKILL_CATEGORIES = {
   polish: 'harden',
   optimize: 'harden',
   harden: 'harden',
+  onboard: 'harden',
+  // SYSTEM - setup and tooling
+  teach: 'system',
+  document: 'system',
+  extract: 'system',
+  live: 'system',
 };
 
-export const CATEGORY_ORDER = ['create', 'evaluate', 'refine', 'simplify', 'harden'];
+export const CATEGORY_ORDER = ['create', 'evaluate', 'refine', 'simplify', 'harden', 'system'];
 
 export const CATEGORY_LABELS = {
   create: 'Create',
@@ -89,6 +94,46 @@ export const CATEGORY_DESCRIPTIONS = {
   simplify: 'Strip complexity. Remove what does not earn its place.',
   harden: 'Make it production-ready. Edge cases, performance, polish.',
   system: 'Setup and tooling. Design system work, extraction, organization.',
+};
+
+/**
+ * How commands relate to each other. Mirrors public/js/data.js so the server
+ * can render the docs overview without loading the client bundle.
+ *
+ * - leadsTo: commands that typically follow this one (used for evaluators)
+ * - pairs: the inverse counterpart (bolder <-> quieter)
+ * - combinesWith: commands that work well alongside this one
+ */
+export const COMMAND_RELATIONSHIPS = {
+  // Create
+  craft: { combinesWith: ['shape'] },
+  shape: { combinesWith: ['craft'] },
+  // Evaluate (these are the "diagnostics" that lead to fixes)
+  audit: { leadsTo: ['harden', 'optimize', 'adapt', 'clarify'] },
+  critique: { leadsTo: ['polish', 'distill', 'bolder', 'quieter', 'typeset', 'layout'] },
+  // Refine
+  typeset: { combinesWith: ['bolder', 'polish'] },
+  layout: { combinesWith: ['distill', 'adapt'] },
+  colorize: { combinesWith: ['bolder', 'delight'] },
+  animate: { combinesWith: ['delight'] },
+  delight: { combinesWith: ['bolder', 'animate'] },
+  bolder: { pairs: 'quieter' },
+  quieter: { pairs: 'bolder' },
+  overdrive: { combinesWith: ['animate', 'delight'] },
+  // Simplify
+  distill: { combinesWith: ['quieter', 'polish'] },
+  clarify: { combinesWith: ['polish', 'adapt'] },
+  adapt: { combinesWith: ['polish', 'clarify'] },
+  // Harden
+  polish: {},
+  optimize: {},
+  harden: { combinesWith: ['optimize'] },
+  onboard: { combinesWith: ['clarify', 'delight'] },
+  // System
+  teach: { combinesWith: ['document'] },
+  document: { combinesWith: ['teach', 'extract'] },
+  extract: { combinesWith: ['document'] },
+  live: {},
 };
 
 /**
@@ -168,28 +213,76 @@ export async function buildSubPageData(rootDir) {
   const contentDir = path.join(rootDir, 'content/site');
   const commandDemos = await loadCommandDemos(rootDir);
 
-  // Filter to user-invocable, non-deprecated skills.
-  const skills = rawSkills
-    .filter((s) => s.userInvocable && !EXCLUDED_SKILLS.has(s.name))
-    .map((s) => {
-      const category = SKILL_CATEGORIES[s.name];
-      const editorial = readEditorialWrapper(contentDir, 'skills', s.name);
-      const demo = commandDemos[s.name] || null;
-      return {
-        id: s.name,
-        name: s.name,
-        description: s.description,
-        argumentHint: s.argumentHint,
-        category,
-        body: s.body,
-        references: s.references,
-        editorial, // may be null
-        demo, // may be null (e.g. /shape has no demo)
-      };
-    })
-    .sort((a, b) => a.name.localeCompare(b.name));
+  // After the v3.0 consolidation there's only one source skill (impeccable).
+  // Its reference/ directory holds one file per command (audit.md, polish.md, ...).
+  // We synthesize a virtual skill entry for each sub-command so the sub-page
+  // generators can keep rendering per-command pages, index cards, etc.
+  const impeccableSkill = rawSkills.find((s) => s.name === 'impeccable');
+  const metadataPath = path.join(rootDir, 'source/skills/impeccable/scripts/command-metadata.json');
+  let commandMetadata = {};
+  if (fs.existsSync(metadataPath)) {
+    commandMetadata = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));
+  }
 
-  // Validate the category map covers every user-invocable skill.
+  // Reference files and skill bodies use {{command_prefix}} placeholders that
+  // are normally replaced by the provider transformer at build time. For web
+  // rendering, resolve them here using the claude-code provider as the canonical
+  // form ("/" prefix). The list of all command names includes the root skill
+  // plus all sub-commands from metadata so cross-references render correctly.
+  const allCommandNames = ['impeccable', ...Object.keys(commandMetadata)];
+  const resolvePlaceholders = (content) =>
+    replacePlaceholders(content, 'claude-code', [], allCommandNames);
+
+  const skills = [];
+
+  // 1. The root impeccable skill itself.
+  if (impeccableSkill && !EXCLUDED_SKILLS.has(impeccableSkill.name)) {
+    const editorial = readEditorialWrapper(contentDir, 'skills', 'impeccable');
+    const demo = commandDemos['impeccable'] || null;
+    skills.push({
+      id: 'impeccable',
+      name: 'impeccable',
+      description: impeccableSkill.description,
+      argumentHint: impeccableSkill.argumentHint,
+      category: SKILL_CATEGORIES['impeccable'],
+      body: resolvePlaceholders(impeccableSkill.body),
+      references: (impeccableSkill.references || []).map((r) => ({
+        ...r,
+        content: resolvePlaceholders(r.content),
+      })),
+      editorial,
+      demo,
+      isSubCommand: false,
+    });
+  }
+
+  // 2. One virtual entry per sub-command, body sourced from its reference file.
+  if (impeccableSkill) {
+    for (const [cmdId, meta] of Object.entries(commandMetadata)) {
+      if (EXCLUDED_SKILLS.has(cmdId)) continue;
+      const refFile = impeccableSkill.references?.find((r) => r.name === cmdId);
+      if (!refFile) continue; // no reference file = no page
+
+      const editorial = readEditorialWrapper(contentDir, 'skills', cmdId);
+      const demo = commandDemos[cmdId] || null;
+      skills.push({
+        id: cmdId,
+        name: cmdId,
+        description: meta.description,
+        argumentHint: meta.argumentHint,
+        category: SKILL_CATEGORIES[cmdId],
+        body: resolvePlaceholders(refFile.content),
+        references: [], // sub-commands don't have their own references
+        editorial,
+        demo,
+        isSubCommand: true,
+      });
+    }
+  }
+
+  skills.sort((a, b) => a.name.localeCompare(b.name));
+
+  // Validate the category map covers every skill entry.
   const missing = skills.filter((s) => !s.category).map((s) => s.id);
   if (missing.length > 0) {
     throw new Error(

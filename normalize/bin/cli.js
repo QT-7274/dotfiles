@@ -5,8 +5,6 @@
  *
  * Usage:
  *   npx impeccable detect [file-or-dir-or-url...]
- *   npx impeccable live [--port=PORT]
- *   npx impeccable live stop
  *   npx impeccable skills help|install|update
  *   npx impeccable --help
  */
@@ -24,8 +22,6 @@ if (!command || command === '--help' || command === '-h') {
 
 Commands:
   detect [file-or-dir-or-url...]   Scan for UI anti-patterns and design quality issues
-  live [--port=PORT]               Start browser detection overlay server
-  live stop                        Stop a running live server
   skills help                      List all available skills and commands
   skills install                   Install impeccable skills into your project
   skills update                    Update skills to the latest version
@@ -49,10 +45,6 @@ if (command === 'detect') {
   process.argv = [process.argv[0], process.argv[1], ...args.slice(1)];
   const { detectCli } = await import('../src/detect-antipatterns.mjs');
   await detectCli();
-} else if (command === 'live') {
-  process.argv = [process.argv[0], process.argv[1], ...args.slice(1)];
-  const { liveCli } = await import('../src/detect-antipatterns.mjs');
-  await liveCli();
 } else if (command === 'skills') {
   const { run } = await import('./commands/skills.mjs');
   await run(args.slice(1));

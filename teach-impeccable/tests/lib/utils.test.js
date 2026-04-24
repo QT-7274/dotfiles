@@ -10,8 +10,7 @@ import {
   writeFile,
   generateYamlFrontmatter,
   readPatterns,
-  replacePlaceholders,
-  prefixSkillReferences
+  replacePlaceholders
 } from '../../scripts/lib/utils.js';
 
 // Temporary test directory
@@ -165,6 +164,42 @@ describe('generateYamlFrontmatter', () => {
     expect(parsed.frontmatter.name).toBe(original.name);
     expect(parsed.frontmatter.description).toBe(original.description);
     expect(parsed.frontmatter['argument-hint']).toBe('<arg1>');
+  });
+
+  test('should quote strings containing colon-space (breaks plain scalars)', () => {
+    const data = {
+      name: 'impeccable',
+      description: 'Design fluency. Also handles: critique, audit. Commands: craft, polish.'
+    };
+
+    const result = generateYamlFrontmatter(data);
+    // Must be wrapped in quotes so YAML parsers don't mis-read the inner `: ` as a mapping
+    expect(result).toContain('description: "Design fluency. Also handles: critique, audit. Commands: craft, polish."');
+
+    // Roundtrip through our parser should recover the original string intact
+    const parsed = parseFrontmatter(`${result}\n\nbody`);
+    expect(parsed.frontmatter.description).toBe(data.description);
+  });
+
+  test('should quote strings starting with YAML flow indicators', () => {
+    const data = {
+      name: 'test',
+      'argument-hint': '[command] [target]'
+    };
+
+    const result = generateYamlFrontmatter(data);
+    expect(result).toContain('argument-hint: "[command] [target]"');
+  });
+
+  test('should not quote plain strings without special chars', () => {
+    const data = {
+      name: 'simple',
+      description: 'A plain description with no colons or hashes'
+    };
+
+    const result = generateYamlFrontmatter(data);
+    expect(result).toContain('description: A plain description with no colons or hashes');
+    expect(result).not.toContain('"A plain');
   });
 });
 
@@ -651,58 +686,3 @@ describe('replacePlaceholders', () => {
   });
 });
 
-describe('prefixSkillReferences', () => {
-  test('should prefix /skillname command references', () => {
-    const result = prefixSkillReferences('Run /audit to check.', 'i-', ['audit', 'polish']);
-    expect(result).toBe('Run /i-audit to check.');
-  });
-
-  test('should prefix "the skillname skill" references', () => {
-    const result = prefixSkillReferences('Use the audit skill for checks.', 'i-', ['audit', 'polish']);
-    expect(result).toBe('Use the i-audit skill for checks.');
-  });
-
-  test('should prefix multiple different references', () => {
-    const result = prefixSkillReferences('Run /audit then /polish. The audit skill is great.', 'i-', ['audit', 'polish']);
-    expect(result).toContain('/i-audit');
-    expect(result).toContain('/i-polish');
-    expect(result).toContain('The i-audit skill');
-  });
-
-  test('should not partially match longer skill names', () => {
-    const result = prefixSkillReferences('Run /teach-impeccable command.', 'i-', ['teach', 'teach-impeccable']);
-    expect(result).toBe('Run /i-teach-impeccable command.');
-  });
-
-  test('should handle case-insensitive "the X skill" matching', () => {
-    const result = prefixSkillReferences('The audit skill is useful.', 'i-', ['audit']);
-    expect(result).toBe('The i-audit skill is useful.');
-  });
-
-  test('should return content unchanged with empty prefix', () => {
-    const result = prefixSkillReferences('Run /audit.', '', ['audit']);
-    expect(result).toBe('Run /audit.');
-  });
-
-  test('should return content unchanged with empty skill names', () => {
-    const result = prefixSkillReferences('Run /audit.', 'i-', []);
-    expect(result).toBe('Run /audit.');
-  });
-
-  test('should not match /skillname inside longer words', () => {
-    const result = prefixSkillReferences('The /auditing process.', 'i-', ['audit']);
-    // 'auditing' starts with 'audit' but has trailing letters — should NOT match
-    expect(result).toBe('The /auditing process.');
-  });
-
-  test('should match /skillname at end of string', () => {
-    const result = prefixSkillReferences('Run /audit', 'i-', ['audit']);
-    expect(result).toBe('Run /i-audit');
-  });
-
-  test('should match /skillname before punctuation', () => {
-    const result = prefixSkillReferences('Try /audit, /polish.', 'i-', ['audit', 'polish']);
-    expect(result).toContain('/i-audit,');
-    expect(result).toContain('/i-polish.');
-  });
-});

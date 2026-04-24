@@ -11,6 +11,7 @@
 /* Section partials (landing page only) */
 @import "./problem-section.css";
 @import "./workflow.css";
+@import "./live-mode.css";
 @import "./gallery.css";
 @import "./skill-demos.css";
 
@@ -1153,7 +1154,7 @@ code {
 
 .language-content {
   display: grid;
-  gap: var(--spacing-lg);
+  gap: var(--spacing-sm);
 }
 
 /* Grid and flex items default to min-width: auto, which lets them expand to
@@ -1664,6 +1665,11 @@ code {
   font-weight: 600;
   color: var(--color-ink);
   margin: 0 0 var(--spacing-xs) 0;
+}
+
+.mobile-cmd-namespace {
+  color: var(--color-ash);
+  font-weight: 400;
 }
 
 .mobile-cmd-desc {
@@ -2437,28 +2443,76 @@ code {
   padding: var(--spacing-lg);
 }
 
-.patterns-tabs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
+.patterns-tabs-wrap {
+  position: relative;
   margin-bottom: var(--spacing-md);
 }
 
-@media (max-width: 768px) {
-  .patterns-tabs {
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-    margin-left: calc(-1 * var(--spacing-lg));
-    margin-right: calc(-1 * var(--spacing-lg));
-    padding-left: var(--spacing-lg);
-    padding-right: var(--spacing-lg);
-  }
+.patterns-tabs {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 6px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  scroll-snap-type: x proximity;
+}
 
-  .patterns-tabs::-webkit-scrollbar {
-    display: none;
-  }
+.patterns-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+/* Edge fade only on sides where more content exists. data-scroll is set
+   by JS: start | middle | end | none. */
+.patterns-tabs[data-scroll="start"] {
+  mask-image: linear-gradient(to right, black calc(100% - 40px), transparent);
+  -webkit-mask-image: linear-gradient(to right, black calc(100% - 40px), transparent);
+}
+.patterns-tabs[data-scroll="middle"] {
+  mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 40px), transparent);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 32px, black calc(100% - 40px), transparent);
+}
+.patterns-tabs[data-scroll="end"] {
+  mask-image: linear-gradient(to right, transparent, black 32px);
+  -webkit-mask-image: linear-gradient(to right, transparent, black 32px);
+}
+.patterns-tabs[data-scroll="none"] {
+  mask-image: none;
+  -webkit-mask-image: none;
+}
+
+/* Chevrons sit on the wrapper (outside the mask) so they're always fully
+   opaque, regardless of edge fade. Visible only when scroll can progress
+   in that direction. */
+.patterns-tabs-wrap::before,
+.patterns-tabs-wrap::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: 9px;
+  height: 9px;
+  border-top: 1.5px solid var(--color-ash);
+  border-right: 1.5px solid var(--color-ash);
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 0.18s ease;
+}
+.patterns-tabs-wrap::before {
+  left: 2px;
+  transform: translateY(-50%) rotate(-135deg);
+}
+.patterns-tabs-wrap::after {
+  right: 2px;
+  transform: translateY(-50%) rotate(45deg);
+}
+.patterns-tabs-wrap[data-scroll="start"]::after,
+.patterns-tabs-wrap[data-scroll="middle"]::after { opacity: 1; }
+.patterns-tabs-wrap[data-scroll="end"]::before,
+.patterns-tabs-wrap[data-scroll="middle"]::before { opacity: 1; }
+
+.patterns-tab {
+  scroll-snap-align: start;
+  flex-shrink: 0;
 }
 
 .patterns-tab {
@@ -2741,7 +2795,7 @@ code {
 /* Row 1: full-width primary install card with internal 2-column split */
 .install-row-primary {
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1fr 1fr;
   gap: var(--spacing-xl);
   align-items: start;
   margin: 0 0 var(--spacing-xl);
@@ -2751,19 +2805,356 @@ code {
   min-width: 0;
 }
 
-.install-primary-main {
+.install-primary-main,
+.install-primary-howto {
   display: flex;
   flex-direction: column;
   min-width: 0;
 }
 
+.install-primary-howto {
+  padding-left: var(--spacing-xl);
+  border-left: 1px solid var(--color-mist);
+}
+
+/* The "Use it" side uses the hero body copy size so both columns feel balanced
+   in typographic weight, not just pixel width. */
+.install-primary-howto .install-path-desc {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: var(--color-ink);
+  max-width: 48ch;
+}
+
+.install-primary-howto .install-path-desc em {
+  font-family: var(--font-display);
+  font-style: italic;
+  font-weight: 500;
+  color: var(--color-accent);
+}
+
 .install-primary-alts {
+  min-width: 0;
+}
+
+/* "Other install methods" is a collapsed <details> panel that sits
+   directly under the main install card. The alternatives are worth
+   keeping discoverable but don't need to be visible by default. */
+.install-primary-main > .install-primary-alts {
+  margin-top: var(--spacing-lg);
+  padding-top: var(--spacing-md);
+  border-top: 1px solid var(--color-mist);
+}
+
+.install-primary-alts[open] > .install-alts-summary > .install-alts-arrow {
+  transform: rotate(90deg);
+}
+
+.install-alts-summary {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-xs);
+  list-style: none;
+  cursor: pointer;
+  padding: 2px 0;
+}
+
+.install-alts-summary::-webkit-details-marker {
+  display: none;
+}
+
+.install-alts-arrow {
+  color: var(--color-ash);
+  transition: transform var(--duration-fast) var(--ease-out, ease);
+}
+
+.install-primary-alts[open] > .install-alts-summary {
+  margin-bottom: var(--spacing-md);
+}
+
+.install-primary-alts[open] > .install-alt-method + .install-alt-method {
+  margin-top: var(--spacing-lg);
+}
+
+/* Editorial "How to use" step list on the right side of the install row.
+   Uses display-font numerals as prominent visual anchors, generous vertical
+   rhythm, and body text at the same scale as the hero copy for hierarchy
+   parity with the rest of the page. */
+.install-howto-steps {
+  list-style: none;
+  counter-reset: howto-step;
+  padding: 0;
+  margin: var(--spacing-lg) 0 0;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-lg);
+}
+
+.install-howto-steps > li {
+  counter-increment: howto-step;
+  position: relative;
+  padding-left: 3rem;
+  min-height: 2.5rem;
+}
+
+.install-howto-steps > li::before {
+  content: counter(howto-step, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: -0.1em;
+  font-family: var(--font-display);
+  font-size: 1.75rem;
+  font-weight: 400;
+  font-style: italic;
+  color: var(--color-accent);
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.install-howto-step-label {
+  font-family: var(--font-body);
+  font-size: 1rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin-bottom: 0.35rem;
+  line-height: 1.3;
+  letter-spacing: -0.005em;
+}
+
+.install-howto-steps > li p {
+  margin: 0;
+  font-size: 0.9375rem;
+  color: var(--color-ink);
+  line-height: 1.6;
+}
+
+.install-howto-steps code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background: var(--color-accent-dim);
+  padding: 1px 6px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.install-howto-steps .install-path-slash {
+  color: var(--color-accent);
+}
+
+/* Compact 3-row "try it" table. Replaces the numbered sub-steps
+   inside step 2 to condense vertical height. Each row: mono command
+   example + one-line caption. Collapses to stacked on narrow screens. */
+.install-howto-rows {
+  margin: var(--spacing-lg) 0 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.install-howto-row {
+  display: grid;
+  grid-template-columns: minmax(0, 0.42fr) minmax(0, 0.58fr);
+  gap: var(--spacing-md);
+  align-items: baseline;
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--color-mist);
+}
+
+.install-howto-row:first-child {
+  padding-top: 0;
+}
+
+.install-howto-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.install-howto-row dt {
+  margin: 0;
   min-width: 0;
-  padding-left: var(--spacing-xl);
-  border-left: 1px solid var(--color-mist);
+}
+
+.install-howto-row dt code {
+  font-family: var(--font-mono);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-ink);
+  background: var(--color-accent-dim);
+  padding: 3px 8px;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+.install-howto-row dd {
+  margin: 0;
+  font-size: 0.9375rem;
+  line-height: 1.55;
+  color: var(--color-ink);
+}
+
+.install-howto-row dd code {
+  font-family: var(--font-mono);
+  font-size: 0.8125em;
+  background: var(--color-mist);
+  padding: 1px 5px;
+  border-radius: 3px;
+  color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.install-howto-row .install-path-slash {
+  color: var(--color-accent);
+}
+
+@media (max-width: 700px) {
+  .install-howto-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
+
+.install-howto-footer {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-xl);
+  padding-top: var(--spacing-lg);
+  border-top: 1px solid var(--color-mist);
+}
+
+.install-howto-link {
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-accent);
+  text-decoration: none;
+  display: inline-flex;
+  align-items: baseline;
+  gap: 0.35em;
+  transition: gap 0.2s var(--ease-out-quart, ease);
+}
+
+.install-howto-link:hover {
+  gap: 0.6em;
+}
+
+.install-howto-link span {
+  display: inline-block;
+  transition: transform 0.2s var(--ease-out-quart, ease);
+}
+
+.install-howto-link:hover span {
+  transform: translateX(2px);
+}
+
+/* Two-tool grid inside the "Anti-pattern tools" step. */
+.install-tool-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+}
+
+.install-tool {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-sm);
+  min-width: 0;
+}
+
+/* Solo install-tool (no grid wrapper) — used when step 3 is Chrome-only.
+   The preview screenshot sits to the left of the CTA button so neither
+   dominates vertical space. Collapses to a stack on narrow screens. */
+.install-tool--solo {
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-lg);
+  margin-top: var(--spacing-md);
+  width: 100%;
+}
+
+.install-tool--solo .install-tool-preview {
+  flex: 0 1 260px;
+  min-width: 0;
+  margin-top: 0;
+}
+
+.install-tool--solo .install-tool-cta {
+  flex: 1 1 auto;
+  margin-top: 0;
+  width: auto;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .install-tool--solo {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .install-tool--solo .install-tool-preview,
+  .install-tool--solo .install-tool-cta {
+    flex: 1 1 auto;
+  }
+}
+
+.install-tool-label {
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.install-tool-desc {
+  margin: 0;
+  font-size: 0.8125rem;
+  color: var(--color-ink);
+  line-height: 1.55;
+}
+
+/* Chrome extension screenshot preview inside the install-tool column */
+.install-tool-preview {
+  display: block;
+  margin-top: var(--spacing-sm);
+  border: 1px solid var(--color-mist);
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  background: var(--color-paper);
+  transition: border-color var(--duration-fast) var(--ease-out, ease),
+              transform var(--duration-fast) var(--ease-out, ease);
+}
+
+.install-tool-preview:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-1px);
+}
+
+.install-tool-preview img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.install-tool-preview-caption {
+  display: block;
+  padding: 0.4rem 0.75rem;
+  font-family: var(--font-body);
+  font-size: 0.75rem;
+  color: var(--color-ash);
+  border-top: 1px solid var(--color-mist);
+}
+
+/* "Install from Chrome Web Store" uses the standard .btn .btn-primary
+   styles; this modifier only adds layout (full width + top spacing). */
+.install-tool-cta {
+  margin-top: var(--spacing-sm);
+  width: 100%;
 }
 
 .install-alts-label {
@@ -3025,6 +3416,7 @@ code {
   color: var(--color-accent);
 }
 
+
 .install-path-subcommands {
   display: flex;
   flex-direction: column;
@@ -3112,6 +3504,7 @@ code {
   font-size: 0.75rem;
   color: var(--color-ash);
   line-height: 1.5;
+  text-wrap: pretty;
 }
 
 .install-cmd-note code {
@@ -3121,6 +3514,11 @@ code {
   padding: 2px 5px;
   border-radius: 3px;
   color: var(--color-ink);
+  white-space: nowrap;
+}
+
+.install-cmd-note a {
+  white-space: nowrap;
 }
 
 
@@ -3311,11 +3709,15 @@ a.install-updated-ref:hover {
     max-width: calc(100vw - var(--spacing-md) * 2);
   }
 
-  .install-primary-alts {
+  .install-primary-howto {
     padding-left: 0;
     padding-top: var(--spacing-lg);
     border-left: none;
     border-top: 1px solid var(--color-mist);
+  }
+
+  .install-tool-grid {
+    grid-template-columns: 1fr;
   }
 
   .install-path-primary {

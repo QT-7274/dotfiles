@@ -49,7 +49,7 @@
     "dev": "bun run server/index.js",
     "preview": "bun run build && wrangler pages dev",
     "deploy": "bun run build && wrangler pages deploy build/",
-    "test": "bun test tests/build.test.js tests/detect-antipatterns.test.js && node --test tests/detect-antipatterns-fixtures.test.mjs && node --test tests/detect-antipatterns-browser.test.mjs && node --test tests/cleanup-deprecated.test.mjs",
+    "test": "bun test tests/build.test.js tests/detect-antipatterns.test.js && node --test tests/detect-antipatterns-fixtures.test.mjs && node --test tests/detect-antipatterns-browser.test.mjs && node --test tests/cleanup-deprecated.test.mjs && node --test tests/live-wrap.test.mjs && node --test tests/live-accept.test.mjs && node --test tests/live-inject.test.mjs && node --test tests/live-server.test.mjs && node --test tests/framework-fixtures.test.mjs",
     "prepack": "cp README.md README.repo.md && cp README.npm.md README.md",
     "postpack": "cp README.repo.md README.md && rm README.repo.md",
     "screenshot": "bun run scripts/screenshot-antipatterns.js",
@@ -63,9 +63,16 @@
     "puppeteer": "^24.39.1"
   },
   "devDependencies": {
+    "@ai-sdk/anthropic": "^3.0.69",
+    "@ai-sdk/openai": "^3.0.53",
+    "@anthropic-ai/claude-agent-sdk": "^0.2.110",
+    "@google/genai": "^1.50.1",
+    "ai": "^6.0.162",
     "archiver": "^7.0.1",
+    "modern-screenshot": "^4.7.0",
     "motion": "^12.38.0",
     "playwright": "^1.58.2",
-    "wrangler": "^4.75.0"
+    "wrangler": "^4.75.0",
+    "zod": "^4.3.6"
   }
 }

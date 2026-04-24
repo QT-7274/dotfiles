@@ -61,6 +61,78 @@ export function renderCommandDemo(commandId) {
         </div>
       `;
     }
+    // craft is the full end-to-end flow, show the four stages
+    if (commandId === 'craft') {
+      return `
+        <div class="demo-container">
+          <div class="demo-viewport" style="padding: var(--spacing-lg); font-size: 13px; line-height: 1.6;">
+            <div style="display: flex; flex-direction: column; gap: 16px; color: var(--color-ash);">
+              <div style="font-size: 14px; color: var(--color-text); font-weight: 600;">Shape, reference, build, iterate</div>
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">1. Shape</span>
+                  </div>
+                  <span style="opacity: 0.8;">Runs <code style="font-size: 11px;">/impeccable shape</code> internally to build a design brief from discovery questions. No code yet.</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">2. Reference</span>
+                  </div>
+                  <span style="opacity: 0.8;">Loads the right reference files for the feature (spatial design, typography, motion, color) based on what the brief calls for.</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">3. Build</span>
+                  </div>
+                  <span style="opacity: 0.8;">Implements structure, spacing, type, color, states, motion, responsive. Every decision traces back to the brief.</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">4. Visual iteration</span>
+                  </div>
+                  <span style="opacity: 0.8;">Opens the result in a browser, checks against the brief and anti-pattern list, refines until the polish bar is high.</span>
+                </div>
+              </div>
+              <div style="font-size: 12px; opacity: 0.5; margin-top: 2px; font-style: italic;">The full shape-then-build flow in one command. Best for brand-new features.</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+    // teach sets up the project's design context, show the flow
+    if (commandId === 'teach') {
+      return `
+        <div class="demo-container">
+          <div class="demo-viewport" style="padding: var(--spacing-lg); font-size: 13px; line-height: 1.6;">
+            <div style="display: flex; flex-direction: column; gap: 16px; color: var(--color-ash);">
+              <div style="font-size: 14px; color: var(--color-text); font-weight: 600;">One-time project setup</div>
+              <div style="display: flex; flex-direction: column; gap: 14px;">
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">1. Explore</span>
+                  </div>
+                  <span style="opacity: 0.8;">Scans the codebase for brand assets, existing design tokens, typography, components, and documentation.</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">2. Interview</span>
+                  </div>
+                  <span style="opacity: 0.8;">Asks about audience, brand personality, aesthetic direction, and accessibility needs. Skips anything it can infer from the code.</span>
+                </div>
+                <div style="display: flex; flex-direction: column; gap: 4px;">
+                  <div style="display: flex; gap: 8px; align-items: baseline;">
+                    <span style="color: var(--spread-accent, var(--color-accent)); font-weight: 600; font-size: 12px;">3. Save</span>
+                  </div>
+                  <span style="opacity: 0.8;">Writes a <code style="font-size: 11px;">PRODUCT.md</code> file with users, brand, aesthetic direction, and design principles. Every future command reads it automatically.</span>
+                </div>
+              </div>
+              <div style="font-size: 12px; opacity: 0.5; margin-top: 2px; font-style: italic;">Run once per project. Then forget it exists.</div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
     // shape is a planning skill — show the process
     if (commandId === 'shape') {
       return `

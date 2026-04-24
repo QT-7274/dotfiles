@@ -47,10 +47,68 @@ export async function getSkills() {
 	return skills;
 }
 
-// Read commands (user-invocable skills)
+// Read a short tagline for a command from its editorial file
+// (content/site/skills/<id>.md). Returns null if the file or tagline is
+// missing. Taglines are used by UI surfaces that need a human-friendly
+// one-liner; `description` stays optimized for auto-trigger matching.
+async function readCommandTagline(id) {
+	const editorialPath = join(PROJECT_ROOT, "content/site/skills", `${id}.md`);
+	if (!existsSync(editorialPath)) return null;
+	try {
+		const raw = await readFileContent(editorialPath);
+		const match = raw.match(/^---\n([\s\S]*?)\n---/);
+		if (!match) return null;
+		const taglineMatch = match[1].match(/tagline:\s*"([^"]+)"/);
+		return taglineMatch ? taglineMatch[1] : null;
+	} catch {
+		return null;
+	}
+}
+
+// Read commands. After the v3.0 consolidation, commands are sub-commands of
+// /impeccable. Read them from command-metadata.json and include the root
+// impeccable skill itself so UI surfaces (cheatsheet, magazine spread) can
+// list them.
 export async function getCommands() {
 	const allSkills = await getSkills();
-	return allSkills.filter(s => s.userInvocable);
+	const metadataPath = join(PROJECT_ROOT, "source/skills/impeccable/scripts/command-metadata.json");
+
+	const commands = [];
+	const impeccable = allSkills.find(s => s.name === "impeccable");
+	if (impeccable) {
+		commands.push({
+			id: "impeccable",
+			name: "impeccable",
+			description: impeccable.description,
+			tagline: await readCommandTagline("impeccable"),
+			userInvocable: true,
+		});
+	}
+
+	if (existsSync(metadataPath)) {
+		try {
+			const raw = await readFileContent(metadataPath);
+			const metadata = JSON.parse(raw);
+			for (const [id, meta] of Object.entries(metadata)) {
+				commands.push({
+					id,
+					name: id,
+					description: meta.description,
+					tagline: await readCommandTagline(id),
+					userInvocable: true,
+				});
+			}
+		} catch (error) {
+			console.error("Error reading command metadata:", error);
+		}
+	}
+
+	// Fallback: return just user-invocable skills if no metadata
+	if (commands.length === 0) {
+		return allSkills.filter(s => s.userInvocable);
+	}
+
+	return commands;
 }
 
 // Get command/skill source content

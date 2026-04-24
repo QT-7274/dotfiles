@@ -13,6 +13,7 @@ import {
   removeDeprecatedSkills,
   cleanSkillsLock,
   cleanup,
+  loadLock,
 } from '../source/skills/impeccable/scripts/cleanup-deprecated.mjs';
 
 function makeTmpDir() {
@@ -68,6 +69,45 @@ describe('cleanup-deprecated', () => {
     it('returns false for non-existent directory', () => {
       assert.equal(isImpeccableSkill(join(tmp, 'nope')), false);
     });
+
+    it('returns true when lock source says pbakaus/impeccable, even if SKILL.md never mentions it', () => {
+      const dir = writeSkill(tmp, '.claude', 'harden', 'A custom skill with no pack mention.');
+      const lock = {
+        skills: { harden: { source: 'pbakaus/impeccable' } },
+      };
+      assert.equal(isImpeccableSkill(dir, { skillName: 'harden', lock }), true);
+    });
+
+    it('returns false when lock source is a different pack', () => {
+      const dir = writeSkill(tmp, '.claude', 'harden', 'A custom skill with no pack mention.');
+      const lock = {
+        skills: { harden: { source: 'someone-else/pack' } },
+      };
+      assert.equal(isImpeccableSkill(dir, { skillName: 'harden', lock }), false);
+    });
+
+    it('falls back to SKILL.md content when no lock entry exists', () => {
+      const dir = writeSkill(tmp, '.claude', 'harden', 'Invoke /impeccable to harden.');
+      const lock = { skills: {} };
+      assert.equal(isImpeccableSkill(dir, { skillName: 'harden', lock }), true);
+    });
+  });
+
+  describe('loadLock', () => {
+    it('returns null when skills-lock.json is missing', () => {
+      assert.equal(loadLock(tmp), null);
+    });
+
+    it('parses skills-lock.json when present', () => {
+      const lock = { version: 1, skills: { arrange: { source: 'pbakaus/impeccable' } } };
+      writeFileSync(join(tmp, 'skills-lock.json'), JSON.stringify(lock), 'utf-8');
+      assert.deepEqual(loadLock(tmp), lock);
+    });
+
+    it('returns null on malformed JSON', () => {
+      writeFileSync(join(tmp, 'skills-lock.json'), '{not json', 'utf-8');
+      assert.equal(loadLock(tmp), null);
+    });
   });
 
   describe('buildTargetNames', () => {
@@ -77,7 +117,7 @@ describe('cleanup-deprecated', () => {
       assert.ok(names.includes('i-arrange'));
       assert.ok(names.includes('frontend-design'));
       assert.ok(names.includes('i-frontend-design'));
-      assert.equal(names.length, 12); // 6 deprecated * 2
+      assert.equal(names.length, 46); // 23 deprecated * 2
     });
   });
 
@@ -128,11 +168,79 @@ describe('cleanup-deprecated', () => {
     });
 
     it('leaves non-deprecated skills alone', () => {
-      writeSkill(tmp, '.claude', 'polish', 'Invoke /impeccable first.');
+      writeSkill(tmp, '.claude', 'my-custom-skill', 'Invoke /impeccable first.');
       writeSkill(tmp, '.claude', 'arrange', 'Invoke /impeccable first.');
       const deleted = removeDeprecatedSkills(tmp);
       assert.equal(deleted.length, 1); // only arrange
-      assert.equal(existsSync(join(tmp, '.claude', 'skills', 'polish')), true);
+      assert.equal(existsSync(join(tmp, '.claude', 'skills', 'my-custom-skill')), true);
+    });
+
+    it('deletes a stock v2.x harden skill with no lock file via the fingerprint fallback', () => {
+      // Reproduces the no-lock-file install path: user installed via
+      // submodule or manual copy, so skills-lock.json never existed. The
+      // v2.x harden SKILL.md never contained the word "impeccable", but
+      // does contain the distinctive description fingerprint.
+      const body = [
+        '---',
+        'name: harden',
+        'description: "Make interfaces production-ready: error handling, empty states, onboarding flows, i18n, text overflow, and edge case management."',
+        '---',
+        '',
+        'Strengthen interfaces against edge cases.',
+      ].join('\n');
+      writeSkill(tmp, '.claude', 'harden', body);
+      const deleted = removeDeprecatedSkills(tmp);
+      assert.equal(deleted.length, 1);
+      assert.equal(existsSync(join(tmp, '.claude', 'skills', 'harden')), false);
+    });
+
+    it('deletes a stock v2.x optimize skill with no lock file via the fingerprint fallback', () => {
+      const body = [
+        '---',
+        'name: optimize',
+        'description: "Diagnoses and fixes UI performance across loading speed, rendering, animations, images, and bundle size."',
+        '---',
+        '',
+        'Identify and fix performance issues.',
+      ].join('\n');
+      writeSkill(tmp, '.claude', 'optimize', body);
+      const deleted = removeDeprecatedSkills(tmp);
+      assert.equal(deleted.length, 1);
+    });
+
+    it('does NOT delete a user-written harden skill that lacks both the pack word and the fingerprint', () => {
+      writeSkill(tmp, '.claude', 'harden', 'My custom skill for hardening cookies against CSRF.');
+      const deleted = removeDeprecatedSkills(tmp);
+      assert.equal(deleted.length, 0);
+      assert.equal(existsSync(join(tmp, '.claude', 'skills', 'harden')), true);
+    });
+
+    it('deletes skills whose SKILL.md never mentions impeccable when the lock claims them', () => {
+      // Reproduces the "orphan dir" bug: the old SKILL.md bodies described
+      // each skill on its own merits and never said the word "impeccable",
+      // so the content heuristic returned false. The lock source is the
+      // authoritative signal.
+      writeSkill(tmp, '.claude', 'harden', '# Harden\n\nA custom skill with zero pack-name mentions.');
+      const lock = {
+        version: 1,
+        skills: { harden: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'x' } },
+      };
+      writeFileSync(join(tmp, 'skills-lock.json'), JSON.stringify(lock), 'utf-8');
+      const deleted = removeDeprecatedSkills(tmp);
+      assert.equal(deleted.length, 1);
+      assert.equal(existsSync(join(tmp, '.claude', 'skills', 'harden')), false);
+    });
+
+    it('does NOT delete a same-named skill owned by a different pack', () => {
+      writeSkill(tmp, '.claude', 'extract', 'Some user-written extract skill.');
+      const lock = {
+        version: 1,
+        skills: { extract: { source: 'someone-else/pack' } },
+      };
+      writeFileSync(join(tmp, 'skills-lock.json'), JSON.stringify(lock), 'utf-8');
+      const deleted = removeDeprecatedSkills(tmp);
+      assert.equal(deleted.length, 0);
+      assert.equal(existsSync(join(tmp, '.claude', 'skills', 'extract')), true);
     });
 
     it('handles symlinks to deprecated skills', () => {
@@ -152,7 +260,7 @@ describe('cleanup-deprecated', () => {
         version: 1,
         skills: {
           arrange: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'abc' },
-          polish: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'def' },
+          impeccable: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'def' },
           'resolve-reviews': { source: 'pbakaus/agent-reviews', sourceType: 'github', computedHash: 'ghi' },
         },
       };
@@ -161,7 +269,7 @@ describe('cleanup-deprecated', () => {
       assert.deepEqual(removed, ['arrange']);
       const updated = JSON.parse(readFileSync(join(tmp, 'skills-lock.json'), 'utf-8'));
       assert.equal(updated.skills.arrange, undefined);
-      assert.ok(updated.skills.polish); // not deprecated
+      assert.ok(updated.skills.impeccable); // not deprecated
       assert.ok(updated.skills['resolve-reviews']); // different source
     });
 
@@ -209,7 +317,7 @@ describe('cleanup-deprecated', () => {
         skills: {
           arrange: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'a' },
           extract: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'b' },
-          polish: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'c' },
+          impeccable: { source: 'pbakaus/impeccable', sourceType: 'github', computedHash: 'c' },
         },
       };
       writeFileSync(join(tmp, 'skills-lock.json'), JSON.stringify(lock), 'utf-8');
@@ -221,13 +329,13 @@ describe('cleanup-deprecated', () => {
       assert.equal(existsSync(join(tmp, '.agents', 'skills', 'arrange')), false);
 
       const updated = JSON.parse(readFileSync(join(tmp, 'skills-lock.json'), 'utf-8'));
-      assert.ok(updated.skills.polish);
+      assert.ok(updated.skills.impeccable); // not deprecated
       assert.equal(updated.skills.arrange, undefined);
       assert.equal(updated.skills.extract, undefined);
     });
 
     it('is a no-op when nothing needs cleaning', () => {
-      writeSkill(tmp, '.claude', 'polish', 'Invoke /impeccable.');
+      writeSkill(tmp, '.claude', 'my-custom-skill', 'Invoke /impeccable.');
       const result = cleanup(tmp);
       assert.equal(result.deletedPaths.length, 0);
       assert.equal(result.removedLockEntries.length, 0);

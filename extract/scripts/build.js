@@ -7,8 +7,9 @@
  * - Cursor: .cursor/skills/
  * - Claude Code: .claude/skills/
  * - Gemini: .gemini/skills/
- * - Codex: .codex/skills/
- * - Agents: .agents/skills/ (VS Code Copilot + Antigravity)
+ * - Codex: dist/codex/ only (OpenAI-metadata bundle; not synced to repo root)
+ * - Agents: .agents/skills/ (Codex repo/user installs)
+ * - GitHub: .github/skills/ (GitHub Copilot)
  *
  * Also assembles a universal ZIP containing all providers,
  * and builds Tailwind CSS for production deployment.
@@ -17,7 +18,7 @@
 import path from 'path';
 import fs from 'fs';
 import { fileURLToPath } from 'url';
-import { readSourceFiles, readPatterns } from './lib/utils.js';
+import { readSourceFiles, readPatterns, stashPerProjectArtifacts, restorePerProjectArtifacts } from './lib/utils.js';
 import { createTransformer, PROVIDERS } from './lib/transformers/index.js';
 import { createAllZips } from './lib/zip.js';
 import { generateSubPages } from './build-sub-pages.js';
@@ -27,13 +28,25 @@ import { generateSubPages } from './build-sub-pages.js';
  * Also validates that key HTML files reference the correct numbers.
  */
 function generateCounts(rootDir, skills, buildDir) {
-  // Count active (non-deprecated) user-invocable commands
-  const activeCommands = skills.filter(s => {
-    if (!s.userInvocable) return false;
-    const content = fs.readFileSync(s.filePath, 'utf-8');
-    return !content.includes('DEPRECATED');
-  });
-  const commandCount = activeCommands.length;
+  // Count active commands. After the v3.0 consolidation, commands are sub-commands
+  // of /impeccable. Count them from the command router table in SKILL.md.
+  const impeccableSkill = skills.find(s => s.name === 'impeccable');
+  let commandCount;
+  if (impeccableSkill) {
+    // Count lines in the command table that start with | `...` | — tolerant
+    // of argument hints inside the backticks (e.g. `craft [feature]`) and of
+    // multi-word commands (e.g. `pin <command>`).
+    const routerMatches = impeccableSkill.body.match(/^\| `[^`]+` \|/gm);
+    commandCount = routerMatches ? routerMatches.length : 0;
+  } else {
+    // Fallback: count user-invocable skills
+    const activeCommands = skills.filter(s => {
+      if (!s.userInvocable) return false;
+      const content = fs.readFileSync(s.filePath, 'utf-8');
+      return !content.includes('DEPRECATED');
+    });
+    commandCount = activeCommands.length;
+  }
 
   // Count detection rules from impeccable package
   const detectPkgPath = path.join(rootDir, 'src/detect-antipatterns.mjs');
@@ -56,7 +69,6 @@ function generateCounts(rootDir, skills, buildDir) {
   // Validate counts in key files
   const filesToCheck = [
     'public/index.html',
-    'public/cheatsheet.html',
     'README.md',
     'NOTICE.md',
     'AGENTS.md',
@@ -73,7 +85,7 @@ function generateCounts(rootDir, skills, buildDir) {
     // Check for stale command counts (look for "N commands" or "N skills" patterns)
     // Strip changelog list content to avoid flagging historical counts
     const strippedContent = content.replace(/<ul class="changelog-items">[\s\S]*?<\/ul>/g, '');
-    const countPattern = /\b(\d+)\s+(design\s+)?(commands|skills|steering commands)/gi;
+    const countPattern = /\b(\d+)\s+(design\s+)?(commands|sub-commands|skills|steering commands)/gi;
     for (const match of strippedContent.matchAll(countPattern)) {
       const num = parseInt(match[1]);
       // Allow 1 (for "1 skill") and the correct count
@@ -102,64 +114,16 @@ function generateCounts(rootDir, skills, buildDir) {
   return errors;
 }
 
-/**
- * Cross-validate that every detection rule with a `skillGuideline` has a
- * matching DON'T line in the right section of source/skills/impeccable/SKILL.md.
- *
- * This is the linchpin of the single-source-of-truth design: it catches drift
- * between the engine's ANTIPATTERNS and the human-written DO/DON'T prose.
- *
- * Returns the number of validation errors. Build fails if > 0.
- */
-function validateAntipatternRules(rootDir) {
-  const detectPath = path.join(rootDir, 'src/detect-antipatterns.mjs');
-  const src = fs.readFileSync(detectPath, 'utf-8');
-  const apMatch = src.match(/const ANTIPATTERNS = \[([\s\S]*?)\n\];/);
-  if (!apMatch) {
-    console.error('  ❌ Could not extract ANTIPATTERNS from detect-antipatterns.mjs');
-    return 1;
-  }
-  const antipatterns = new Function(`return [${apMatch[1]}]`)();
-  const { antipatterns: skillSections } = readPatterns(rootDir);
-
-  // Build section -> joined-DON'T-text lookup for substring matching.
-  // Lowercased for case-insensitive matching: my XML refactor uses sentence-
-  // case "DO NOT nest cards" while the rules' skillGuideline strings are
-  // sentence-cased "Nest cards inside cards" (a fragment from the original
-  // markdown bullet "**DON'T**: Nest cards inside cards.").
-  const sectionText = {};
-  for (const section of skillSections) {
-    sectionText[section.name] = section.items.join('\n').toLowerCase();
-  }
-
+function validateSkillFrontmatter(skills) {
   let errors = 0;
-  let validated = 0;
-  for (const rule of antipatterns) {
-    if (!rule.skillGuideline) continue;
-    if (!rule.skillSection) {
-      console.error(`  ❌ Rule '${rule.id}' declares skillGuideline but no skillSection`);
+
+  for (const skill of skills) {
+    if (skill.description && skill.description.length > 1024) {
+      console.error(`❌ ${skill.filePath}: invalid description: exceeds maximum length of 1024 characters (${skill.description.length})`);
       errors++;
-      continue;
     }
-    const text = sectionText[rule.skillSection];
-    if (!text) {
-      console.error(`  ❌ Rule '${rule.id}': skillSection '${rule.skillSection}' has no DON'T lines in source/skills/impeccable/SKILL.md`);
-      errors++;
-      continue;
-    }
-    if (!text.includes(rule.skillGuideline.toLowerCase())) {
-      console.error(`  ❌ Rule '${rule.id}': skillGuideline '${rule.skillGuideline}' not found in any DON'T of section '${rule.skillSection}' in source/skills/impeccable/SKILL.md`);
-      errors++;
-      continue;
-    }
-    validated++;
   }
 
-  if (errors > 0) {
-    console.error(`\n❌ ${errors} anti-pattern rule(s) drift between src/detect-antipatterns.mjs and source/skills/impeccable/SKILL.md`);
-  } else {
-    console.log(`✓ Validated ${validated}/${antipatterns.length} anti-pattern rules against impeccable SKILL.md`);
-  }
   return errors;
 }
 
@@ -174,7 +138,6 @@ function validateNoEmDashes(rootDir) {
   const targets = [
     'content/site',
     'public/index.html',
-    'public/cheatsheet.html',
     'public/privacy.html',
     'scripts/build-sub-pages.js',
     'scripts/lib/sub-pages-data.js',
@@ -228,7 +191,6 @@ function validateNoEmDashes(rootDir) {
 function validateSiteHeader(rootDir) {
   const pages = [
     'public/index.html',
-    'public/cheatsheet.html',
     'public/privacy.html',
   ];
   const marker = '<!-- site-header v1 -->';
@@ -281,7 +243,6 @@ const DIST_DIR = path.join(ROOT_DIR, 'dist');
 async function buildStaticSite(extraEntrypoints = []) {
   const entrypoints = [
     path.join(ROOT_DIR, 'public', 'index.html'),
-    path.join(ROOT_DIR, 'public', 'cheatsheet.html'),
     path.join(ROOT_DIR, 'public', 'privacy.html'),
     ...extraEntrypoints,
   ];
@@ -298,7 +259,7 @@ async function buildStaticSite(extraEntrypoints = []) {
       // Older Bun versions (e.g. the one Cloudflare Pages ships) don't dedupe
       // shared CSS/JS chunks across HTML entrypoints — every entry tries to
       // emit its own copy, and three different sub-pages all named index.html
-      // (under skills/, tutorials/, anti-patterns/) collide on the same
+      // (under docs/, tutorials/, slop/) collide on the same
       // chunk filename. Including [dir] in the chunk template scopes each
       // chunk to its entry's directory so the names stay unique even when
       // dedupe is off. Local Bun still emits a single shared chunk; CF Bun
@@ -328,7 +289,7 @@ async function buildStaticSite(extraEntrypoints = []) {
     const cssFiles = result.outputs.filter(o => o.path.endsWith('.css'));
 
     // When entrypoints span multiple depths under public/ (e.g. public/index.html
-    // + public/skills/polish.html), Bun's HTML loader preserves the full public/
+    // + public/docs/polish.html), Bun's HTML loader preserves the full public/
     // prefix in the output tree. Flatten build/public/* up to build/*.
     const nestedPublic = path.join(outdir, 'public');
     if (fs.existsSync(nestedPublic)) {
@@ -371,8 +332,8 @@ async function buildStaticSite(extraEntrypoints = []) {
 /**
  * Assemble universal directory from all provider outputs
  */
-function assembleUniversal(distDir, suffix = '') {
-  const universalDir = path.join(distDir, `universal${suffix}`);
+function assembleUniversal(distDir) {
+  const universalDir = path.join(distDir, 'universal');
 
   // Clean and recreate
   if (fs.existsSync(universalDir)) {
@@ -382,7 +343,7 @@ function assembleUniversal(distDir, suffix = '') {
   const providerConfigs = Object.values(PROVIDERS);
 
   for (const { provider, configDir } of providerConfigs) {
-    const src = path.join(distDir, `${provider}${suffix}`, configDir);
+    const src = path.join(distDir, provider, configDir);
     const dest = path.join(universalDir, configDir);
     if (fs.existsSync(src)) {
       copyDirSync(src, dest);
@@ -391,30 +352,30 @@ function assembleUniversal(distDir, suffix = '') {
 
   // Add a visible README so macOS users don't see an empty folder
   // (all provider dirs are dotfiles, hidden by default in Finder)
-  const prefixNote = suffix ? '\nSkills in this bundle are prefixed with i- (e.g. /i-audit) to avoid conflicts.\n' : '';
   fs.writeFileSync(path.join(universalDir, 'README.txt'),
-`Impeccable — Design fluency for AI harnesses
+`Impeccable. Design fluency for AI harnesses.
 https://impeccable.style
-${prefixNote}
+
 This folder contains skills for all supported tools:
 
-  .cursor/    → Cursor
-  .claude/    → Claude Code
-  .gemini/    → Gemini CLI
-  .codex/     → Codex CLI
-  .agents/    → VS Code Copilot, Antigravity
-  .kiro/      → Kiro
-  .opencode/  → OpenCode
-  .pi/        → Pi
-  .trae-cn/   → Trae China
-  .trae/      → Trae International
+  .cursor/    -> Cursor
+  .claude/    -> Claude Code
+  .gemini/    -> Gemini CLI
+  .codex/     -> Legacy bundle folder in this ZIP (Codex CLI uses .agents/)
+  .agents/    -> Codex CLI
+  .github/    -> GitHub Copilot
+  .kiro/      -> Kiro
+  .opencode/  -> OpenCode
+  .pi/        -> Pi
+  .trae-cn/   -> Trae China
+  .trae/      -> Trae International
 
 To install, copy the relevant folder(s) into your project root.
-These are hidden folders (dotfiles) — press Cmd+Shift+. in Finder to see them.
+For Codex, repo and user skill installs come from .agents/skills.
+These are hidden folders (dotfiles). Press Cmd+Shift+. in Finder to see them.
 `);
 
-  const label = suffix ? ' (prefixed)' : '';
-  console.log(`✓ Assembled universal${label} directory (${providerConfigs.length} providers)`);
+  console.log(`✓ Assembled universal directory (${providerConfigs.length} providers)`);
 }
 
 /**
@@ -435,8 +396,49 @@ function generateApiData(buildDir, skills, patterns) {
   }));
   fs.writeFileSync(path.join(apiDir, 'skills.json'), JSON.stringify(skillsData));
 
-  // commands.json (user-invocable skills only)
-  const commandsData = skillsData.filter(s => s.userInvocable);
+  // commands.json - after v3.0 consolidation, commands are sub-commands of
+  // /impeccable. Load them from command-metadata.json and include the root
+  // impeccable skill itself so UI surfaces like the cheatsheet can list them.
+  // Each entry also picks up a short `tagline` from its editorial file
+  // (content/site/skills/<id>.md) when one exists. Taglines are used by UI
+  // surfaces that need a human-friendly one-liner, while `description` stays
+  // optimized for auto-trigger keyword matching in the AI harness.
+  const readTagline = (id) => {
+    const editorialPath = path.join(ROOT_DIR, 'content/site/skills', `${id}.md`);
+    if (!fs.existsSync(editorialPath)) return null;
+    const raw = fs.readFileSync(editorialPath, 'utf-8');
+    const match = raw.match(/^---\n([\s\S]*?)\n---/);
+    if (!match) return null;
+    const taglineMatch = match[1].match(/tagline:\s*"([^"]+)"/);
+    return taglineMatch ? taglineMatch[1] : null;
+  };
+
+  const metadataPath = path.join(ROOT_DIR, 'source/skills/impeccable/scripts/command-metadata.json');
+  if (!fs.existsSync(metadataPath)) {
+    throw new Error(`command-metadata.json is missing at ${metadataPath}. This file is required to generate the commands API.`);
+  }
+  const impeccable = skills.find(s => s.name === 'impeccable');
+  if (!impeccable) {
+    throw new Error('impeccable skill not found in source/skills/. The build system expects a single impeccable skill.');
+  }
+
+  const metadata = JSON.parse(fs.readFileSync(metadataPath, 'utf-8'));
+  const commandsData = [
+    {
+      id: 'impeccable',
+      name: 'impeccable',
+      description: impeccable.description,
+      tagline: readTagline('impeccable'),
+      userInvocable: true,
+    },
+    ...Object.entries(metadata).map(([id, meta]) => ({
+      id,
+      name: id,
+      description: meta.description,
+      tagline: readTagline(id),
+      userInvocable: true,
+    })),
+  ];
   fs.writeFileSync(path.join(apiDir, 'commands.json'), JSON.stringify(commandsData));
 
   // patterns.json
@@ -454,7 +456,8 @@ function generateApiData(buildDir, skills, patterns) {
     );
   }
 
-  console.log(`✓ Generated static API data (${skillsData.length} skills, ${commandsData.length} commands)`);
+  const skillWord = skillsData.length === 1 ? 'skill' : 'skills';
+  console.log(`✓ Generated static API data (${skillsData.length} ${skillWord}, ${commandsData.length} commands)`);
 }
 
 /**
@@ -523,12 +526,18 @@ function generateCFConfig(buildDir) {
 `;
   fs.writeFileSync(path.join(buildDir, '_headers'), headers);
 
-  // _redirects: rewrite JSON API routes to static files (200 = rewrite, not redirect)
+  // _redirects: rewrite JSON API routes to static files (200 = rewrite, not redirect).
+  // Plus permanent redirects for legacy URLs.
   const redirects = `/api/skills /_data/api/skills.json 200
 /api/commands /_data/api/commands.json 200
 /api/patterns /_data/api/patterns.json 200
 /api/command-source/:id /_data/api/command-source/:id.json 200
-/gallery /visual-mode#try-it-live 301
+/gallery /slop#try-it-live 301
+/cheatsheet /docs 301
+/skills /docs 301
+/skills/:id /docs/:id 301
+/anti-patterns /slop#catalog 301
+/visual-mode /slop#see-it 301
 `;
   fs.writeFileSync(path.join(buildDir, '_redirects'), redirects);
 
@@ -550,7 +559,7 @@ function generateCFConfig(buildDir) {
 async function build() {
   console.log('🔨 Building cross-provider design skills...\n');
 
-  // Pre-generate sub-pages (skills, anti-patterns, tutorials) from source
+  // Pre-generate sub-pages (docs, slop, tutorials, live-mode, designing) from source
   console.log('📝 Generating sub-pages...');
   const { files: subPageFiles } = await generateSubPages(ROOT_DIR);
   console.log(`✓ Generated ${subPageFiles.length} sub-page(s)\n`);
@@ -588,20 +597,23 @@ async function build() {
   const userInvocableCount = skills.filter(s => s.userInvocable).length;
   console.log(`📖 Read ${skills.length} skills (${userInvocableCount} user-invocable) and ${patterns.patterns.length + patterns.antipatterns.length} pattern categories\n`);
 
+  const frontmatterErrors = validateSkillFrontmatter(skills);
+  if (frontmatterErrors > 0) {
+    process.exit(1);
+  }
+
   // Read skills version from plugin.json
   const pluginJson = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '.claude-plugin/plugin.json'), 'utf-8'));
   const skillsVersion = pluginJson.version;
 
-  // Transform for each provider (unprefixed + prefixed)
+  // Transform for each provider
   for (const config of Object.values(PROVIDERS)) {
     const transform = createTransformer(config);
     transform(skills, DIST_DIR, { skillsVersion });
-    transform(skills, DIST_DIR, { prefix: 'i-', outputSuffix: '-prefixed', skillsVersion });
   }
 
-  // Assemble universal directory (unprefixed and prefixed)
+  // Assemble universal directory
   assembleUniversal(DIST_DIR);
-  assembleUniversal(DIST_DIR, '-prefixed');
 
   // Create ZIP bundles (individual + universal)
   await createAllZips(DIST_DIR);
@@ -611,16 +623,23 @@ async function build() {
   copyDistToBuild(DIST_DIR, buildDir);
   generateCFConfig(buildDir);
 
-  // Copy all provider outputs to project root for local testing
-  const syncConfigs = Object.values(PROVIDERS);
+  // Copy all provider outputs to project root for local testing.
+  // `.codex/` is intentionally excluded: Codex no longer consumes that layout; keep
+  // generated bundles under dist/ only.
+  const syncConfigs = Object.values(PROVIDERS).filter(({ configDir }) => configDir !== '.codex');
 
   for (const { provider, configDir } of syncConfigs) {
     const skillsSrc = path.join(DIST_DIR, provider, configDir, 'skills');
     const skillsDest = path.join(ROOT_DIR, configDir, 'skills');
 
     if (fs.existsSync(skillsSrc)) {
+      // Preserve per-project script artifacts (e.g. live-mode config.json)
+      // across the rm + recopy. The build intentionally doesn't ship them,
+      // so without this the sync destroys local state on every rebuild.
+      const stashed = stashPerProjectArtifacts(skillsDest);
       if (fs.existsSync(skillsDest)) fs.rmSync(skillsDest, { recursive: true });
       copyDirSync(skillsSrc, skillsDest);
+      restorePerProjectArtifacts(skillsDest, stashed);
     }
   }
 
@@ -630,6 +649,10 @@ async function build() {
   const deprecatedLocalSkills = [
     'frontend-design', 'teach-impeccable',
     'arrange', 'normalize', 'onboard', 'extract',
+    // v3.0 consolidation: standalone skills -> /impeccable sub-commands
+    'adapt', 'animate', 'audit', 'bolder', 'clarify', 'colorize',
+    'critique', 'delight', 'distill', 'harden', 'layout', 'optimize',
+    'overdrive', 'polish', 'quieter', 'shape', 'typeset',
   ];
   for (const { configDir } of syncConfigs) {
     for (const name of deprecatedLocalSkills) {
@@ -644,16 +667,13 @@ async function build() {
   // Generate authoritative counts and validate references
   const countErrors = generateCounts(ROOT_DIR, skills, buildDir);
 
-  // Cross-validate engine rules against impeccable SKILL.md DON'Ts
-  const validationErrors = validateAntipatternRules(ROOT_DIR);
-
   // Verify every hand-authored HTML page carries the shared site header
   const headerErrors = validateSiteHeader(ROOT_DIR);
 
   // Scan user-facing copy for em dashes
   const emDashErrors = validateNoEmDashes(ROOT_DIR);
 
-  if (countErrors > 0 || validationErrors > 0 || headerErrors > 0 || emDashErrors > 0) {
+  if (countErrors > 0 || headerErrors > 0 || emDashErrors > 0) {
     process.exit(1);
   }
 

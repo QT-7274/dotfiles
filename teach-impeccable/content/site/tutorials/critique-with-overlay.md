@@ -1,7 +1,7 @@
 ---
 title: Critique with the visual overlay
-tagline: "Use /critique plus the browser overlay to review a live page with ground truth."
-order: 2
+tagline: "Use /impeccable critique plus the browser overlay to review a live page with ground truth."
+order: 4
 description: "Run a full design critique that combines LLM assessment, the automated detector, and a live browser overlay so you can see exactly which elements trigger which anti-patterns on the page you're looking at."
 ---
 
@@ -17,25 +17,25 @@ Total time: about ten minutes.
 - A harness with browser automation available (Claude Code with the Chrome extension, or similar).
 - A page you want to critique, either local (`localhost:3000/pricing`) or deployed.
 
-## Step 1. Run /critique
+## Step 1. Run /impeccable critique
 
 From your harness, run:
 
 ```
-/critique the pricing page at localhost:3000/pricing
+/impeccable critique the pricing page at localhost:3000/pricing
 ```
 
 The skill kicks off two independent assessments in parallel. They run in separate sub-agents so one does not bias the other.
 
 ### What the LLM assessment does
 
-The first assessment reads your source code and, if browser automation is available, opens the live page in a new tab. It walks the full impeccable skill DO/DON'T catalog and scores the page against Nielsen's 10 heuristics, the 8-item cognitive load checklist, and the brand fit from your `.impeccable.md`.
+The first assessment reads your source code and, if browser automation is available, opens the live page in a new tab. It walks the full impeccable skill DO/DON'T catalog and scores the page against Nielsen's 10 heuristics, the 8-item cognitive load checklist, and the brand fit from your `PRODUCT.md`.
 
 It labels the tab it opens with `[LLM]` in the title so you can tell which one is which.
 
 ### What the automated detector does
 
-The second assessment runs `npx impeccable detect` against the page. This is deterministic: 25 specific pattern checks that fire or do not fire. Gradient text, purple palettes, side-tab borders, nested cards, line length problems, low contrast, tiny body text, and the rest.
+The second assessment runs `npx impeccable detect` against the page. This is deterministic: around thirty specific pattern checks that fire or do not fire. Gradient text, purple palettes, side-tab borders, nested cards, line length problems, low contrast, tiny body text, and the rest. The [full catalog](/anti-patterns) lists every rule and which layer (CLI, browser, or LLM-only) catches it.
 
 You get back a JSON list of every finding with its element selector, the rule that fired, and a short description.
 
@@ -55,17 +55,16 @@ Impeccable ships with a visual mode that highlights every detected anti-pattern 
 
 Every outlined element has a floating label naming the rule that fired. Hover an outline to see the full finding. This is exactly what you will see on your own page.
 
-You have three ways to open it:
+You have two ways to open it:
 
 1. **[Chrome extension](https://chromewebstore.google.com/detail/impeccable/bdkgmiklpdmaojlpflclinlofgjfpabf)**: one-click activation on any page. Click the Impeccable icon in the toolbar and every anti-pattern gets highlighted instantly.
-2. **Inside `/critique`**: the skill opens a browser tab labeled `[Human]` with the detector active during the browser portion of the assessment. You do not need to do anything extra.
-3. **Standalone CLI**: `npx impeccable live` starts a local server that serves the detector script. You inject it into any page by adding a `<script>` tag.
+2. **Inside `/impeccable critique`**: the skill opens a browser tab labeled `[Human]` with the detector active during the browser portion of the assessment. You do not need to do anything extra.
 
 For this tutorial, the easiest option is the Chrome extension. Install it, navigate to your pricing page, and click the Impeccable icon. You will see the overlay appear immediately on the live page.
 
 ## Step 3. Merge the two assessments
 
-Back in your harness, `/critique` has finished and produced a combined report. It looks something like:
+Back in your harness, `/impeccable critique` has finished and produced a combined report. It looks something like:
 
 ```
 AI slop verdict: FAIL
@@ -110,17 +109,18 @@ The report gives you a priority list. You can work through them one at a time, a
 
 This feedback loop is the reason the overlay matters. You see fixes land in real time, and you never ship a "fix" that did not actually satisfy the rule.
 
-## Step 5. Re-run /critique when you are done
+## Step 5. Re-run when you are done
 
-After you have worked through the priority list, run `/critique` again. The goal is a clean AI slop verdict and at least a 3.5 average on the heuristics. Cognitive load should be below 2 failures.
+After you have worked through the priority list, run `/impeccable critique` again. The goal is a clean AI slop verdict and at least a 3.5 average on the heuristics. Cognitive load should be below 2 failures.
 
 If something still fires, fix it or write a suppression comment explaining why the rule does not apply in your context (the detector respects a small set of opt-out pragmas, but use them sparingly).
 
 ## What to try next
 
-- `/audit the same page` to catch the implementation issues critique does not cover (accessibility, performance, theming).
-- `/polish` if the critique report is clean and you want the last-mile refinement pass.
-- `/distill` if critique flagged "too busy" or "cognitive load". Distill removes what should not be there.
+- [Iterate on the critique findings with Live Mode](/tutorials/iterate-live). Pick the element critique flagged, drop a comment, get three redirections hot-swapped in place, and write the accepted one back to source.
+- `/impeccable audit the same page` to catch the implementation issues critique does not cover (accessibility, performance, theming).
+- `/impeccable polish` if the critique report is clean and you want the last-mile refinement pass.
+- `/impeccable distill` if critique flagged "too busy" or "cognitive load". Distill removes what should not be there.
 
 ## Common issues
 

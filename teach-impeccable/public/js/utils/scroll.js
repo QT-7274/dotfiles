@@ -1,14 +1,15 @@
-// Instant anchor scroll - no smooth scrolling for better UX on long pages
+// Instant anchor scroll - no smooth scrolling for better UX on long pages.
+// `behavior: 'instant'` explicitly overrides any CSS `scroll-behavior: smooth`
+// from a stylesheet we don't own; `behavior: 'auto'` would defer to CSS.
 export function initAnchorScroll() {
 	document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
 		anchor.addEventListener("click", (e) => {
 			e.preventDefault();
 			const target = document.querySelector(anchor.getAttribute("href"));
 			if (target) {
-				// Instant jump with small offset for visual breathing room
 				const offset = 40;
 				const targetPosition = target.getBoundingClientRect().top + window.scrollY - offset;
-				window.scrollTo({ top: targetPosition, behavior: 'auto' });
+				window.scrollTo({ top: targetPosition, behavior: 'instant' });
 			}
 		});
 	});
@@ -75,22 +76,29 @@ export function initHashTracking() {
 		}
 	}, { passive: true });
 
-	// Handle initial hash on page load - instant jump
+	// Handle initial hash on page load — instant jump, retried on
+	// fonts.ready and window `load`. A fixed setTimeout is unreliable
+	// because async-loaded display fonts reflow the page by hundreds of
+	// pixels when they swap in; computing target position before that
+	// lands the user several sections above the right spot.
 	if (window.location.hash) {
 		const hash = window.location.hash.slice(1);
 		const target = document.getElementById(hash);
 		if (target) {
 			currentHash = hash;
-			setTimeout(() => {
+			let clicked = false;
+			const jump = () => {
 				const offset = 40;
 				const targetPosition = target.getBoundingClientRect().top + window.scrollY - offset;
-				window.scrollTo({ top: targetPosition, behavior: 'auto' });
-
-				// If it's a command deep link, activate it
-				if (hash.startsWith('cmd-') && target.classList.contains('manual-entry')) {
+				window.scrollTo({ top: targetPosition, behavior: 'instant' });
+				if (!clicked && hash.startsWith('cmd-') && target.classList.contains('manual-entry')) {
 					target.click();
+					clicked = true;
 				}
-			}, 100);
+			};
+			jump();
+			if (document.fonts?.ready) document.fonts.ready.then(jump).catch(() => {});
+			window.addEventListener('load', jump, { once: true });
 		}
 	} else {
 		// No hash — don't set one on initial load

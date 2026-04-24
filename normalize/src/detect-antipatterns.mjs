@@ -2241,6 +2241,9 @@ if (IS_BROWSER) {
       // Skip browser extension elements (Claude, etc.)
       const elId = el.id || '';
       if (elId.startsWith('claude-') || elId.startsWith('cic-')) continue;
+      // Skip the impeccable live-mode overlay (highlight, tooltip, bar, picker, toast).
+      // These are inspector chrome, not part of the user's design.
+      if (el.closest('[id^="impeccable-live-"]')) continue;
       // Skip html/body -- page-level findings go in the banner, not a full-page overlay
       if (el === document.body || el === document.documentElement) continue;
 
@@ -2294,7 +2297,14 @@ if (IS_BROWSER) {
     }
 
     // Regex-on-HTML checks (shared with Node)
-    const htmlPatternFindings = checkHtmlPatterns(document.documentElement.outerHTML);
+    // Clone the document and strip impeccable-live overlay nodes before the
+    // regex scan, so the inspector's own inline styles (transitions on top/
+    // left/width/height, etc.) don't register as page anti-patterns.
+    const docClone = document.documentElement.cloneNode(true);
+    for (const node of docClone.querySelectorAll('[id^="impeccable-live-"]')) {
+      node.remove();
+    }
+    const htmlPatternFindings = checkHtmlPatterns(docClone.outerHTML);
     if (htmlPatternFindings.length > 0) {
       const mapped = htmlPatternFindings.map(f => ({ type: f.id, detail: f.snippet })).filter(f => _ruleOk(f.type));
       pageLevelFindings.push(...mapped);
@@ -3443,124 +3453,6 @@ async function main() {
 }
 
 // ---------------------------------------------------------------------------
-// Live detection server
-// ---------------------------------------------------------------------------
-
-async function findOpenPort(start = 8400) {
-  const net = await import('node:net');
-  return new Promise((resolve) => {
-    const server = net.default.createServer();
-    server.listen(start, '127.0.0.1', () => {
-      const port = server.address().port;
-      server.close(() => resolve(port));
-    });
-    server.on('error', () => resolve(findOpenPort(start + 1)));
-  });
-}
-
-const LIVE_PID_FILE = path.join((await import('node:os')).default.tmpdir(), 'impeccable-live.json');
-
-async function liveCli() {
-  const args = process.argv.slice(2);
-  const helpMode = args.includes('--help');
-  const stopMode = args.includes('stop');
-  const portArg = args.find(a => a.startsWith('--port='));
-  const requestedPort = portArg ? parseInt(portArg.split('=')[1], 10) : null;
-
-  if (helpMode) {
-    console.log(`Usage: impeccable live [options]
-
-Start a local server that serves the browser detection overlay script.
-Inject the script into any page to scan for anti-patterns in real time.
-
-Commands:
-  live          Start the server (default)
-  live stop     Stop a running live server
-
-Options:
-  --port=PORT   Use a specific port (default: auto-detect unused port)
-  --help        Show this help message
-
-The server provides:
-  /detect.js    The detection overlay script (inject via <script> tag)
-  /health       Health check endpoint
-  /stop         Stop the server remotely`);
-    process.exit(0);
-  }
-
-  // Stop a running server
-  if (stopMode) {
-    try {
-      const info = JSON.parse(fs.readFileSync(LIVE_PID_FILE, 'utf-8'));
-      const res = await fetch(`http://localhost:${info.port}/stop`);
-      if (res.ok) {
-        console.log(`Stopped live server on port ${info.port}.`);
-      }
-    } catch {
-      console.log('No running live server found.');
-    }
-    process.exit(0);
-  }
-
-  const http = await import('node:http');
-  const scriptPath = path.join(path.dirname(new URL(import.meta.url).pathname), 'detect-antipatterns-browser.js');
-
-  let browserScript;
-  try {
-    browserScript = fs.readFileSync(scriptPath, 'utf-8');
-  } catch {
-    process.stderr.write('Error: Browser script not found. Run `npm run build:browser` first.\n');
-    process.exit(1);
-  }
-
-  const port = requestedPort || await findOpenPort();
-
-  const shutdown = () => {
-    try { fs.unlinkSync(LIVE_PID_FILE); } catch { /* ignore */ }
-    server.close();
-    process.exit(0);
-  };
-
-  const server = http.default.createServer((req, res) => {
-    // CORS headers for cross-origin injection
-    res.setHeader('Access-Control-Allow-Origin', '*');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, OPTIONS');
-    if (req.method === 'OPTIONS') { res.writeHead(204); res.end(); return; }
-
-    if (req.url === '/detect.js' || req.url === '/') {
-      res.writeHead(200, { 'Content-Type': 'application/javascript' });
-      res.end(browserScript);
-    } else if (req.url === '/health') {
-      res.writeHead(200, { 'Content-Type': 'application/json' });
-      res.end(JSON.stringify({ status: 'ok', port }));
-    } else if (req.url === '/stop') {
-      res.writeHead(200, { 'Content-Type': 'text/plain' });
-      res.end('stopping');
-      shutdown();
-    } else {
-      res.writeHead(404);
-      res.end('Not found');
-    }
-  });
-
-  server.listen(port, '127.0.0.1', () => {
-    // Write PID file so `live stop` can find us
-    fs.writeFileSync(LIVE_PID_FILE, JSON.stringify({ pid: process.pid, port }));
-
-    const url = `http://localhost:${port}`;
-    console.log(`Impeccable live detection server running on ${url}\n`);
-    console.log(`Inject into any page:`);
-    console.log(`  const s = document.createElement('script');`);
-    console.log(`  s.src = '${url}/detect.js';`);
-    console.log(`  document.head.appendChild(s);\n`);
-    console.log(`Stop: npx impeccable live stop`);
-  });
-
-  process.on('SIGINT', shutdown);
-  process.on('SIGTERM', shutdown);
-}
-
-// ---------------------------------------------------------------------------
 // Entry point
 // ---------------------------------------------------------------------------
 
@@ -3584,7 +3476,6 @@ export {
   buildImportGraph, resolveImport,
   detectFrameworkConfig, isPortListening, FRAMEWORK_CONFIGS,
   main as detectCli,
-  liveCli,
 };
 
 // @browser-strip-end

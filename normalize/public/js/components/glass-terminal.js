@@ -1,6 +1,6 @@
 import { renderCommandDemo, initCommandDemo } from "../demo-renderer.js";
 import { initSplitCompare } from "../effects/split-compare.js";
-import { commandProcessSteps, commandCategories, commandRelationships, betaCommands } from "../data.js";
+import { commandProcessSteps, commandCategories, commandRelationships, alphaCommands } from "../data.js";
 
 // Track current split instance and command for cleanup
 let currentSplitInstance = null;
@@ -71,8 +71,10 @@ function renderDesktopLayout(container, commands) {
 
     let startIndex = -1;
 
-    // Filter out deprecated shims and sub-commands (no standalone demos)
-    const deprecated = new Set(['teach-impeccable', 'frontend-design', 'arrange', 'normalize', 'onboard', 'extract', 'impeccable craft', 'impeccable teach', 'impeccable extract']);
+    // Filter out deprecated shims. craft, teach, extract used to be filtered
+    // too (when they were rendered as 'impeccable craft' etc.) but are now
+    // first-class sub-commands that should appear in the gallery.
+    const deprecated = new Set(['teach-impeccable', 'frontend-design', 'arrange', 'normalize', 'onboard', 'impeccable craft', 'impeccable teach', 'impeccable extract']);
     const filteredCommands = commands.filter(c => !deprecated.has(c.id));
 
     const categoryOrder = ['create', 'evaluate', 'refine', 'simplify', 'harden', 'system'];
@@ -82,12 +84,12 @@ function renderDesktopLayout(container, commands) {
     };
     // Preferred order within each category (unlisted commands append at end)
     const categoryCommandOrder = {
-        'create': ['impeccable', 'shape'],
+        'create': ['impeccable', 'craft', 'shape'],
         'evaluate': ['critique', 'audit'],
-        'refine': ['typeset', 'arrange', 'colorize', 'animate', 'delight', 'bolder', 'quieter', 'onboard', 'overdrive'],
+        'refine': ['typeset', 'layout', 'colorize', 'animate', 'delight', 'bolder', 'quieter', 'overdrive'],
         'simplify': ['distill', 'clarify', 'adapt'],
-        'harden': ['normalize', 'polish', 'optimize', 'harden'],
-        'system': ['extract']
+        'harden': ['polish', 'optimize', 'harden'],
+        'system': ['teach', 'extract']
     };
     const grouped = {};
     filteredCommands.forEach(cmd => {
@@ -132,8 +134,14 @@ function renderDesktopLayout(container, commands) {
 
     const fisheyeHTML = filteredCommands.map((cmd, i) => {
         const cat = commandCategories[cmd.id] || 'other';
-        const isBeta = betaCommands.includes(cmd.id);
-        return `<button class="fisheye-item${i === startIndex ? ' is-active' : ''}" data-index="${i}" data-id="${cmd.id}" data-cat="${cat}"><span class="fisheye-slash">/</span>${cmd.id}${isBeta ? '<span class="fisheye-beta">BETA</span>' : ''}</button>`;
+        const isAlpha = alphaCommands.includes(cmd.id);
+        // The root skill is shown as "/impeccable", everything else is a sub-command
+        // displayed without a slash (invocation is /impeccable <name>)
+        const isRoot = cmd.id === 'impeccable';
+        const label = isRoot
+            ? `<span class="fisheye-slash">/</span>impeccable`
+            : cmd.id;
+        return `<button class="fisheye-item${i === startIndex ? ' is-active' : ''}" data-index="${i}" data-id="${cmd.id}" data-cat="${cat}">${label}${isAlpha ? '<span class="fisheye-beta">ALPHA</span>' : ''}</button>`;
     }).join('');
 
     container.innerHTML = `
@@ -158,7 +166,7 @@ function renderDesktopLayout(container, commands) {
 
 function renderSpread(cmd, index, isActive) {
     const cat = commandCategories[cmd.id] || 'other';
-    const isBeta = betaCommands.includes(cmd.id);
+    const isAlpha = alphaCommands.includes(cmd.id);
     const relationship = commandRelationships[cmd.id];
     // Build relationship flow
     let flowHTML = '';
@@ -193,12 +201,20 @@ function renderSpread(cmd, index, isActive) {
         }
     }
 
+    // The root skill is rendered as /impeccable; sub-commands are rendered as
+    // /impeccable on a smaller line above the command name, so the command name
+    // stays the visual anchor at full display size.
+    const isRoot = cmd.id === 'impeccable';
+    const nameHTML = isRoot
+        ? `<span class="spread-slash">/</span>impeccable`
+        : `<span class="spread-namespace"><span class="spread-slash">/</span>impeccable</span>${cmd.id}`;
+
     return `
         <div class="magazine-spread${isActive ? ' active' : ''}" data-index="${index}" data-category="${cat}" data-id="${cmd.id}" id="cmd-${cmd.id}">
             <div class="spread-identity">
                 <span class="spread-category-label">${categoryLabels[cat] || cat}</span>
-                <h3 class="spread-command-name"><span class="spread-slash">/</span>${cmd.id}${isBeta ? '<span class="beta-badge">BETA</span>' : ''}</h3>
-                <p class="spread-description">${cmd.description}</p>
+                <h3 class="spread-command-name">${nameHTML}${isAlpha ? '<span class="beta-badge">ALPHA</span>' : ''}</h3>
+                <p class="spread-description">${cmd.tagline || cmd.description}</p>
                 ${flowHTML}
             </div>
             <div class="spread-demo-area" data-demo-index="${index}">
@@ -466,9 +482,11 @@ function truncateDescription(text, maxLen = 120) {
 
 function renderMobileLayout(container, commands) {
     // Build carousel pills
+    // Carousel pills show bare command names for sub-commands, and /impeccable
+    // for the root entry.
     const carouselHTML = commands.map((cmd, i) => `
         <button class="mobile-cmd-pill${i === 0 ? ' active' : ''}" data-id="${cmd.id}">
-            /${cmd.id}
+            ${cmd.id === 'impeccable' ? '/impeccable' : cmd.id}
         </button>
     `).join('');
 
@@ -477,18 +495,24 @@ function renderMobileLayout(container, commands) {
         const relationship = commandRelationships[cmd.id];
         let relationshipHTML = '';
 
+        // Relationships show bare command names (e.g., "pairs with quieter")
+        // because the invocation is /impeccable <name>, not /<name>.
         if (relationship) {
             if (relationship.pairs) {
-                relationshipHTML = `<div class="mobile-cmd-rel">↔ pairs with <code>/${relationship.pairs}</code></div>`;
+                relationshipHTML = `<div class="mobile-cmd-rel">↔ pairs with <code>${relationship.pairs}</code></div>`;
             } else if (relationship.leadsTo && relationship.leadsTo.length > 0) {
-                relationshipHTML = `<div class="mobile-cmd-rel">→ leads to ${relationship.leadsTo.map(c => `<code>/${c}</code>`).join(', ')}</div>`;
+                relationshipHTML = `<div class="mobile-cmd-rel">→ leads to ${relationship.leadsTo.map(c => `<code>${c}</code>`).join(', ')}</div>`;
             }
         }
 
+        const cardName = cmd.id === 'impeccable'
+            ? '/impeccable'
+            : `<span class="mobile-cmd-namespace">/impeccable</span> ${cmd.id}`;
+
         return `
             <div class="mobile-cmd-info${i === 0 ? ' active' : ''}" data-id="${cmd.id}">
-                <h3 class="mobile-cmd-name">/${cmd.id}</h3>
-                <p class="mobile-cmd-desc">${cmd.description}</p>
+                <h3 class="mobile-cmd-name">${cardName}</h3>
+                <p class="mobile-cmd-desc">${cmd.tagline || cmd.description}</p>
                 ${relationshipHTML}
             </div>
         `;

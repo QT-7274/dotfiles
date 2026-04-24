@@ -401,7 +401,7 @@ describeNpx('skills install: full e2e with npx skills', () => {
 
     // Find the provider that has skills
     let found = false;
-    for (const d of ['.claude', '.cursor', '.gemini', '.codex', '.agents', '.kiro']) {
+    for (const d of ['.claude', '.cursor', '.gemini', '.agents', '.kiro']) {
       const dir = join(tmp, d, 'skills');
       if (!existsSync(dir)) continue;
       const skills = readdirSync(dir);
