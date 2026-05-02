@@ -2,6 +2,8 @@
 
 Representative project shapes for exercising live mode against different framework conventions. Each fixture is a small directory tree that the test harness copies into a temp git repo, then drives `live-inject.mjs`, `live-wrap.mjs`, `live-accept.mjs`, and `is-generated.mjs` against.
 
+Fixtures can also opt into a **runtime E2E** pass that actually installs dependencies, boots the framework dev server, and drives a Playwright browser to verify the live handshake. See the `runtime` block below.
+
 ## Layout
 
 ```
@@ -32,11 +34,42 @@ Representative project shapes for exercising live mode against different framewo
     "signals": ["diagnostic hints — paths where CSP was detected"],
     "patchTarget": "which file the agent should modify",
     "expectedAfter": "filename of the reference post-patch output inside this fixture"
+  },
+  "runtime": {
+    "styling": "plain-css | tailwind-v4 | styled-components | ...",
+    "install": ["npm", "install"],
+    "devCommand": ["npm", "run", "dev"],
+    "scheme": "http",
+    "ignoreHTTPSErrors": false,
+    "readyPattern": "Local:\\s+https?://[^:]+:(\\d+)",
+    "readyTimeoutMs": 120000,
+    "pickSelector": "h1.hero-title",
+    "preActions": [
+      { "type": "click", "selector": "[data-testid='open-modal']" },
+      { "type": "goto",  "path": "/about" }
+    ],
+    "reloadProbe": {
+      "preActions": [{ "type": "click", "selector": "[data-testid='open-modal']" }],
+      "expectSelector": "h1.hero-title"
+    },
+    "probe": {
+      "expectLiveInit": true,
+      "expectConsoleClean": true
+    }
   }
 }
 ```
 
 The `expectedAfter` file lives alongside `fixture.json` (not inside `files/`) and is a human/agent-review reference — tests don't auto-apply the patch.
+
+The `runtime` block is optional. Fixtures without it only run the static unit checks (is-generated, inject, wrap, csp-detect). Fixtures *with* it additionally run the E2E suite in `tests/live-e2e.test.mjs` (`bun run test:live-e2e`), which:
+
+1. Stages the fixture into a tmp repo.
+2. Runs `runtime.install` to install real deps.
+3. Starts `live-server.mjs --background` and runs `live-inject.mjs --port` against it.
+4. Spawns `runtime.devCommand` and scrapes the port from stdout using `runtime.readyPattern` (the first capture group must be the port).
+5. Opens Playwright Chromium at the dev URL and asserts `window.__IMPECCABLE_LIVE_INIT__ === true` (the browser-side handshake oracle) within `runtime.readyTimeoutMs`.
+6. Tears everything down (Playwright close, dev server SIGTERM, live-server stop, tmp rm).
 
 ## Current fixtures
 

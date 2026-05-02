@@ -61,7 +61,13 @@ const BORDER_SAFE_TAGS = new Set(
 );
 
 const OVERUSED_FONTS = new Set([
+  // Older monoculture (still ubiquitous):
   'inter', 'roboto', 'open sans', 'lato', 'montserrat', 'arial', 'helvetica',
+  // Newer monoculture (the Anthropic-skill / Vercel / GitHub default wave):
+  'fraunces', 'instrument sans',
+  'geist', 'geist sans', 'geist mono',
+  'mona sans',
+  'plus jakarta sans', 'space grotesk', 'recoleta',
 ]);
 
 // Brand-associated fonts: don't flag these as "overused" on the brand's own domains.
@@ -70,10 +76,16 @@ const GOOGLE_DOMAINS = [
   'google.com', 'youtube.com', 'android.com', 'chromium.org',
   'chrome.com', 'web.dev', 'gstatic.com', 'firebase.google.com',
 ];
+const VERCEL_DOMAINS = ['vercel.com', 'nextjs.org', 'v0.app'];
+const GITHUB_DOMAINS = ['github.com', 'githubnext.com'];
 const BRAND_FONT_DOMAINS = {
   'roboto': GOOGLE_DOMAINS,
   'google sans': GOOGLE_DOMAINS,
   'product sans': GOOGLE_DOMAINS,
+  'geist': VERCEL_DOMAINS,
+  'geist sans': VERCEL_DOMAINS,
+  'geist mono': VERCEL_DOMAINS,
+  'mona sans': GITHUB_DOMAINS,
 };
 
 function isBrandFontOnOwnDomain(font) {
@@ -116,7 +128,7 @@ const ANTIPATTERNS = [
     category: 'slop',
     name: 'Overused font',
     description:
-      'Inter, Roboto, Open Sans, Lato, Montserrat, and Arial are used on millions of sites. Choose a distinctive font that gives your interface personality.',
+      'Inter, Roboto, Fraunces, Geist, Plus Jakarta Sans, and Space Grotesk are used on so many sites they no longer feel distinctive. Each new wave of AI-generated UIs converges on the same handful of faces. Choose a face that gives your interface personality.',
     skillSection: 'Typography',
     skillGuideline: 'overused fonts like Inter',
   },
@@ -465,7 +477,18 @@ function isEmojiOnlyText(text) {
 
 function checkColors(opts) {
   const { tag, textColor, bgColor, effectiveBg, effectiveBgStops, fontSize, fontWeight, hasDirectText, isEmojiOnly, bgClip, bgImage, classList } = opts;
-  if (SAFE_TAGS.has(tag)) return [];
+  if (SAFE_TAGS.has(tag)) {
+    // Exception for <a> and <button> elements styled as buttons. SAFE_TAGS
+    // exists to suppress contrast noise on inline links and unstyled controls,
+    // where the element has no own background and the contrast against the
+    // ancestor surface is already the intended visual. When the element has
+    // its own opaque background and direct text, it is a styled button — and
+    // contrast on its own surface is a real, frequent bug worth flagging.
+    const isStyledButton = (tag === 'a' || tag === 'button')
+      && hasDirectText
+      && bgColor && bgColor.a > 0.5;
+    if (!isStyledButton) return [];
+  }
   const findings = [];
 
   // Pure black background (only solid or near-solid, not semi-transparent overlays)
@@ -817,6 +840,34 @@ function checkHtmlPatterns(html) {
 
 // ─── Section 4: resolveBackground (unified) ─────────────────────────────────
 
+// Read the element's own background color, computed-style first, with a
+// jsdom-friendly fallback that parses the inline `background:` shorthand
+// from the raw style attribute. jsdom (~v29) does not decompose the
+// shorthand into `backgroundColor`, so without this fallback the CLI silently
+// returns null for any element styled via `background: rgb(...)` or
+// `background: #abc`. Real browsers always decompose, so the fallback is
+// a no-op there.
+function readOwnBackgroundColor(el, computedStyle) {
+  const bg = parseRgb(computedStyle.backgroundColor);
+  if (IS_BROWSER || (bg && bg.a >= 0.1)) return bg;
+  const rawStyle = el.getAttribute?.('style') || '';
+  const bgMatch = rawStyle.match(/background(?:-color)?\s*:\s*([^;]+)/i);
+  const inlineBg = bgMatch ? bgMatch[1].trim() : '';
+  if (!inlineBg) return bg;
+  if (/gradient/i.test(inlineBg) || /url\s*\(/i.test(inlineBg)) return bg;
+  const fromRgb = parseRgb(inlineBg);
+  if (fromRgb) return fromRgb;
+  const hexMatch = inlineBg.match(/#([0-9a-f]{6}|[0-9a-f]{3})\b/i);
+  if (hexMatch) {
+    const h = hexMatch[1];
+    if (h.length === 6) {
+      return { r: parseInt(h.slice(0, 2), 16), g: parseInt(h.slice(2, 4), 16), b: parseInt(h.slice(4, 6), 16), a: 1 };
+    }
+    return { r: parseInt(h[0] + h[0], 16), g: parseInt(h[1] + h[1], 16), b: parseInt(h[2] + h[2], 16), a: 1 };
+  }
+  return bg;
+}
+
 function resolveBackground(el, win) {
   let current = el;
   while (current && current.nodeType === 1) {
@@ -885,6 +936,82 @@ function resolveGradientStops(el, win) {
   return null;
 }
 
+// Parse a single CSS length token to pixels. Accepts "12px", "50%", a
+// shorthand like "12px 4px" (uses the first value), or empty / null.
+// Returns the pixel value, or null when the input is unparseable.
+// Percentages convert against `widthPx` when one is supplied. Without a
+// usable width (jsdom returns "auto" for many real-world elements,
+// which parseFloat collapses to 0), fall back to the raw percentage
+// number so callers gating on `> 0` (border-accent-on-rounded,
+// isCardLike's hasRadius) still see a positive value, matching the
+// original parseFloat("50%") === 50 behavior.
+function parseRadiusToPx(value, widthPx) {
+  if (!value || typeof value !== 'string') return null;
+  const trimmed = value.trim();
+  if (!trimmed) return null;
+  const first = trimmed.split(/\s+/)[0];
+  const num = parseFloat(first);
+  if (Number.isNaN(num)) return null;
+  if (/%$/.test(first)) {
+    if (widthPx && widthPx > 0) return (num / 100) * widthPx;
+    return num;
+  }
+  return num;
+}
+
+// jsdom from 29.0.2 onward returns "" for the `border-radius` shorthand
+// in computed style and "0" for longhand reads when the source rule used
+// the shorthand. The rule engine relied on parseFloat(style.borderRadius)
+// to identify circular avatars (border-radius >= width/2) and rounded
+// cards (border-radius > 0); both checks broke silently. This helper
+// recovers the radius via a chain of fallbacks. Browsers resolve the
+// shorthand correctly and exit on the first line.
+function resolveBorderRadiusPx(el, style, widthPx, win) {
+  const fromComputed = parseRadiusToPx(style.borderRadius, widthPx);
+  if (fromComputed !== null) return fromComputed;
+
+  if (IS_BROWSER || !win) return 0;
+
+  const fromLonghand = parseRadiusToPx(style.borderTopLeftRadius, widthPx);
+  if (fromLonghand !== null && fromLonghand > 0) return fromLonghand;
+
+  const fromInlineProp = parseRadiusToPx(el.style?.borderRadius, widthPx);
+  if (fromInlineProp !== null) return fromInlineProp;
+
+  const rawStyle = el.getAttribute?.('style') || '';
+  const inlineMatch = rawStyle.match(/border-radius\s*:\s*([^;]+)/i);
+  if (inlineMatch) {
+    const fromRaw = parseRadiusToPx(inlineMatch[1].trim(), widthPx);
+    if (fromRaw !== null) return fromRaw;
+  }
+
+  // Walk every stylesheet looking for matching rules. Take the maximum
+  // pixel value across all matches so a circle declaration overridden by
+  // a more specific rounded-square selector still registers as a circle
+  // for the exclusion check (better to under-flag than to false-positive
+  // on round avatars).
+  let max = 0;
+  const sheets = win.document?.styleSheets;
+  if (sheets) {
+    for (const sheet of sheets) {
+      let rules;
+      try { rules = sheet.cssRules || []; } catch { continue; }
+      for (const rule of rules) {
+        if (!rule.style || !rule.selectorText) continue;
+        let matches = false;
+        try { matches = el.matches(rule.selectorText); } catch { continue; }
+        if (!matches) continue;
+        const ruleValue = rule.style.borderRadius
+          || (rule.style.getPropertyValue && rule.style.getPropertyValue('border-radius'))
+          || rule.style.borderTopLeftRadius;
+        const px = parseRadiusToPx(ruleValue, widthPx);
+        if (px !== null && px > max) max = px;
+      }
+    }
+  }
+  return max;
+}
+
 // ─── Section 5: Element Adapters ────────────────────────────────────────────
 
 // Browser adapters — call getComputedStyle/getBoundingClientRect on live DOM
@@ -906,7 +1033,9 @@ function checkElementBordersDOM(el) {
 
 function checkElementColorsDOM(el) {
   const tag = el.tagName.toLowerCase();
-  if (SAFE_TAGS.has(tag)) return [];
+  // No early SAFE_TAGS bail here — checkColors() does its own gating that
+  // includes the styled-button exception for <a> / <button> with their own
+  // opaque background. Bailing here would prevent that exception from firing.
   const rect = el.getBoundingClientRect();
   if (rect.width < 10 || rect.height < 10) return [];
   const style = getComputedStyle(el);
@@ -916,7 +1045,7 @@ function checkElementColorsDOM(el) {
   return checkColors({
     tag,
     textColor: parseRgb(style.color),
-    bgColor: parseRgb(style.backgroundColor),
+    bgColor: readOwnBackgroundColor(el, style),
     effectiveBg,
     effectiveBgStops: effectiveBg ? null : resolveGradientStops(el),
     fontSize: parseFloat(style.fontSize) || 16,
@@ -1271,7 +1400,7 @@ function checkElementQuality(el, style, tag, window) {
   return checkQuality({ el, tag, style, hasDirectText, textLen, fontSize, lineHeightPx, letterSpacingPx, rect: null });
 }
 
-function checkElementBorders(tag, style, overrides) {
+function checkElementBorders(tag, style, overrides, resolvedRadius) {
   const sides = ['Top', 'Right', 'Bottom', 'Left'];
   const widths = {}, colors = {};
   for (const s of sides) {
@@ -1291,7 +1420,14 @@ function checkElementBorders(tag, style, overrides) {
       colors[s] = overrides[s].color;
     }
   }
-  return checkBorders(tag, widths, colors, parseFloat(style.borderRadius) || 0);
+  // resolvedRadius lets the caller pre-resolve the radius via
+  // resolveBorderRadiusPx so the value survives jsdom 29.1.0's broken
+  // shorthand serialization. Falls back to the computed value for tests
+  // and browser callers that don't pre-resolve.
+  const radius = resolvedRadius != null
+    ? resolvedRadius
+    : (parseFloat(style.borderRadius) || 0);
+  return checkBorders(tag, widths, colors, radius);
 }
 
 function checkElementColors(el, style, tag, window) {
@@ -1302,7 +1438,7 @@ function checkElementColors(el, style, tag, window) {
   return checkColors({
     tag,
     textColor: parseRgb(style.color),
-    bgColor: parseRgb(style.backgroundColor),
+    bgColor: readOwnBackgroundColor(el, style),
     effectiveBg,
     effectiveBgStops: effectiveBg ? null : resolveGradientStops(el, window),
     fontSize: parseFloat(style.fontSize) || 16,
@@ -1346,7 +1482,7 @@ function checkElementIconTile(el, tag, window) {
     siblingBgColor: parseRgb(sibStyle.backgroundColor),
     siblingBgImage: sibStyle.backgroundImage || '',
     siblingBorderWidth: parseFloat(sibStyle.borderTopWidth) || 0,
-    siblingBorderRadius: parseFloat(sibStyle.borderRadius) || 0,
+    siblingBorderRadius: resolveBorderRadiusPx(sibling, sibStyle, sibWidth, window),
     hasIconChild: !!iconChild || hasInlineEmojiIcon,
     iconChildWidth: iconWidth,
   });
@@ -1565,7 +1701,8 @@ function isCardLike(el, win) {
   const hasShadow = (style.boxShadow && style.boxShadow !== 'none') ||
     /\bshadow(?:-sm|-md|-lg|-xl|-2xl)?\b/.test(cls) || /box-shadow/i.test(rawStyle);
   const hasBorder = /\bborder\b/.test(cls);
-  const hasRadius = (parseFloat(style.borderRadius) || 0) > 0 ||
+  const widthPx = parseFloat(style.width) || 0;
+  const hasRadius = resolveBorderRadiusPx(el, style, widthPx, win) > 0 ||
     /\brounded(?:-sm|-md|-lg|-xl|-2xl|-full)?\b/.test(cls) || /border-radius/i.test(rawStyle);
   const hasBg = /\bbg-(?:white|gray-\d+|slate-\d+)\b/.test(cls) ||
     /background(?:-color)?\s*:\s*(?!transparent)/i.test(rawStyle);

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "4f4c6c63-58c1-4086-88ca-4c36b3033041",
+  "path": "systematic-debugging",
+  "path_key": "systematic-debugging",
+  "enabled": true,
+  "tags": [
+    "代码质量"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "obra/superpowers/systematic-debugging",
+    "subpath": "skills/systematic-debugging",
+    "branch": null
+  }
+}

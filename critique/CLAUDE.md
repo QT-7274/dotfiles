@@ -104,12 +104,33 @@ Local state files inside harness directories (e.g. `.claude/scheduled_tasks.lock
 ## Testing
 
 ```bash
-bun run test       # Run all tests
+bun run test            # Default suite: unit + static framework fixtures
+bun run test:live-e2e   # Opt-in: full-cycle live-mode E2E across framework fixtures
 ```
 
 Unit tests (build orchestration, detector logic) run via `bun test`. Fixture tests (jsdom-based HTML detection) run via `node --test` because bun is too slow with jsdom. The `test` script handles this split automatically.
 
 **Important:** `tests/build.test.js` uses `spyOn(transformers, 'transformCursor')` with the named exports from `scripts/lib/transformers/index.js`. Those named exports (`transformCursor`, `transformClaudeCode`, etc.) are kept specifically for test spying, even though `build.js` itself uses `createTransformer + PROVIDERS` directly. **Do not delete them as "dead code"** — I made that mistake once and broke 8 tests.
+
+### Live-mode E2E
+
+`tests/live-e2e.test.mjs` drives the entire user flow (handshake → pick → Go → cycle → accept → carbonize cleanup) against every fixture in `tests/framework-fixtures/` that declares a `runtime` block. Each fixture installs real deps, boots its framework dev server (Vite, Next, SvelteKit, Astro, Nuxt static), and runs Playwright Chromium against a deterministic fake agent that produces realistic variants in the exact format `reference/live.md` describes.
+
+```bash
+bun run test:live-e2e                                       # full suite, ~2 min, 19 fixtures
+IMPECCABLE_E2E_ONLY=vite8-react-modal bun run test:live-e2e # scope to one fixture
+IMPECCABLE_E2E_DEBUG=1 bun run test:live-e2e                # dump page DOM + dev-server tail on failure
+```
+
+**One-time setup**: `npx playwright install chromium` (the suite uses a specific Chromium build keyed to the bundled Playwright version).
+
+**Kept out of the default `bun run test`** because (a) it does real `npm install` per fixture, (b) it boots framework dev servers, (c) wall time is ~2 minutes, and (d) it requires Playwright's browser cache. Run it locally before shipping changes to anything in `source/skills/impeccable/scripts/live-*.{mjs,js}`.
+
+The agent is pluggable via a one-method interface in `tests/live-e2e/agent.mjs`: `generateVariants(event, context) → { scopedCss, variants[] }`. The default fake agent emits canned variants that exercise all three param kinds (`range`, `steps`, `toggle`). The orchestrator (wrap, write, accept, carbonize) is agent-agnostic.
+
+**LLM agent (opt-in)**: set `IMPECCABLE_E2E_AGENT=llm` to swap the fake agent for `tests/live-e2e/agents/llm-agent.mjs`, which calls Claude (default Haiku 4.5) via `@anthropic-ai/sdk`. Requires `ANTHROPIC_API_KEY` in env; the test runner skips with a clear message when it's unset. Override the model with `IMPECCABLE_E2E_LLM_MODEL=claude-sonnet-4-6` if Haiku produces unreliable JSON. Caching is on — live.md is the cacheable prefix, and after the first call subsequent fixtures pay only the cache-read rate. Pass rate on a typical sweep is 18/19; the modal fixture's intrinsic state-loss flake is amplified by LLM latency and may need a re-run. **This path hits the API and costs money** — keep it out of CI unless you really want it there.
+
+Adding a new fixture is a matter of cloning a directory under `tests/framework-fixtures/`, swapping the source files, and writing a `fixture.json`. See `tests/framework-fixtures/README.md` for the full schema.
 
 ## CLI
 
@@ -153,6 +174,25 @@ There are three independently versioned components. Only bump the one(s) that ac
 - Update for user-facing changes only, not internal build/tooling details
 - Use the most prominent version that changed (skills version is usually the right one)
 
+After bumping, see **Releases** below for how to tag and publish.
+
+## Releases
+
+GitHub releases are tagged per-component, not per-version, since the three components ship independently. Tag prefixes: `skill-v`, `cli-v`, `ext-v`.
+
+Workflow for any component:
+
+1. Bump the manifest version (see Versioning above).
+2. Add a changelog entry to `public/index.html`. Skill entries use a bare `vX.Y.Z` label; CLI and extension entries use the prefixed forms `CLI vX.Y.Z` and `Extension vX.Y.Z`. The release script extracts notes by matching this label, so the prefix matters.
+3. Commit and push to `main`.
+4. Run `bun run release:<skill|cli|ext>`. Preview first with `node scripts/release.mjs <component> --dry-run`.
+
+The script refuses to run if: the working tree is dirty, HEAD is ahead of origin, the tag already exists, the matching changelog entry is missing, or (for skill/extension) `bun run build` / `bun run build:extension` produces uncommitted changes — meaning the harness output dirs or `extension/detector/` files weren't refreshed before the bump was committed.
+
+Skill releases attach `dist/universal.zip`. Extension releases run `bun run build:extension` first and attach `dist/extension.zip`. CLI releases print a reminder to run `npm publish` separately; extension releases print a reminder to upload the zip to the Chrome Web Store dashboard.
+
+If you need to fix release notes after the fact (typo, missing thank-you, formatting bug): `gh release edit <tag> --notes-file <md>`. The release script's `htmlToMarkdown` function is the cleanest source for regenerating notes from the changelog.
+
 ## Adding New Commands
 
 All commands live under `/impeccable`. To add a new one:
@@ -193,6 +233,42 @@ Editorial files live at `content/site/skills/<command>.md` and have a `tagline` 
 The tagline is used by UI surfaces (magazine spread, docs cards) that need a short human-friendly label. The long description in `command-metadata.json` stays optimized for auto-trigger keyword matching in the AI harness.
 
 Every command should have an editorial file eventually, but the build does not require one: commands without editorials fall back to the frontmatter description.
+
+## Adding or modifying anti-pattern detection rules
+
+`src/detect-antipatterns.mjs` is the source of truth for the rule engine. It powers the CLI, the public-site overlay, the Chrome extension, and the homepage rule count. Five places stay in sync:
+
+| Where | How it stays in sync |
+|---|---|
+| `src/detect-antipatterns.mjs` (`ANTIPATTERNS` array + `checkXxx` logic) | Hand-edited |
+| `src/detect-antipatterns-browser.js` | `bun run build:browser` |
+| `extension/detector/detect.js` + `extension/detector/antipatterns.json` | `bun run build:extension` |
+| `public/js/generated/counts.js` (`DETECTION_COUNT`) | `bun run build` |
+| `source/skills/impeccable/SKILL.md` and `reference/*.md` | Hand-edited if the rule introduces new design guidance |
+
+Always run all three builds and the test suite after a rule change:
+
+```bash
+bun run build && bun run build:browser && bun run build:extension && bun run test
+```
+
+### TDD order (non-negotiable)
+
+1. **Fixture** at `tests/fixtures/antipatterns/{rule-id}.html` with two columns (should-flag / should-pass), each case identified by a unique heading. Cover ≥4 flag cases and ≥5 false-positive shapes. Use **explicit pixel dimensions in CSS** because jsdom does no layout.
+2. **Failing test** in `tests/detect-antipatterns-fixtures.test.mjs` using the snippet-substring pattern (regex `/"([^"]+)"/` against `SHOULD_FLAG` / `SHOULD_PASS` lists). Run it and watch it fail before implementing.
+3. **Rule entry** in the `ANTIPATTERNS` array: `id`, `category` (`slop` for AI tells, `quality` for real design or a11y issues), `name`, `description`, optional `skillSection` and `skillGuideline`.
+4. **Pure check function** `checkXxx(opts)` returning `[{ id, snippet }]`. No DOM access in the pure function.
+5. **Two adapters**: `checkElementXxxDOM(el)` for the browser (`getComputedStyle` + `getBoundingClientRect`) and `checkElementXxx(el, tag, window)` for jsdom (`parseFloat(style.width)` instead of layout). Wire **both** into **both** element loops in `src/detect-antipatterns.mjs` — the browser loop (~line 1837) and the jsdom loop in `detectHtml` (~line 2058). Forgetting one is the most common mistake; symptom is "test passes, live page silent" or vice versa.
+6. **Verify on a live page**: `http://localhost:3000/fixtures/antipatterns/{rule-id}.html` and the homepage (no false positives). The two adapter paths can disagree, so manual browser checks catch what the fixture test can't.
+
+### Conventions and jsdom gotchas
+
+- **Snippet format**: wrap the identifying heading text in straight double quotes (e.g. `'icon tile above h3 "Lightning Fast"'`) so the fixture test can extract it. For rules not anchored to a heading, pick another stable identifier.
+- **jsdom doesn't lay out**: `getBoundingClientRect()` returns 0×0. Read `parseFloat(style.width)` and `parseFloat(style.height)` from explicit CSS instead.
+- **`background:` shorthand isn't decomposed in jsdom**: use the existing `resolveBackground()` and `resolveGradientStops()` helpers (~line 631 / 670).
+- **Computed colors aren't normalized in jsdom**: `parseGradientColors()` handles both hex and rgb forms.
+
+Reference rules to copy from: `side-tab` (border, ~line 312), `low-contrast` (color + gradient, ~line 339), `icon-tile-stack` (sibling relationship, ~line 425), `flat-type-hierarchy` (page-level, ~line 1080).
 
 ## Evals Framework (separate private repo)
 

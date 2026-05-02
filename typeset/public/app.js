@@ -287,12 +287,16 @@ function initWhyTabs() {
 
 	const CYCLE_MS = 7000;
 	const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	let current = 0;
+	let current = Math.max(tabs.findIndex((tab) => tab.classList.contains('is-active')), 0);
 	let timer = null;
 	let autoRotate = !reducedMotion;
 	let visible = false;
 
 	const tabStrip = container.querySelector('.why-tabs');
+	const getPanelForTab = (tab) => {
+		const panelId = tab?.getAttribute('aria-controls');
+		return panelId ? container.querySelector(`#${CSS.escape(panelId)}`) : null;
+	};
 
 	const centerActiveInStrip = (active) => {
 		// On mobile the tab list is a horizontal scroll strip. Keep the
@@ -309,6 +313,9 @@ function initWhyTabs() {
 	};
 
 	const activate = (index, fromAuto = false) => {
+		const targetTab = tabs[index];
+		const targetPanel = getPanelForTab(targetTab);
+		if (!targetTab || !targetPanel) return;
 		current = index;
 		tabs.forEach((tab, i) => {
 			const on = i === index;
@@ -318,19 +325,18 @@ function initWhyTabs() {
 			// progress indicator restarts cleanly.
 			tab.classList.remove('is-cycling');
 		});
-		panels.forEach((panel, i) => {
-			const on = i === index;
+		panels.forEach((panel) => {
+			const on = panel === targetPanel;
 			panel.classList.toggle('is-active', on);
 			if (on) panel.removeAttribute('hidden');
 			else panel.setAttribute('hidden', '');
 		});
 		if (autoRotate && visible) {
 			// Force reflow so the animation restart is picked up.
-			const active = tabs[index];
-			void active.offsetWidth;
-			active.classList.add('is-cycling');
+			void targetTab.offsetWidth;
+			targetTab.classList.add('is-cycling');
 		}
-		centerActiveInStrip(tabs[index]);
+		centerActiveInStrip(targetTab);
 	};
 
 	const scheduleNext = () => {

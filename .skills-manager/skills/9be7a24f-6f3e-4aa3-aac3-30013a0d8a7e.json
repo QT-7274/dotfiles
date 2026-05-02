@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "9be7a24f-6f3e-4aa3-aac3-30013a0d8a7e",
+  "path": "bmad-worktree-orchestrator",
+  "path_key": "bmad-worktree-orchestrator",
+  "enabled": true,
+  "tags": [
+    "Git",
+    "工作流"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

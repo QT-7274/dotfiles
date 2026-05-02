@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "60c67584-a94f-40e1-8397-1e882a0ffa7d",
+  "path": "web-design-guidelines",
+  "path_key": "web-design-guidelines",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "代码质量",
+    "前端",
+    "可访问性"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "vercel-labs/agent-skills/web-design-guidelines",
+    "subpath": "skills/web-design-guidelines",
+    "branch": null
+  }
+}

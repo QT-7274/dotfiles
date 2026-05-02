@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "b22acdd5-5076-4ecd-8093-6c80ad27980a",
+  "path": "writing-plans",
+  "path_key": "writing-plans",
+  "enabled": true,
+  "tags": [
+    "任务规划",
+    "实施方案",
+    "文档编写",
+    "需求分析"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "obra/superpowers/writing-plans",
+    "subpath": "skills/writing-plans",
+    "branch": null
+  }
+}

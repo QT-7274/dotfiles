@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "06533b5d-93aa-4078-981e-3c056e10a447",
+  "path": "openai-codex/codex/1.0.1/skills/codex-result-handling",
+  "path_key": "openai-codex/codex/1.0.1/skills/codex-result-handling",
+  "enabled": true,
+  "tags": [
+    "Codex",
+    "代码审查",
+    "内部工具",
+    "结果处理"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

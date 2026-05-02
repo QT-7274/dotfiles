@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "b1b1fd33-32be-4287-a1f8-6482e53dc782",
+  "path": "monorepo-management",
+  "path_key": "monorepo-management",
+  "enabled": true,
+  "tags": [
+    "前端",
+    "架构",
+    "跨平台"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "wshobson/agents/monorepo-management",
+    "subpath": "plugins/developer-essentials/skills/monorepo-management",
+    "branch": null
+  }
+}

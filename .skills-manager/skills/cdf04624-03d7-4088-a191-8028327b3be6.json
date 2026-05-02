@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "cdf04624-03d7-4088-a191-8028327b3be6",
+  "path": "optimize",
+  "path_key": "optimize",
+  "enabled": true,
+  "tags": [
+    "前端"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/optimize",
+    "subpath": null,
+    "branch": null
+  }
+}

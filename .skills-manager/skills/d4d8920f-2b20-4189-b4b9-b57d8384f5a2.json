@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "d4d8920f-2b20-4189-b4b9-b57d8384f5a2",
+  "path": "nestjs-best-practices",
+  "path_key": "nestjs-best-practices",
+  "enabled": true,
+  "tags": [
+    "代码质量",
+    "后端",
+    "架构"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "kadajett/agent-nestjs-skills/nestjs-best-practices",
+    "subpath": null,
+    "branch": null
+  }
+}

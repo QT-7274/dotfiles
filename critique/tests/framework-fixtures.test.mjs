@@ -12,7 +12,7 @@
 import { describe, it } from 'node:test';
 import assert from 'node:assert/strict';
 import { execFileSync } from 'node:child_process';
-import { cpSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -27,6 +27,7 @@ const FIXTURES_DIR = join(__dirname, 'framework-fixtures');
 function listFixtures() {
   return readdirSync(FIXTURES_DIR, { withFileTypes: true })
     .filter((e) => e.isDirectory())
+    .filter((e) => existsSync(join(FIXTURES_DIR, e.name, 'fixture.json')))
     .map((e) => e.name);
 }
 

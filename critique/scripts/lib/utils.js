@@ -45,7 +45,7 @@ export function restorePerProjectArtifacts(rootDir, stashed) {
  * Returns { frontmatter: object, body: string }
  */
 export function parseFrontmatter(content) {
-  const frontmatterRegex = /^---\n([\s\S]*?)\n---\n([\s\S]*)$/;
+  const frontmatterRegex = /^---\r?\n([\s\S]*?)\r?\n---\r?\n([\s\S]*)$/;
   const match = content.match(frontmatterRegex);
 
   if (!match) {
@@ -56,7 +56,7 @@ export function parseFrontmatter(content) {
   const frontmatter = {};
 
   // Simple YAML parser (handles basic key-value and arrays)
-  const lines = frontmatterText.split('\n');
+  const lines = frontmatterText.split(/\r?\n/);
   let currentKey = null;
   let currentArray = null;
 
@@ -101,13 +101,19 @@ export function parseFrontmatter(content) {
       if (colonIndex > 0) {
         const key = trimmed.slice(0, colonIndex).trim();
         const value = trimmed.slice(colonIndex + 1).trim();
+        const isQuoted = /^(".*"|'.*')$/.test(value);
+        const unquotedValue = isQuoted ? value.slice(1, -1) : value;
+        const shouldCoerceBoolean =
+          key === 'user-invocable' || key === 'user-invokable' || !isQuoted;
 
         if (value) {
-          // Strip YAML quotes
-          const unquoted = (value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))
-            ? value.slice(1, -1)
-            : value;
-          frontmatter[key] = unquoted === 'true' ? true : unquoted === 'false' ? false : unquoted;
+          frontmatter[key] = shouldCoerceBoolean
+            ? unquotedValue === 'true'
+              ? true
+              : unquotedValue === 'false'
+                ? false
+                : unquotedValue
+            : unquotedValue;
           currentKey = key;
           currentArray = null;
         } else {
@@ -478,7 +484,7 @@ export const PROVIDER_PLACEHOLDERS = {
   'codex': {
     model: 'GPT',
     config_file: 'AGENTS.md',
-    ask_instruction: 'ask the user directly to clarify what you cannot infer.',
+    ask_instruction: "STOP and use Codex's structured user-input/question tool when available; if unavailable, ask directly in chat to clarify what you cannot infer.",
     command_prefix: '$'
   },
   'agents': {
@@ -500,6 +506,12 @@ export const PROVIDER_PLACEHOLDERS = {
     command_prefix: '/'
   },
   'pi': {
+    model: 'the model',
+    config_file: 'AGENTS.md',
+    ask_instruction: 'ask the user directly to clarify what you cannot infer.',
+    command_prefix: '/'
+  },
+  'qoder': {
     model: 'the model',
     config_file: 'AGENTS.md',
     ask_instruction: 'ask the user directly to clarify what you cannot infer.',

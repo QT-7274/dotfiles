@@ -538,6 +538,10 @@ function generateCFConfig(buildDir) {
 /skills/:id /docs/:id 301
 /anti-patterns /slop#catalog 301
 /visual-mode /slop#see-it 301
+/neon-mirai /neo-mirai/ 301
+/neon-mirai/ /neo-mirai/ 301
+/cases/neon-mirai /cases/neo-mirai 301
+/cases/neon-mirai/ /cases/neo-mirai 301
 `;
   fs.writeFileSync(path.join(buildDir, '_redirects'), redirects);
 
@@ -564,8 +568,13 @@ async function build() {
   const { files: subPageFiles } = await generateSubPages(ROOT_DIR);
   console.log(`✓ Generated ${subPageFiles.length} sub-page(s)\n`);
 
+  const casePageFiles = [
+    path.join(ROOT_DIR, 'public', 'cases', 'neo-mirai', 'index.html'),
+    path.join(ROOT_DIR, 'public', 'neo-mirai', 'index.html'),
+  ].filter((pagePath) => fs.existsSync(pagePath));
+
   // Bundle HTML, JS, and CSS with Bun (including generated sub-pages)
-  await buildStaticSite(subPageFiles);
+  await buildStaticSite([...subPageFiles, ...casePageFiles]);
 
   // Copy root-level static assets that need stable (unhashed) URLs
   const staticAssets = ['og-image.jpg', 'robots.txt', 'sitemap.xml', 'favicon.svg', 'apple-touch-icon.png'];
@@ -663,6 +672,37 @@ async function build() {
 
   console.log(`📋 Synced skills to: ${syncConfigs.map(p => p.configDir).join(', ')}`);
 
+  // Build the Claude Code plugin subtree at ./plugin/.
+  // The Claude Code marketplace is configured with `source: "./plugin"`, so
+  // the plugin cache only copies this slim directory (~0.3 MB) instead of
+  // the entire monorepo (~291 MB on the previous "./" source). The harness
+  // dirs above stay where they are because `npx skills add pbakaus/impeccable`
+  // reads them directly from the GitHub repo at install time.
+  const pluginRoot = path.join(ROOT_DIR, 'plugin');
+  const pluginManifestDir = path.join(pluginRoot, '.claude-plugin');
+  const pluginSkillsDir = path.join(pluginRoot, 'skills');
+  if (fs.existsSync(pluginManifestDir)) fs.rmSync(pluginManifestDir, { recursive: true });
+  if (fs.existsSync(pluginSkillsDir)) fs.rmSync(pluginSkillsDir, { recursive: true });
+
+  const rootManifest = JSON.parse(fs.readFileSync(path.join(ROOT_DIR, '.claude-plugin/plugin.json'), 'utf-8'));
+  // Trailing slash on the skills path matches the documented schema in
+  // code.claude.com/docs/en/plugins-reference. Issue #86 has 3 reporters
+  // converging on "add trailing slash to fix slash commands not registering";
+  // the docs schema example consistently uses `"./custom/skills/"` form.
+  const pluginManifest = { ...rootManifest, skills: './skills/' };
+  fs.mkdirSync(pluginManifestDir, { recursive: true });
+  fs.writeFileSync(
+    path.join(pluginManifestDir, 'plugin.json'),
+    JSON.stringify(pluginManifest, null, 2) + '\n',
+  );
+
+  const claudeSkillsSrc = path.join(DIST_DIR, 'claude-code', '.claude', 'skills', 'impeccable');
+  if (fs.existsSync(claudeSkillsSrc)) {
+    fs.mkdirSync(pluginSkillsDir, { recursive: true });
+    copyDirSync(claudeSkillsSrc, path.join(pluginSkillsDir, 'impeccable'));
+  }
+
+  console.log('📦 Built Claude Code plugin subtree at ./plugin/');
 
   // Generate authoritative counts and validate references
   const countErrors = generateCounts(ROOT_DIR, skills, buildDir);

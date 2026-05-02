@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "8d4f194b-0bff-420b-a415-e74f5b246409",
+  "path": "nodejs-backend-patterns",
+  "path_key": "nodejs-backend-patterns",
+  "enabled": true,
+  "tags": [
+    "API 设计",
+    "后端"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "wshobson/agents/nodejs-backend-patterns",
+    "subpath": "plugins/javascript-typescript/skills/nodejs-backend-patterns",
+    "branch": null
+  }
+}

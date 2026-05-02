@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "e13cc0de-c60b-47b4-b001-3b9d84bd830c",
+  "path": "cmux-browser",
+  "path_key": "cmux-browser",
+  "enabled": true,
+  "tags": [
+    "CSS 选择器",
+    "UI 测试",
+    "cmux",
+    "浏览器自动化"
+  ],
+  "source": {
+    "type": "local",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

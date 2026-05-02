@@ -9,7 +9,7 @@ import { mkdtempSync, writeFileSync, readFileSync, rmSync } from 'node:fs';
 import { dirname, join, resolve } from 'node:path';
 import { tmpdir } from 'node:os';
 import { fileURLToPath } from 'node:url';
-import { execFileSync } from 'node:child_process';
+import { execFileSync, execSync } from 'node:child_process';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ACCEPT = resolve(__dirname, '..', 'source/skills/impeccable/scripts/live-accept.mjs');
@@ -121,6 +121,217 @@ describe('live-accept — style-element edge cases', () => {
     const after = readFileSync(join(tmp, 'page.html'), 'utf-8');
     assert.ok(after.includes('data-impeccable-variant="1"'), 'accepted wrapper for variant 1 present');
     assert.ok(after.includes('variant one'), 'variant 1 content kept');
+  });
+
+  // Regression: the agent writes JSX <style>{`…`}</style> and live-accept's
+  // extractCss used to capture the `{` … `` ` ``}` template-literal punctuation
+  // as CSS content. handleAccept then re-wrapped with another `{` …
+  // `` ` ``}`, producing nested template literals (`<style>{`{`@scope…`}`}`)
+  // that oxc rejects with "Expected `}` but found `@`". extractCss must
+  // strip the JSX wrap regardless of where the agent placed it.
+  it('carbonize does not double-wrap when the variants block uses JSX template literals on their own lines', () => {
+    const tsx = `export default function App() {\n` +
+      `  return (\n` +
+      `    <main>\n` +
+      `      <>\n` +
+      `        {/* impeccable-variants-start TPL */}\n` +
+      `        <div data-impeccable-variants="TPL" data-impeccable-variant-count="2" style={{ display: 'contents' }}>\n` +
+      `          <div data-impeccable-variant="original"><p className="hook">orig</p></div>\n` +
+      `          <style data-impeccable-css="TPL">\n` +
+      "            {`\n" +
+      `              @scope ([data-impeccable-variant="1"]) { .hook { color: red; } }\n` +
+      `              @scope ([data-impeccable-variant="2"]) { .hook { color: green; } }\n` +
+      "            `}\n" +
+      `          </style>\n` +
+      `          <div data-impeccable-variant="1"><p className="hook">variant one</p></div>\n` +
+      `          <div data-impeccable-variant="2" style={{ display: 'none' }}><p className="hook">variant two</p></div>\n` +
+      `        </div>\n` +
+      `        {/* impeccable-variants-end TPL */}\n` +
+      `      </>\n` +
+      `    </main>\n` +
+      `  );\n` +
+      `}\n`;
+    writeFileSync(join(tmp, 'App.tsx'), tsx);
+
+    const result = runAccept(tmp, ['--id', 'TPL', '--variant', '1']);
+    assert.equal(result.handled, true, `accept should succeed: ${JSON.stringify(result)}`);
+
+    const after = readFileSync(join(tmp, 'App.tsx'), 'utf-8');
+    // Exactly one `{` opener after the carbonized <style ...> tag — not two.
+    const carbonStyleMatch = after.match(/<style data-impeccable-css="TPL">([\s\S]*?)<\/style>/);
+    assert.ok(carbonStyleMatch, 'carbonize <style> block present');
+    const inner = carbonStyleMatch[1];
+    // Inner must open with one `{` ... and end with one ` `` ... — no nesting.
+    const openCount = (inner.match(/\{`/g) || []).length;
+    const closeCount = (inner.match(/`\}/g) || []).length;
+    assert.equal(openCount, 1, `expected exactly one {\` opener, got ${openCount}`);
+    assert.equal(closeCount, 1, `expected exactly one \`} closer, got ${closeCount}`);
+    // CSS content survived intact.
+    assert.ok(inner.includes('@scope ([data-impeccable-variant="1"])'), 'variant-1 scope kept');
+  });
+
+  // Same shape, but the agent put `{`` and ``\`}` attached to first/last CSS
+  // lines instead of on dedicated lines. Tests the inline-strip branch.
+  it('carbonize does not double-wrap when JSX template-literal punctuation hugs the CSS lines', () => {
+    const tsx = `export default function App() {\n` +
+      `  return (\n` +
+      `    <main>\n` +
+      `      <>\n` +
+      `        {/* impeccable-variants-start INLINE */}\n` +
+      `        <div data-impeccable-variants="INLINE" data-impeccable-variant-count="2" style={{ display: 'contents' }}>\n` +
+      `          <div data-impeccable-variant="original"><p className="hook">orig</p></div>\n` +
+      `          <style data-impeccable-css="INLINE">\n` +
+      "            {`@scope ([data-impeccable-variant=\"1\"]) { .hook { color: red; } }\n" +
+      "             @scope ([data-impeccable-variant=\"2\"]) { .hook { color: green; } }`}\n" +
+      `          </style>\n` +
+      `          <div data-impeccable-variant="1"><p className="hook">variant one</p></div>\n` +
+      `          <div data-impeccable-variant="2" style={{ display: 'none' }}><p className="hook">variant two</p></div>\n` +
+      `        </div>\n` +
+      `        {/* impeccable-variants-end INLINE */}\n` +
+      `      </>\n` +
+      `    </main>\n` +
+      `  );\n` +
+      `}\n`;
+    writeFileSync(join(tmp, 'App.tsx'), tsx);
+
+    const result = runAccept(tmp, ['--id', 'INLINE', '--variant', '1']);
+    assert.equal(result.handled, true, `accept should succeed: ${JSON.stringify(result)}`);
+
+    const after = readFileSync(join(tmp, 'App.tsx'), 'utf-8');
+    const inner = after.match(/<style data-impeccable-css="INLINE">([\s\S]*?)<\/style>/)[1];
+    const openCount = (inner.match(/\{`/g) || []).length;
+    const closeCount = (inner.match(/`\}/g) || []).length;
+    assert.equal(openCount, 1, `expected one {\` opener, got ${openCount}`);
+    assert.equal(closeCount, 1, `expected one \`} closer, got ${closeCount}`);
+    assert.ok(inner.includes('@scope ([data-impeccable-variant="1"])'), 'variant-1 scope kept');
+  });
+
+  // Cursor Bugbot regression (PR #118 review): the JSX wrapper places
+  // marker comments INSIDE the outer <div>, so block.start sits 2 spaces
+  // deeper than the original element. Using block.start as the deindent
+  // base on JSX accept/discard pushes every restored line 2 spaces too far
+  // right. The fix anchors the indent on `replaceRange.start` (the outer
+  // wrapper line), which is at the original element's indent level for
+  // both HTML and JSX.
+  it('discard restores JSX content at the original indent (no 2-space drift from marker-inside layout)', () => {
+    // Run the real wrap CLI so we exercise the JSX-marker-inside-wrapper
+    // layout end to end, not a hand-rolled approximation.
+    const tsx = `export default function App() {
+  return (
+    <main>
+      <aside className="card">
+        <h1 className="hero-title">Hero</h1>
+      </aside>
+    </main>
+  );
+}`;
+    writeFileSync(join(tmp, 'App.tsx'), tsx);
+
+    execSync(
+      `node source/skills/impeccable/scripts/live-wrap.mjs --id INDENTDISC --count 3 --classes "card" --tag "aside" --file "${join(tmp, 'App.tsx')}"`,
+      { cwd: process.cwd(), encoding: 'utf-8' }
+    );
+
+    runAccept(tmp, ['--id', 'INDENTDISC', '--discard']);
+    const after = readFileSync(join(tmp, 'App.tsx'), 'utf-8');
+    // The aside opener should land at exactly 6 spaces — same as the
+    // original — and the <h1> child at 8 (preserved relative depth).
+    // The earlier 6/6/6 collapse was caused by `originalLines.map(l =>
+    // indent + '    ' + l.trimStart())` in live-wrap stripping ALL
+    // leading whitespace before reindenting; the fix strips only the
+    // COMMON minimum so the relative structure is preserved.
+    assert.match(after, /^      <aside className="card">$/m,
+      `<aside> opener must be at 6-space indent (was 8 before outer-indent fix), got:\n${after}`);
+    assert.match(after, /^        <h1 className="hero-title">Hero<\/h1>$/m,
+      `<h1> child must be at 8-space indent — relative depth preserved through wrap+discard. Got:\n${after}`);
+    assert.match(after, /^      <\/aside>$/m,
+      `</aside> closer must be back at 6-space indent. Got:\n${after}`);
+  });
+
+  it('expandReplaceRange handles multi-line self-closing <div /> inside the wrapped element', () => {
+    // Cursor Bugbot regression: per-line depth tracking in
+    // `expandReplaceRange` couldn't see across line boundaries, so a
+    // multi-line self-closing JSX `<div\n  className="spacer"\n/>` got
+    // counted as +1 with no compensating -1. The wrapper's outer </div>
+    // never matched the depth-zero condition; replace-range stopped at
+    // block.end (the marker comment), leaving the wrapper's outer </div>
+    // orphaned in the file after accept/discard — and worse, an
+    // unrelated <div className="next-card"> right after the wrapper got
+    // its own </div> mis-counted as the wrapper close.
+    const tsx = `export default function App() {
+  return (
+    <main>
+      <aside className="card">
+        <h1>Hi</h1>
+        <div
+          className="spacer"
+        />
+        <p>Body</p>
+      </aside>
+      <div className="next-card">After</div>
+    </main>
+  );
+}`;
+    writeFileSync(join(tmp, 'App.tsx'), tsx);
+
+    execSync(
+      `node source/skills/impeccable/scripts/live-wrap.mjs --id MULTILINESC --count 3 --classes "card" --tag "aside" --file "${join(tmp, 'App.tsx')}"`,
+      { cwd: process.cwd(), encoding: 'utf-8' }
+    );
+
+    const result = runAccept(tmp, ['--id', 'MULTILINESC', '--discard']);
+    assert.equal(result.handled, true, `discard should succeed: ${JSON.stringify(result)}`);
+
+    const after = readFileSync(join(tmp, 'App.tsx'), 'utf-8');
+    // The wrapper scaffold must be fully gone — no orphan </div> from
+    // the outer wrapper, and no impeccable markers/data attributes.
+    assert.ok(!after.includes('data-impeccable-variants'),
+      `outer wrapper div must be fully removed; got:\n${after}`);
+    assert.ok(!after.includes('data-impeccable-variant'),
+      `original-div wrapper must be fully removed; got:\n${after}`);
+    assert.ok(!after.includes('impeccable-variants-start'),
+      `start marker must be removed; got:\n${after}`);
+    // The unrelated <div className="next-card">After</div> sibling
+    // must survive intact — Bugbot's worst-case scenario was the depth
+    // walk eating its </div> as the wrapper close.
+    assert.ok(after.includes('<div className="next-card">After</div>'),
+      `unrelated next-card sibling must be preserved; got:\n${after}`);
+    // The multi-line self-closing div inside the original element must
+    // survive too.
+    assert.match(after, /<div\s*\n\s*className="spacer"\s*\n\s*\/>/m,
+      `multi-line self-closing <div /> inside original must survive; got:\n${after}`);
+  });
+
+  it('accept (no carbonize, raw HTML) restores at the original indent on JSX', () => {
+    // Manually craft a wrapped file in the JSX-marker-inside layout — this
+    // mirrors what wrap produces, but lets us exercise accept's indent
+    // logic without a full live cycle.
+    const tsx = `export default function App() {
+  return (
+    <main>
+      <div data-impeccable-variants="INDENTACC" data-impeccable-variant-count="3" style={{ display: "contents" }}>
+        {/* impeccable-variants-start INDENTACC */}
+        {/* Original */}
+        <div data-impeccable-variant="original">
+          <aside className="card">
+            <h1 className="hero-title">Hero</h1>
+          </aside>
+        </div>
+        {/* Variants: insert below this line */}
+        <div data-impeccable-variant="1"><aside className="card variant-one"><h1 className="hero-title">Hero</h1></aside></div>
+        {/* impeccable-variants-end INDENTACC */}
+      </div>
+    </main>
+  );
+}`;
+    writeFileSync(join(tmp, 'App.tsx'), tsx);
+
+    runAccept(tmp, ['--id', 'INDENTACC', '--variant', '1']);
+    const after = readFileSync(join(tmp, 'App.tsx'), 'utf-8');
+    // The accepted aside (variant-one) should land at 6-space indent, the
+    // same place the wrapper <div> sat — not 2 spaces deeper.
+    assert.match(after, /^      <aside className="card variant-one">/m,
+      `accepted <aside> must land at 6-space indent (the wrapper's level), got:\n${after}`);
   });
 
   // Discard must restore the original element after a self-closing <style />,

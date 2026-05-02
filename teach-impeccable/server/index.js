@@ -52,14 +52,33 @@ const server = serve({
 
     // Generated sub-pages — served directly from the pre-generated files
     "/docs": () => serveGenerated(path.join(ROOT_DIR, "public/docs/index.html")),
+    "/docs/": () => serveGenerated(path.join(ROOT_DIR, "public/docs/index.html")),
     "/docs/:id": (req) => {
       const id = req.params.id.replace(/[^a-z0-9-]/gi, "");
       return serveGenerated(path.join(ROOT_DIR, `public/docs/${id}.html`));
     },
     "/slop": () => serveGenerated(path.join(ROOT_DIR, "public/slop/index.html")),
+    "/slop/": () => serveGenerated(path.join(ROOT_DIR, "public/slop/index.html")),
     "/live-mode": () => serveGenerated(path.join(ROOT_DIR, "public/live-mode/index.html")),
+    "/live-mode/": () => serveGenerated(path.join(ROOT_DIR, "public/live-mode/index.html")),
     "/designing": () => serveGenerated(path.join(ROOT_DIR, "public/designing/index.html")),
+    "/designing/": () => serveGenerated(path.join(ROOT_DIR, "public/designing/index.html")),
+    "/neo-mirai": () => Response.redirect("/neo-mirai/", 302),
+    "/neo-mirai/": () => serveGenerated(path.join(ROOT_DIR, "public/neo-mirai/index.html")),
+    "/neon-mirai": () => Response.redirect("/neo-mirai/", 301),
+    "/neon-mirai/": () => Response.redirect("/neo-mirai/", 301),
+    "/cases/neon-mirai": () => Response.redirect("/cases/neo-mirai", 301),
+    "/cases/neon-mirai/": () => Response.redirect("/cases/neo-mirai", 301),
+    "/cases/:slug": (req) => {
+      const slug = req.params.slug.replace(/[^a-z0-9-]/gi, "");
+      return serveGenerated(path.join(ROOT_DIR, `public/cases/${slug}/index.html`));
+    },
+    "/cases/:slug/": (req) => {
+      const slug = req.params.slug.replace(/[^a-z0-9-]/gi, "");
+      return serveGenerated(path.join(ROOT_DIR, `public/cases/${slug}/index.html`));
+    },
     "/tutorials": () => serveGenerated(path.join(ROOT_DIR, "public/tutorials/index.html")),
+    "/tutorials/": () => serveGenerated(path.join(ROOT_DIR, "public/tutorials/index.html")),
     "/tutorials/:slug": (req) => {
       const slug = req.params.slug.replace(/[^a-z0-9-]/gi, "");
       return serveGenerated(path.join(ROOT_DIR, `public/tutorials/${slug}.html`));
@@ -212,4 +231,3 @@ const server = serve({
 });
 
 console.log(`🎨 impeccable.style running at ${server.url}`);
-

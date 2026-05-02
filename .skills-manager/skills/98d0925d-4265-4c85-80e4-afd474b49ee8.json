@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "98d0925d-4265-4c85-80e4-afd474b49ee8",
+  "path": "skill-creator",
+  "path_key": "skill-creator",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "性能",
+    "技能管理",
+    "项目管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "anthropics/skills/skill-creator",
+    "subpath": "skills/skill-creator",
+    "branch": null
+  }
+}

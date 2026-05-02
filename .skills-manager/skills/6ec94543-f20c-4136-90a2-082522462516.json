@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "6ec94543-f20c-4136-90a2-082522462516",
+  "path": "cli-building",
+  "path_key": "cli-building",
+  "enabled": true,
+  "tags": [
+    "CLI",
+    "后端"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "siviter-xyz/dot-agent/cli-building",
+    "subpath": "skills/cli-building",
+    "branch": null
+  }
+}

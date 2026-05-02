@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "b5fe560e-9dfd-4d70-9616-8496420201c3",
+  "path": "arrange",
+  "path_key": "arrange",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/arrange",
+    "subpath": null,
+    "branch": null
+  }
+}

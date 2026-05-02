@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "64cbd0a5-c500-4151-aa25-578fe2aed383",
+  "path": "writing-clearly-and-concisely",
+  "path_key": "writing-clearly-and-concisely",
+  "enabled": true,
+  "tags": [
+    "代码质量",
+    "写作"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "softaworks/agent-toolkit/writing-clearly-and-concisely",
+    "subpath": "skills/writing-clearly-and-concisely",
+    "branch": null
+  }
+}

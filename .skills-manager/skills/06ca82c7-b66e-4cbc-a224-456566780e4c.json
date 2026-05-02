@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "06ca82c7-b66e-4cbc-a224-456566780e4c",
+  "path": "follow-builders",
+  "path_key": "follow-builders",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "创意探索",
+    "视频创作"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "xiaoxuerenww/follow-builders/follow-builders",
+    "subpath": null,
+    "branch": null
+  }
+}

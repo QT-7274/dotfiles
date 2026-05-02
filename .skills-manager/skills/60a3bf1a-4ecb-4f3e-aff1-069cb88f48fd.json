@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "60a3bf1a-4ecb-4f3e-aff1-069cb88f48fd",
+  "path": "claude-plugins-official",
+  "path_key": "claude-plugins-official",
+  "enabled": true,
+  "tags": [
+    "CLI",
+    "MCP",
+    "代码开发",
+    "技能管理"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "e465bae8-2747-4082-bb9f-ea45f62bc4e8",
+  "path": "minimalist-ui",
+  "path_key": "minimalist-ui",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/minimalist-ui",
+    "subpath": "skills/minimalist-skill",
+    "branch": null
+  }
+}

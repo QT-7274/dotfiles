@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "04703661-77c9-45c4-9bff-7ab97b840303",
+  "path": "design-taste-frontend",
+  "path_key": "design-taste-frontend",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "架构"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/design-taste-frontend",
+    "subpath": "skills/taste-skill",
+    "branch": null
+  }
+}

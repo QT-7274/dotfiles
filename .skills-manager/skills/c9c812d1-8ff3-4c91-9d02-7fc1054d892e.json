@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "c9c812d1-8ff3-4c91-9d02-7fc1054d892e",
+  "path": "quieter",
+  "path_key": "quieter",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/quieter",
+    "subpath": null,
+    "branch": null
+  }
+}

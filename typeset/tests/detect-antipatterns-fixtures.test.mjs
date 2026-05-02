@@ -94,6 +94,58 @@ describe('detectHtml — jsdom fixtures', () => {
     );
   });
 
+  it('color: styled <a> and <button> with their own background get contrast checks', async () => {
+    // SAFE_TAGS skips <a> and <button> by default to avoid noise on inline links
+    // (text links inside paragraphs). When these elements are styled as buttons
+    // (own opaque background, padding, direct text), the contrast check must run.
+    // Mirrors a real bug from the landing-demo: a pill-style <a> with
+    // warm-charcoal text on near-black bg, ~2:1 contrast, was missed by both
+    // the CLI and browser overlay paths because <a> was categorically skipped.
+    const f = await detectHtml(path.join(FIXTURES, 'color.html'));
+    const pillBtnFlag = f.some(r =>
+      r.antipattern === 'low-contrast' &&
+      /#5b4f44/i.test(r.snippet || '') &&
+      /#1f1a15/i.test(r.snippet || '')
+    );
+    assert.ok(pillBtnFlag, 'expected low-contrast finding for styled <a> pill button');
+    const styledButtonFlag = f.some(r =>
+      r.antipattern === 'low-contrast' &&
+      /#6c7280/i.test(r.snippet || '') &&
+      /#374151/i.test(r.snippet || '')
+    );
+    assert.ok(styledButtonFlag, 'expected low-contrast finding for styled <button>');
+  });
+
+  it('color: inline <a> without own background remains skipped (no regression)', async () => {
+    // The exception for styled buttons must not regress to flagging plain
+    // inline text links — those would create noise on essentially every
+    // page on the web.
+    const f = await detectHtml(path.join(FIXTURES, 'color.html'));
+    const inlineLinkFalsePositive = f.some(r =>
+      r.antipattern === 'low-contrast' &&
+      /#aaaaaa/i.test(r.snippet || '')
+    );
+    assert.equal(
+      inlineLinkFalsePositive, false,
+      'inline <a> without own background must remain skipped'
+    );
+  });
+
+  it('color: styled <a> with good contrast does not flag', async () => {
+    // The detector exception must let the check run, but a properly contrasted
+    // styled button must obviously pass.
+    const f = await detectHtml(path.join(FIXTURES, 'color.html'));
+    const goodPillFalsePositive = f.some(r =>
+      r.antipattern === 'low-contrast' &&
+      /#f5f0e8/i.test(r.snippet || '') &&
+      /#141419/i.test(r.snippet || '')
+    );
+    assert.equal(
+      goodPillFalsePositive, false,
+      'styled <a> with high contrast must not flag'
+    );
+  });
+
   it('color: emoji-only text is never flagged as low-contrast', async () => {
     // Emojis render as multicolor glyphs regardless of CSS `color`, so the
     // CSS text color is irrelevant for contrast. The fixture's emoji cards

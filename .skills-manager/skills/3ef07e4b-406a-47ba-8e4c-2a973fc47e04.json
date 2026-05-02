@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "3ef07e4b-406a-47ba-8e4c-2a973fc47e04",
+  "path": "find-skills",
+  "path_key": "find-skills",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "技能管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "vercel-labs/skills/find-skills",
+    "subpath": "skills/find-skills",
+    "branch": null
+  }
+}

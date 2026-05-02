@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "80547a68-37f0-4227-9cc5-05ff970772b6",
+  "path": "typescript-expert",
+  "path_key": "typescript-expert",
+  "enabled": true,
+  "tags": [
+    "代码开发",
+    "前端",
+    "架构"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "sickn33/antigravity-awesome-skills/typescript-expert",
+    "subpath": "skills/typescript-expert",
+    "branch": null
+  }
+}

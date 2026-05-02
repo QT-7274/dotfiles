@@ -128,6 +128,71 @@ describe('live-inject — insert/remove round-trip preserves file bytes', () => 
     }
   });
 
+  it('round-trips with insertAfter — preserves indented opener line below it', () => {
+    const original = `<!DOCTYPE html>
+<html>
+  <head>
+    <title>Test</title>
+  </head>
+  <body>
+    <main>
+      <h1>Hello</h1>
+    </main>
+  </body>
+</html>
+`;
+    const file = join(tmp, 'index.html');
+    writeFileSync(file, original);
+
+    const cfgPath = join(tmp, 'config.json');
+    writeFileSync(cfgPath, JSON.stringify({
+      files: ['index.html'],
+      insertAfter: '<head>',
+      commentSyntax: 'html',
+    }));
+
+    runInject(tmp, cfgPath, ['--port', '8400']);
+    runInject(tmp, cfgPath, ['--remove']);
+
+    const after = readFileSync(file, 'utf-8');
+    assert.equal(after, original, 'insertAfter round-trip must restore original byte-for-byte');
+  });
+
+  it('round-trips through CSP-meta patch and revert (insert mutates the meta tag, remove restores it)', () => {
+    // Mirrors a Vite app that ships a CSP meta tag in index.html. live-inject
+    // appends `http://localhost:PORT` to script-src / connect-src on insert
+    // and stashes the original directives in `data-impeccable-csp-original`.
+    // --remove must restore the meta tag's original `content` exactly.
+    const original = `<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; connect-src 'self';" />
+    <title>CSP test</title>
+  </head>
+  <body>
+    <main>
+      <h1>Hello</h1>
+    </main>
+  </body>
+</html>
+`;
+    const file = join(tmp, 'index.html');
+    writeFileSync(file, original);
+
+    const cfgPath = join(tmp, 'config.json');
+    writeFileSync(cfgPath, JSON.stringify({
+      files: ['index.html'],
+      insertBefore: '</body>',
+      commentSyntax: 'html',
+    }));
+
+    runInject(tmp, cfgPath, ['--port', '8400']);
+    runInject(tmp, cfgPath, ['--remove']);
+
+    const after = readFileSync(file, 'utf-8');
+    assert.equal(after, original, 'CSP meta tag must round-trip exactly through insert+remove');
+  });
+
   it('round-trips when the insert anchor has no leading indent (column-0 </body>)', () => {
     const original = `<html>
 <body>

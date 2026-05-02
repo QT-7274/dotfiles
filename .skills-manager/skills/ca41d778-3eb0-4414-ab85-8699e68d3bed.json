@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "ca41d778-3eb0-4414-ab85-8699e68d3bed",
+  "path": "frontend-patterns",
+  "path_key": "frontend-patterns",
+  "enabled": true,
+  "tags": [
+    "React",
+    "前端",
+    "状态管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "affaan-m/everything-claude-code/frontend-patterns",
+    "subpath": "skills/frontend-patterns",
+    "branch": null
+  }
+}

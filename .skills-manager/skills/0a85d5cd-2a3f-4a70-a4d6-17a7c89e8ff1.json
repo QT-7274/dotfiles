@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "0a85d5cd-2a3f-4a70-a4d6-17a7c89e8ff1",
+  "path": "bolder",
+  "path_key": "bolder",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "视觉设计",
+    "设计系统"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/bolder",
+    "subpath": null,
+    "branch": null
+  }
+}

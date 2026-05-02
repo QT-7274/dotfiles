@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "5bf6afde-4d30-40d3-830d-807c9848d489",
+  "path": "layout",
+  "path_key": "layout",
+  "enabled": true,
+  "tags": [
+    "CSS",
+    "UI 布局",
+    "前端",
+    "组件设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/layout",
+    "subpath": null,
+    "branch": null
+  }
+}

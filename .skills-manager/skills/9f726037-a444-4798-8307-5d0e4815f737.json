@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "9f726037-a444-4798-8307-5d0e4815f737",
+  "path": "verification-before-completion",
+  "path_key": "verification-before-completion",
+  "enabled": true,
+  "tags": [
+    "代码质量",
+    "工作流"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "obra/superpowers/verification-before-completion",
+    "subpath": "skills/verification-before-completion",
+    "branch": null
+  }
+}

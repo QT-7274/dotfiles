@@ -63,9 +63,9 @@
         <a href="/slop" data-nav="slop">Slop</a>
         <a href="/live-mode" data-nav="live">Live</a>
       </nav>
-      <a href="https://github.com/pbakaus/impeccable" class="site-header-github" target="_blank" rel="noopener" aria-label="Impeccable on GitHub, 21k stars">
+      <a href="https://github.com/pbakaus/impeccable" class="site-header-github" target="_blank" rel="noopener" aria-label="Impeccable on GitHub, 23k stars">
         <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.531 1.032 1.531 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/></svg>
-        <span class="site-header-github-label">21k</span>
+        <span class="site-header-github-label">23k</span>
         <svg class="site-header-github-star" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l2.76 6.36L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l7.24-.91L12 2z"/></svg>
       </a>
     </div>
@@ -86,6 +86,8 @@
   <section id="hero" class="hero-combined">
     <div class="hero-combined-container">
       <!-- Left: Title & Info -->
+
+
 
 
 
@@ -135,8 +137,10 @@
 
 
       </div>
-      <p class="hero-version-link"><a href="#changelog">v3.0: 1 skill, 23 commands</a></p>
+      <p class="hero-version-link"><a href="#changelog">v3.0.6: live mode preserves identity, departure mode derives from brand voice</a></p>
       </div>
+
+
 
 
 
@@ -269,8 +273,8 @@
         <div class="why-layout">
           <div class="why-left">
             <ol class="why-tabs" role="tablist" aria-label="Reasons Impeccable is different">
-            <li><button role="tab" class="why-tab is-active" data-index="0" aria-selected="true" aria-controls="why-panel-0"><span class="why-tab-num">01</span><span class="why-tab-label">Intentional design</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
-            <li><button role="tab" class="why-tab" data-index="vz" aria-selected="false" aria-controls="why-panel-vz"><span class="why-tab-num">02</span><span class="why-tab-label">Visualize, then build</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
+            <li><button role="tab" class="why-tab is-active" data-index="vz" aria-selected="true" aria-controls="why-panel-vz"><span class="why-tab-num">01</span><span class="why-tab-label">Visualize, then ship</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
+            <li><button role="tab" class="why-tab" data-index="0" aria-selected="false" aria-controls="why-panel-0"><span class="why-tab-num">02</span><span class="why-tab-label">Intentional design</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
             <li><button role="tab" class="why-tab" data-index="1" aria-selected="false" aria-controls="why-panel-1"><span class="why-tab-num">03</span><span class="why-tab-label">Prevents AI slop</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
             <li><button role="tab" class="why-tab" data-index="2" aria-selected="false" aria-controls="why-panel-2"><span class="why-tab-num">04</span><span class="why-tab-label">Production codebases</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
             <li><button role="tab" class="why-tab" data-index="3" aria-selected="false" aria-controls="why-panel-3"><span class="why-tab-num">05</span><span class="why-tab-label">Brand + Product design</span><span class="why-tab-progress" aria-hidden="true"></span></button></li>
@@ -282,7 +286,7 @@
           </div>
 
           <div class="why-panels">
-            <article class="why-panel is-active" id="why-panel-0" role="tabpanel" data-index="0">
+            <article class="why-panel" id="why-panel-0" role="tabpanel" data-index="0" hidden>
               <h3 class="why-panel-title">Design that knows who it's for.</h3>
               <p class="why-panel-body">Most AI tools one-shot a plausible-looking mock. Impeccable starts with a conversation: audience, brand personality, anti-references, aesthetic direction. It captures the answer in <code>PRODUCT.md</code> and <code>DESIGN.md</code> and loads them on every command. The output is design that fits the actual business, not a generic impression of one.</p>
               <div class="why-visual why-visual--productmd">
@@ -319,24 +323,30 @@
               </div>
             </article>
 
-            <article class="why-panel why-panel--vizfirst" id="why-panel-vz" role="tabpanel" data-index="vz" hidden>
-              <h3 class="why-panel-title">Picture it before you build it.</h3>
-              <p class="why-panel-body">Image gen crossed the reference-quality threshold with <em>GPT Image 2</em>, <em>Nano Banana Pro</em>, and <em>Imagen 4 Ultra</em>. <code>/impeccable shape</code> drafts a brand toolkit; <code>/impeccable craft</code> codes toward a hi-fi mock. The mood board lives inside the flow.</p>
+            <article class="why-panel why-panel--vizfirst is-active" id="why-panel-vz" role="tabpanel" data-index="vz">
+              <h3 class="why-panel-title">Picture it. Build it. Ship the page.</h3>
+              <p class="why-panel-body">Neo Mirai started as generated reference images: a brand toolkit and a hi-fi conference mock. <code>/impeccable craft</code> turned them into a real responsive website, then iterated in the browser until the live page matched the direction.</p>
               <div class="why-visual why-visual--vizfirst">
-                <figure class="why-vz-plate why-vz-plate--brand">
-                  <span class="why-vz-plate-kind">Shape &middot; brand toolkit</span>
-                  <div class="why-vz-plate-frame">
-                    <img src="assets/openai_image_2_brand.jpg" alt="Auto-generated brand toolkit: identity lockups, palette, type, icon system, and application mocks for a fictional AI design conference." loading="lazy" width="1536" height="1024" />
-                  </div>
-                </figure>
                 <figure class="why-vz-plate why-vz-plate--hifi">
-                  <span class="why-vz-plate-kind">Craft &middot; hi-fi reference</span>
-                  <div class="why-vz-plate-frame">
+                  <span class="why-vz-plate-kind">01 &middot; Visualize</span>
+                  <a class="why-vz-plate-frame" href="/cases/neo-mirai" aria-label="Read the Neo Mirai case study">
                     <img src="assets/openai_image_2_hifi.jpg" alt="Auto-generated hi-fi landing-page mock in editorial warm-paper style." loading="lazy" width="864" height="1821" />
-                  </div>
+                  </a>
+                </figure>
+                <figure class="why-vz-plate why-vz-plate--brand">
+                  <span class="why-vz-plate-kind">02 &middot; Shape</span>
+                  <a class="why-vz-plate-frame" href="/cases/neo-mirai" aria-label="Read the Neo Mirai case study">
+                    <img src="assets/openai_image_2_brand.jpg" alt="Auto-generated brand toolkit: identity lockups, palette, type, icon system, and application mocks for a fictional AI design conference." loading="lazy" width="1536" height="1024" />
+                  </a>
+                </figure>
+                <figure class="why-vz-plate why-vz-plate--live">
+                  <span class="why-vz-plate-kind">03 &middot; Live build</span>
+                  <a class="why-vz-plate-frame" href="/neo-mirai/" aria-label="Open the Neo Mirai live build">
+                    <img src="assets/cases/neo-mirai/live-fold.png" alt="Finished Neo Mirai website hero and agenda, implemented from the generated conference mock." loading="lazy" width="1440" height="1100" />
+                  </a>
                 </figure>
               </div>
-              <p class="why-panel-meta">Plates generated by GPT Image 2 via Codex. &middot; <a href="/designing#start">See the workflow &rarr;</a></p>
+              <p class="why-panel-meta">A generated reference became shipped HTML, CSS, assets, responsive fixes, and interaction polish. &middot; <a href="/cases/neo-mirai">Read the case &rarr;</a> &middot; <a href="/neo-mirai/">Open the live build &rarr;</a></p>
             </article>
 
             <article class="why-panel why-panel--antidote" id="why-panel-1" role="tabpanel" data-index="1" hidden>
@@ -922,14 +932,125 @@
         <h2 class="section-title">What's New</h2>
       </div>
 
-      <div class="changelog-list" data-reveal>
+      <div class="changelog-highlights" data-reveal>
+        <p class="changelog-highlights-label">Highlights since v3.0 <span class="changelog-date">April 10 – 30, 2026</span></p>
+        <ul class="changelog-items">
+          <li><strong>Live mode preserves identity by default.</strong> Variants stay on-brand for the existing surface and explore different expression axes within that identity. Departure from the current aesthetic only triggers when PRODUCT.md anti-references explicitly reject the current surface, or the user asks for it. Departure directions derive from brand voice, not a fixed catalog.</li>
+          <li><strong>Detector flags the new monoculture.</strong> The overused-font rule now catches Fraunces, Geist, Mona Sans, Plus Jakarta Sans, Space Grotesk, Recoleta, and Instrument Sans. Contrast checks run on styled <code>&lt;a&gt;</code> and <code>&lt;button&gt;</code> elements. Brand exceptions for Vercel, Next.js, and GitHub on their own domains.</li>
+          <li><strong>Live mode works everywhere.</strong> Strict-CSP apps, modal hosts (Radix, Headless UI, vaul), React/TSX projects, and repeated identical-class siblings all handle cleanly through the wrap, preview, accept, and carbonize loop.</li>
+          <li><strong>PRODUCT.md + DESIGN.md as shared context.</strong> A strategic file (who, what, why) and a visual file (colors, typography, components in the <a href="https://stitch.withgoogle.com/docs/design-md/format/" target="_blank" rel="noopener">Google Stitch format</a>) that every command reads before generating. Created via <code>/impeccable teach</code> and <code>/impeccable document</code>.</li>
+          <li><strong>18 skills became 1 skill with 23 commands.</strong> One <code>/impeccable</code> entry in the menu, shared design vocabulary, and <code>/impeccable pin</code> to promote favorites back as standalone shortcuts.</li>
+        </ul>
+      </div>
+
+      <details class="changelog-older" data-reveal>
+        <summary class="changelog-older-toggle">Full version history</summary>
+        <div class="changelog-older-entries">
+        <div class="changelog-list">
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">v3.0.6</span>
+            <span class="changelog-date">April 30, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Live mode preserves identity by default.</strong> Variants now stay on-brand for the existing surface (same palette, same type pairing, same visual rhetoric) and explore different expression axes within that identity. Departure from the existing aesthetic only triggers when PRODUCT.md anti-references explicitly call out the current surface, or the user asks for it.</li>
+            <li><strong>Departure mode derives from brand voice, not a fixed catalog.</strong> The old lane list (Swiss-grid, Terminal, Industrial-signage, etc.) caused the model to converge on the same three directions every time. Replaced with a brand-voice derivation process: read personality words, imagine physical experiences, derive visual directions. Each run produces directions specific to the brand.</li>
+            <li><strong>Parameters ship consistently on large surfaces.</strong> Planning params is now part of variant planning, not a separate step. The freeform bias aligns with the budget table: 2-3 knobs per variant for heroes and sections, with 0-param heroes flagged as mistakes rather than judgment calls.</li>
+            <li><strong>Reflex-reject aesthetic lanes.</strong> Parallel to the font reflex-reject list in <code>brand.md</code>. Editorial-typographic is the first entry, catching the second-order training reflex where every departure from SaaS-cream defaults to magazine-cover aesthetics.</li>
+            <li><strong>Two-altitude category-reflex check.</strong> The shared design laws now catch both first-order reflexes (theme + palette from category alone) and second-order reflexes (aesthetic family from category + anti-references).</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">Extension v1.0.3</span>
+            <span class="changelog-date">April 29, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Contrast checks now run on styled buttons.</strong> A styled <code>&lt;a&gt;</code> or <code>&lt;button&gt;</code> with its own opaque background was silently skipped by the contrast rule, so a "Get started" pill with charcoal text on a near-black background read as fine to the detector. Buttons with their own background and direct text now flow through the same contrast and palette checks as every other text element. Inline links inside paragraphs continue to skip, as before.</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">Extension v1.0.2</span>
+            <span class="changelog-date">April 29, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Popup scan no longer hangs after a page reload.</strong> The toolbar-icon flow worked the first time but got stuck on "Scanning…" on subsequent clicks if the page had been reloaded in between. The service worker only cleared its content-script-injected flag when DevTools was open, so the popup-only path saw a stale flag and silently sent its scan request to a tab whose content script had already been wiped. Reset is now unconditional; auto-rescan stays gated to DevTools.</li>
+            <li><strong>Detector flags the new monoculture.</strong> The overused-font rule now catches Fraunces, Geist, Mona Sans, Plus Jakarta Sans, Space Grotesk, Recoleta, and Instrument Sans alongside Inter and the older defaults. Brand exceptions for Vercel, Next.js, and GitHub on their own domains.</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">CLI v2.1.8</span>
+            <span class="changelog-date">April 28, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Detector runs on Windows.</strong> CLI path resolution used <code>new URL(...).pathname</code>, which prepends a slash to drive letters (<code>/C:/...</code>) and breaks <code>fs</code> on Windows. Switched to <code>fileURLToPath</code> across the board. Reported in <a href="https://github.com/pbakaus/impeccable/issues/95" target="_blank" rel="noopener">#95</a>, contributed by <a href="https://github.com/voidborne-d" target="_blank" rel="noopener">@voidborne-d</a>.</li>
+            <li><strong>Border-radius detection no longer flickers under jsdom.</strong> The pill-button rule was missing real cases when jsdom returned a percent radius without an explicit width, and over-reporting when CSS shorthand left individual corners unset. The reader now preserves the percent signal and resolves shorthand consistently across the browser and jsdom paths, so CLI scans match what the live overlay sees.</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">v3.0.5</span>
+            <span class="changelog-date">April 28, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Live mode lands valid TSX through the wrap → preview → accept → carbonize loop on Vite/Next React/TSX projects.</strong> The wrapper now keeps a single JSX-slot child instead of three adjacent siblings, so it round-trips cleanly inside <code>return (...)</code>, array <code>.map(...)</code>, and <code>asChild</code> parents like Radix's <code>&lt;DialogPrimitive.Title&gt;</code>. Carbonize stopped double-wrapping CSS in nested template literals on TSX targets, accept and discard restore the picked element at its original indent (with relative depth between lines preserved), and the screenshot overlay no longer flashes solid black on default-background pages. Closes <a href="https://github.com/pbakaus/impeccable/issues/114" target="_blank" rel="noopener">#114</a>, with thanks again to <a href="https://github.com/dergachoff" target="_blank" rel="noopener">@dergachoff</a> for the detailed bug report.</li>
+            <li><strong>Wrap correctly disambiguates repeated identical-class siblings.</strong> A list of <code>&lt;Card className="card"&gt;</code> rendered three times with the same classes used to land on the first one regardless of which the user picked. <code>live-wrap.mjs</code> now accepts <code>--text TEXT</code> (the picked element's <code>textContent</code>) and narrows candidates accordingly, falling back to first-match when the text is too short or doesn't appear literally in source (data-driven children like <code>{title}</code>), and erroring with <code>element_ambiguous</code> when multiple branches still match equally.</li>
+            <li><strong><code>live-inject</code> CSP-meta unwrap now byte-for-byte preserves self-closing tag whitespace.</strong> The patch+revert cycle on a <code>&lt;meta http-equiv="Content-Security-Policy" ... /&gt;</code> tag was eating the space before <code>/&gt;</code> via a double-space artifact in the marker insertion path; common Vite shapes that ship a CSP meta now round-trip cleanly.</li>
+            <li><strong><code>live.md</code> spec gained explicit guidance for three real authoring traps.</strong> Variant CSS must use a descendant combinator (<code>:scope &gt; .card</code>, not bare <code>:scope</code>) or it lands on the wrapper instead of the picked element. JSX <code>&lt;style&gt;</code> bodies need <code>{`...`}</code> template-literal wrapping. Aborting an in-flight session uses <code>live-poll --reply EVENT_ID error "msg"</code>, not <code>live-accept --discard</code>; the latter only mutates source while the bar stays stuck on GENERATING dots forever.</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">v3.0.4</span>
+            <span class="changelog-date">April 28, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong><code>/impeccable craft</code> now treats approved mocks as visual contracts.</strong> The craft flow requires a mock fidelity inventory before build, maps major visible ingredients to code or assets, and flags missing hero objects, imagery, section structure, nav/CTA treatment, and distinctive motifs as blocking defects unless the user accepted the deviation.</li>
+            <li><strong>Image-led brand surfaces can no longer degrade into abstract panels.</strong> Travel, editorial, portfolio, venue, product showcase, entertainment, and education work now requires credible imagery, generated plates, illustrations, maps, renders, or destination scenes when the approved mock or subject matter calls for them.</li>
+            <li><strong><code>/impeccable craft</code> and <code>/impeccable shape</code> hardened against autonomous agents.</strong> Codex-class harnesses had started writing files before the user confirmed a design brief, treating their own summary as the brief. Setup now ships a preflight checklist (context, product, command reference, shape, image gate, mutation), and craft enforces an explicit build gate: <code>shape=pass</code> only counts when the user separately approves the brief or supplies a pre-confirmed one. Self-authored briefs and "the implementation will be semantic anyway" no longer skip the visual probe.</li>
+            <li><strong>Live picker plays nice with modal hosts.</strong> Inside Radix Dialog, Headless UI, vaul, and other portals that lock <code>body { pointer-events: none }</code> or attach outside-click dismissers, the picker chrome had become unclickable, and any click that did land would dismiss the host dialog. The bar, picker, params panel, annotation overlay, and design panel now defang outside-handlers at the chrome boundary and force <code>pointer-events: auto</code> on themselves. Theme detection also stopped misreading a transparent body as black. Closes <a href="https://github.com/pbakaus/impeccable/issues/113" target="_blank" rel="noopener">#113</a>, with thanks to <a href="https://github.com/dergachoff" target="_blank" rel="noopener">@dergachoff</a> for the thoughtful bug report.</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">v3.0.2</span>
+            <span class="changelog-date">April 27, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Claude Code plugin install shrunk by 380×.</strong> The marketplace now ships only the runtime payload (~770 KB) instead of the entire monorepo (291 MB). Plugin source moved from <code>./</code> to <code>./plugin</code>, so the cache no longer copies <code>node_modules</code>, build scripts, tests, or the other harness directories. Reported in <a href="https://github.com/pbakaus/impeccable/issues/107" target="_blank" rel="noopener">#107</a>.</li>
+            <li><strong>Slash commands now register reliably on Claude Code.</strong> The <code>skills</code> field in <code>plugin.json</code> was missing the trailing slash that the documented schema expects (<code>"./skills/"</code>, not <code>"./skills"</code>), which caused Claude Code's plugin loader to skip command registration on some setups. Reported by three users in <a href="https://github.com/pbakaus/impeccable/issues/86" target="_blank" rel="noopener">#86</a>.</li>
+          </ul>
+        </div>
+
+        <div class="changelog-entry">
+          <div class="changelog-version-header">
+            <span class="changelog-version">v3.0.1</span>
+            <span class="changelog-date">April 24, 2026</span>
+          </div>
+          <ul class="changelog-items">
+            <li><strong>Live mode runs in strict-CSP apps.</strong> When your HTML carries a Content-Security-Policy meta tag, <code>/impeccable live</code> now silently appends the live-server origin to <code>script-src</code> and <code>connect-src</code> (and <code>blob:</code> to <code>img-src</code> for the screenshot overlay) on session start, and reverts the patch verbatim on stop. Header-based CSP setups still get the existing detect-and-suggest path.</li>
+            <li><strong>Live mode survives conditional-render content.</strong> Picking an element inside a closed modal, an inactive tab, or a collapsible panel used to wedge live mode when Vite Fast Refresh remounted the parent and reset state. Now: a brief upfront heads-up at pick time, plus a contextual toast after Go ("retrace the path that revealed it") so variants land the moment the element is back in the DOM. No more force-reload that masked the issue.</li>
+            <li><strong>Live mode no longer breaks JSX projects.</strong> Three round-trip bugs in <code>/impeccable live</code>'s accept path are fixed: the carbonize stash now uses JSX-syntax style attributes and template-literal CSS, and the post-accept rewrite no longer leaks template-literal punctuation into the file. SvelteKit and other frameworks that hydrate after HTML parse now also resume cleanly post-reload.</li>
+            <li><strong><code>/impeccable polish</code> now a true superset of the retired <code>/normalize</code>.</strong> Aligning to the design system is non-optional, drift is named by root cause (missing token, one-off implementation, or conceptual misalignment), and a new Information Architecture &amp; Flow dimension covers progressive disclosure, established user-flow shapes, and naming consistency. Cosmetic-vs-functional triage helps order work when polish time is short.</li>
+          </ul>
+        </div>
+
         <div class="changelog-entry">
           <div class="changelog-version-header">
             <span class="changelog-version">v3.0</span>
             <span class="changelog-date">April 10, 2026</span>
           </div>
           <ul class="changelog-items">
-            <li><strong>Live Mode.</strong> Run <code>/impeccable live</code> and iterate on your UI in the browser: pick any element, drop a comment or stroke, hit Go, get three production-quality variants swapped in via your framework's HMR, accept the one you want and it writes back to source. Works on Vite, Next.js (including monorepos), SvelteKit, Astro, Nuxt. Detects your project's Content Security Policy and offers a one-time, dev-only patch so it runs in strict-CSP apps too.</li>
+            <li><strong>Live Mode (Alpha).</strong> Run <code>/impeccable live</code> and iterate on your UI in the browser: pick any element, drop a comment or stroke, hit Go, get three production-quality variants swapped in via your framework's HMR, accept the one you want and it writes back to source. Works on Vite, Next.js (including monorepos), SvelteKit, Astro, Nuxt. Detects your project's Content Security Policy and offers a one-time, dev-only patch so it runs in strict-CSP apps too.</li>
+            <li><strong>Visualize, then build.</strong> Image gen crossed the reference-quality threshold with GPT Image 2, Nano Banana Pro, and Imagen 4 Ultra. <code>/impeccable shape</code> drafts a brand toolkit (color, typography, mood board) as real images; <code>/impeccable craft</code> pre-renders the hi-fi mock to code toward. Strongest in Codex with GPT 5.5.</li>
             <li><strong>PRODUCT.md, shared design memory for your AI.</strong> A single file at your project root that names the audience, brand personality, anti-references, and register (brand vs product). Every command reads it before generating, so output stops drifting into generic "modern SaaS" territory and starts sounding like your product. Created in one step via <code>/impeccable teach</code>.</li>
             <li><strong>DESIGN.md generation, spec-compliant and interoperable.</strong> <code>/impeccable document</code> scans your tokens, components, and rendered output and writes a DESIGN.md that follows the <a href="https://stitch.withgoogle.com/docs/design-md/format/" target="_blank" rel="noopener">Google Stitch DESIGN.md format</a>. Colors, typography, elevation, components, do's and don'ts, in the exact six sections other DESIGN.md-aware tools expect. Your visual system travels with you.</li>
             <li><strong>Brand and product registers.</strong> Design work splits cleanly into two worlds: brand (marketing sites, landing pages, portfolios, where design IS the product) and product (app UI, dashboards, tools, where design SERVES the product). Register-aware commands (<code>typeset</code>, <code>animate</code>, <code>bolder</code>, <code>quieter</code>, <code>colorize</code>, <code>layout</code>, <code>delight</code>) each adjust their vocabulary to match, so brand work isn't critiqued for breaking product-UI conventions and vice versa.</li>
@@ -937,6 +1058,9 @@
             <li><strong>Pin your favorites back as shortcuts.</strong> Run <code>/impeccable pin audit</code> and <code>/audit</code> becomes a standalone command again, without reversing the consolidation. Under the hood it writes a lightweight redirect skill that delegates to <code>/impeccable audit</code>, so updates to the parent skill flow through automatically. <code>/impeccable unpin audit</code> removes it.</li>
           </ul>
         </div>
+        </div>
+        </div>
+      </details>
 
         <details class="changelog-older">
           <summary class="changelog-older-toggle">View older releases</summary>
@@ -1059,7 +1183,6 @@
             </div>
           </div>
         </details>
-      </div>
 
     </section>
 

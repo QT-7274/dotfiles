@@ -180,6 +180,15 @@ cp -r dist/rovo-dev/.rovodev your-project/
 cp -r dist/rovo-dev/.rovodev/skills/* ~/.rovodev/skills/
 ```
 
+**Qoder:**
+```bash
+# Project-specific
+cp -r dist/qoder/.qoder your-project/
+
+# Or global (applies to all projects)
+cp -r dist/qoder/.qoder/skills/* ~/.qoder/skills/
+```
+
 ## Usage
 
 Once installed, use commands in your AI harness:
@@ -225,6 +234,15 @@ The detector catches 24 issues across AI slop (side-tab borders, purple gradient
 - [Kiro](https://kiro.dev)
 - [Trae](https://trae.ai)
 - [Rovo Dev](https://www.atlassian.com/software/rovo)
+- [Qoder](https://qoder.com)
+
+## Community & Ecosystem
+
+Join the community and ecosystem conversations:
+
+- GitHub Discussions: file bugs, request features, and help newcomers.
+- [Impeccable on npm](https://www.npmjs.com/package/impeccable): grab the CLI, follow releases, and star the package.
+- Follow @pbakaus on Twitter for release notes, sample lint reports, and video highlights of new rules.
 
 ## Contributing
 

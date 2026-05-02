@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "6567d9eb-9dd7-427e-a6c8-6c8c5a5b7b6c",
+  "path": "seo-audit",
+  "path_key": "seo-audit",
+  "enabled": true,
+  "tags": [
+    "SEO",
+    "技术审查",
+    "搜索优化",
+    "网站诊断"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "coreyhaines31/marketingskills/seo-audit",
+    "subpath": "skills/seo-audit",
+    "branch": null
+  }
+}

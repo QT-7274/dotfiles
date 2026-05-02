@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "72eb652e-d586-4b44-8bfa-f3dab7c165e4",
+  "path": "create-subagents",
+  "path_key": "create-subagents",
+  "enabled": true,
+  "tags": [
+    "AI 工作流"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "glittercowboy/taches-cc-resources/create-subagents",
+    "subpath": "skills/create-subagents",
+    "branch": null
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "88b361eb-4eef-4310-8d00-94e7f2a5c912",
+  "path": "colorize",
+  "path_key": "colorize",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/colorize",
+    "subpath": null,
+    "branch": null
+  }
+}

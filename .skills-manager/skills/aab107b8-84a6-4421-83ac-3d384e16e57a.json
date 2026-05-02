@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "aab107b8-84a6-4421-83ac-3d384e16e57a",
+  "path": "harden",
+  "path_key": "harden",
+  "enabled": true,
+  "tags": [
+    "代码质量",
+    "国际化",
+    "工作流"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/harden",
+    "subpath": null,
+    "branch": null
+  }
+}

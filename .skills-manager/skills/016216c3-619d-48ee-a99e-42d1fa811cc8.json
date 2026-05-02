@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "016216c3-619d-48ee-a99e-42d1fa811cc8",
+  "path": "browse-automation",
+  "path_key": "browse-automation",
+  "enabled": true,
+  "tags": [
+    "CLI",
+    "WebGL"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

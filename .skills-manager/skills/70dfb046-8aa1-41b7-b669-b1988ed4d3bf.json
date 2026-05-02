@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "70dfb046-8aa1-41b7-b669-b1988ed4d3bf",
+  "path": "high-end-visual-design",
+  "path_key": "high-end-visual-design",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "前端",
+    "动效设计",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/high-end-visual-design",
+    "subpath": "skills/soft-skill",
+    "branch": null
+  }
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "1bf172df-ad7e-4e63-99e8-5037bb1608e9",
+  "path": "openai-codex",
+  "path_key": "openai-codex",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "代码开发"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

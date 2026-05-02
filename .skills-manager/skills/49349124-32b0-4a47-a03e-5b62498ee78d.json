@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "49349124-32b0-4a47-a03e-5b62498ee78d",
+  "path": "full-output-enforcement",
+  "path_key": "full-output-enforcement",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "代码开发",
+    "代码质量"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/full-output-enforcement",
+    "subpath": "skills/output-skill",
+    "branch": null
+  }
+}

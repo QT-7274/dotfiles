@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "526788b3-abf9-4f43-9804-6e399b563758",
+  "path": "worktree-orchestrator",
+  "path_key": "worktree-orchestrator",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "Git",
+    "工作流"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "f2783b2b-0f71-45f4-8d6f-927d81b73793",
+  "path": "claude-code-internal-plugins",
+  "path_key": "claude-code-internal-plugins",
+  "enabled": true,
+  "tags": [
+    "技能管理"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

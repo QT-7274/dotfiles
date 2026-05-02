@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "bb33cd97-08fa-4a66-9b8e-8410fbb28148",
+  "path": "onboard",
+  "path_key": "onboard",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "UX 设计",
+    "前端"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/onboard",
+    "subpath": null,
+    "branch": null
+  }
+}

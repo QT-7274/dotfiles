@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "ba50bab8-e409-4a01-b9d2-7204df76abf6",
+  "path": "planning-with-files",
+  "path_key": "planning-with-files",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "工作流",
+    "跨平台",
+    "项目管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "othmanadi/planning-with-files/planning-with-files",
+    "subpath": "skills/planning-with-files",
+    "branch": null
+  }
+}

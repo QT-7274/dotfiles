@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "c72d0df9-78a9-4038-a512-bcdf136fd2c8",
+  "path": "redesign-existing-projects",
+  "path_key": "redesign-existing-projects",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "代码质量",
+    "前端",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/redesign-existing-projects",
+    "subpath": "skills/redesign-skill",
+    "branch": null
+  }
+}

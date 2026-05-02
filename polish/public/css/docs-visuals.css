@@ -30,8 +30,9 @@
   padding: 0;
 }
 
+.docs-viz-hero .docs-viz-caption,
 .docs-viz-caption {
-  margin: 10px 0 0;
+  margin: 16px 0 0;
   font-family: var(--font-body);
   font-size: 0.8125rem;
   color: var(--color-ash);
@@ -2939,4 +2940,430 @@
   line-height: 1.6;
   color: var(--color-charcoal);
   margin: 0;
+}
+
+/* Neo Mirai proof case: shared by Designing, Craft docs, and the case route. */
+.designing-visualize-spread {
+  grid-template-columns: 0.88fr 0.72fr 0.88fr;
+  align-items: start;
+}
+
+.designing-visualize-plate-frame {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+  transition: border-color var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out), box-shadow var(--duration-base) var(--ease-out);
+}
+
+.designing-visualize-plate-frame:hover {
+  border-color: var(--color-accent);
+  transform: translateY(-3px);
+  box-shadow: 0 20px 46px oklch(10% 0 0 / 0.08);
+}
+
+.designing-visualize-plate--live .designing-visualize-plate-frame {
+  aspect-ratio: auto;
+}
+
+.designing-visualize-plate--live .designing-visualize-plate-frame img {
+  height: auto;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.designing-visualize-plate-note a {
+  color: var(--color-accent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+}
+
+.craft-case-callout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(220px, 0.82fr);
+  gap: clamp(1.5rem, 4vw, 2.5rem);
+  align-items: stretch;
+  margin: clamp(2.5rem, 5vw, 3.5rem) 0;
+  padding: clamp(1.5rem, 3vw, 2rem);
+  background: var(--color-paper);
+  border: 1px solid var(--color-mist);
+  border-radius: 16px;
+}
+
+.craft-case-eyebrow,
+.neon-case-eyebrow,
+.neon-case-section-label,
+.neon-case-strip figure > span {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: 0.6875rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--color-accent);
+}
+
+.craft-case-copy h2 {
+  margin: 0.6rem 0 0.9rem;
+  font-family: var(--font-display);
+  font-size: clamp(1.8rem, 4vw, 2.5rem);
+  font-style: italic;
+  font-weight: 500;
+  line-height: 1;
+  color: var(--color-ink);
+}
+
+.craft-case-copy p {
+  margin: 0 0 1.25rem;
+  color: var(--color-charcoal);
+  line-height: 1.65;
+}
+
+.craft-case-command {
+  margin: 1.35rem 0 1rem;
+}
+
+.craft-case-link-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  margin-bottom: 0 !important;
+  font-family: var(--font-body);
+  font-weight: 600;
+}
+
+.craft-case-link-row a {
+  color: var(--color-accent);
+}
+
+.craft-case-images {
+  position: relative;
+  min-height: 260px;
+}
+
+.craft-case-images img {
+  position: absolute;
+  display: block;
+  width: 66%;
+  height: 78%;
+  object-fit: cover;
+  border: 1px solid var(--color-mist);
+  background: var(--color-cream);
+}
+
+.craft-case-images img:first-child {
+  left: 0;
+  bottom: 0;
+  object-position: top center;
+}
+
+.craft-case-images img:last-child {
+  right: 0;
+  top: 0;
+  object-position: top left;
+  box-shadow: 0 20px 40px oklch(10% 0 0 / 0.08);
+}
+
+.neon-case-page {
+  background:
+    radial-gradient(circle at 84% 8%, var(--color-accent-dim), transparent 22rem),
+    var(--color-cream);
+}
+
+.neon-case {
+  width: min(100% - 32px, 1360px);
+  margin: 0 auto;
+  padding: clamp(4rem, 8vw, 6.5rem) 0 clamp(4rem, 8vw, 7rem);
+}
+
+.neon-case-hero {
+  display: grid;
+  grid-template-columns: minmax(300px, 0.82fr) minmax(0, 1.18fr);
+  gap: clamp(2rem, 5vw, 5rem);
+  align-items: end;
+}
+
+.neon-case-back {
+  display: inline-block;
+  margin-bottom: clamp(2rem, 5vw, 4rem);
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--color-ash);
+  text-decoration: none;
+}
+
+.neon-case-back:hover {
+  color: var(--color-accent);
+}
+
+.neon-case-hero h1 {
+  margin: 0.8rem 0 1.5rem;
+  font-family: var(--font-display);
+  font-size: clamp(2.8rem, 5vw, 4.9rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.045em;
+  line-height: 0.96;
+  color: var(--color-ink);
+  max-width: 15ch;
+}
+
+.neon-case-hero p,
+.neon-case-command p {
+  max-width: 58ch;
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: clamp(1rem, 1.5vw, 1.125rem);
+  line-height: 1.65;
+  color: var(--color-charcoal);
+}
+
+.neon-case-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+.neon-case-primary,
+.neon-case-secondary {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0.85rem 1.15rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-decoration: none;
+  transition: transform var(--duration-base) var(--ease-out), background var(--duration-fast) var(--ease-out), color var(--duration-fast) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+.neon-case-primary {
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+
+.neon-case-secondary {
+  color: var(--color-ink);
+  border: 1px solid var(--color-mist);
+}
+
+.neon-case-primary:hover,
+.neon-case-secondary:hover {
+  transform: translateY(-2px);
+}
+
+.neon-case-primary:hover {
+  background: var(--color-accent);
+}
+
+.neon-case-secondary:hover {
+  color: var(--color-accent);
+  border-color: var(--color-accent);
+}
+
+.neon-case-hero-shot {
+  display: block;
+  margin: 0;
+  border: 1px solid var(--color-mist);
+  background: var(--color-paper);
+  overflow: hidden;
+  transition: transform var(--duration-base) var(--ease-out), border-color var(--duration-fast) var(--ease-out);
+}
+
+.neon-case-hero-shot:hover {
+  transform: translateY(-3px);
+  border-color: var(--color-accent);
+}
+
+.neon-case-hero-shot img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.neon-case-strip {
+  display: grid;
+  grid-template-columns: 0.78fr 0.78fr 1fr;
+  gap: clamp(1rem, 2vw, 1.5rem);
+  margin: clamp(4rem, 9vw, 8rem) 0;
+  align-items: start;
+}
+
+.neon-case-strip figure,
+.neon-case-details figure {
+  margin: 0;
+}
+
+.neon-case-strip img,
+.neon-case-details img {
+  display: block;
+  width: 100%;
+  border: 1px solid var(--color-mist);
+  background: var(--color-paper);
+}
+
+.neon-case-strip a,
+.neon-case-details a {
+  display: block;
+  color: inherit;
+  text-decoration: none;
+}
+
+.neon-case-strip img {
+  height: clamp(260px, 28vw, 430px);
+  object-fit: cover;
+  object-position: top center;
+  margin-top: 0.75rem;
+}
+
+.neon-case-strip figure:first-child img,
+.neon-case-strip figure:last-child img {
+  object-position: top left;
+}
+
+.neon-case-strip figcaption,
+.neon-case-details figcaption {
+  margin-top: 0.9rem;
+  font-family: var(--font-body);
+  font-size: 0.875rem;
+  line-height: 1.6;
+  color: var(--color-charcoal);
+}
+
+.neon-case-body {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.7fr) minmax(0, 1.3fr);
+  gap: clamp(2rem, 6vw, 5rem);
+  padding: clamp(3rem, 6vw, 5rem) 0;
+  border-top: 1px solid var(--color-mist);
+  border-bottom: 1px solid var(--color-mist);
+}
+
+.neon-case-body h2,
+.neon-case-command h2 {
+  margin: 0.8rem 0 0;
+  font-family: var(--font-display);
+  font-size: clamp(2.25rem, 5vw, 4.6rem);
+  font-style: italic;
+  font-weight: 400;
+  letter-spacing: -0.035em;
+  line-height: 0.98;
+  color: var(--color-ink);
+}
+
+.neon-case-notes {
+  display: grid;
+  gap: 1px;
+  background: var(--color-mist);
+  border: 1px solid var(--color-mist);
+}
+
+.neon-case-notes article {
+  padding: clamp(1.25rem, 3vw, 2rem);
+  background: var(--color-cream);
+}
+
+.neon-case-notes h3 {
+  margin: 0 0 0.6rem;
+  font-family: var(--font-body);
+  font-size: 1rem;
+  color: var(--color-ink);
+}
+
+.neon-case-notes p {
+  margin: 0;
+  font-family: var(--font-body);
+  font-size: 0.9375rem;
+  line-height: 1.65;
+  color: var(--color-charcoal);
+}
+
+.neon-case-details {
+  display: grid;
+  grid-template-columns: minmax(0, 0.86fr) minmax(0, 1fr);
+  gap: clamp(1rem, 2.5vw, 2rem);
+  margin: clamp(4rem, 9vw, 8rem) 0;
+  align-items: start;
+}
+
+.neon-case-details img {
+  height: auto;
+  object-fit: contain;
+  object-position: top center;
+}
+
+.neon-case-details figcaption span {
+  display: block;
+  margin-bottom: 0.25rem;
+  font-weight: 700;
+  color: var(--color-ink);
+}
+
+.neon-case-command {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.9fr) minmax(320px, 1.1fr);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: end;
+  padding: clamp(2rem, 5vw, 4rem);
+  color: var(--color-paper);
+  background: var(--color-ink);
+}
+
+.neon-case-command h2,
+.neon-case-command p,
+.neon-case-command .neon-case-section-label {
+  color: inherit;
+}
+
+.neon-case-command p {
+  margin-top: 1.1rem;
+  color: oklch(90% 0.005 350);
+}
+
+.neon-case-command code {
+  color: inherit;
+}
+
+.neon-case-command .code-block-wrap {
+  margin: 0;
+}
+
+@media (max-width: 980px) {
+  .designing-visualize-spread,
+  .neon-case-hero,
+  .neon-case-strip,
+  .neon-case-body,
+  .neon-case-details,
+  .neon-case-command,
+  .craft-case-callout {
+    grid-template-columns: 1fr;
+  }
+
+  .craft-case-images {
+    min-height: 320px;
+  }
+
+  .neon-case-hero h1 {
+    max-width: 11ch;
+  }
+}
+
+@media (max-width: 640px) {
+  .neon-case {
+    width: min(100% - 24px, 1360px);
+  }
+
+  .neon-case-actions {
+    flex-direction: column;
+  }
+
+  .neon-case-primary,
+  .neon-case-secondary {
+    justify-content: center;
+  }
+
+  .craft-case-images img {
+    width: 74%;
+  }
 }

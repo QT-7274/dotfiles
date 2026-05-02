@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "67c4b73d-2532-40f2-99fd-43912929727e",
+  "path": "delight",
+  "path_key": "delight",
+  "enabled": true,
+  "tags": [
+    "UX 设计",
+    "前端",
+    "动效设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/delight",
+    "subpath": null,
+    "branch": null
+  }
+}

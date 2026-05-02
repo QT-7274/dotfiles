@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "cfa8e7f3-00b0-4669-9b33-ae9201fc5516",
+  "path": "overdrive",
+  "path_key": "overdrive",
+  "enabled": true,
+  "tags": [
+    "WebGL",
+    "前端",
+    "动效设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/overdrive",
+    "subpath": null,
+    "branch": null
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "0b7e2625-502b-4aac-b68a-ba92f337ddc2",
+  "name": "前端性能与优化",
+  "description": "专注于前端性能诊断、渲染优化、包体积分析与生产就绪检查。",
+  "icon": "⚡",
+  "sort_order": 999
+}

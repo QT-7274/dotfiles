@@ -1,0 +1,17 @@
+{
+  "schema_version": 1,
+  "skill_id": "0e535593-0f40-4455-b521-bf5767d95aa0",
+  "path": "crafting-effective-readmes",
+  "path_key": "crafting-effective-readmes",
+  "enabled": true,
+  "tags": [
+    "写作",
+    "开源"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "softaworks/agent-toolkit/crafting-effective-readmes",
+    "subpath": "skills/crafting-effective-readmes",
+    "branch": null
+  }
+}

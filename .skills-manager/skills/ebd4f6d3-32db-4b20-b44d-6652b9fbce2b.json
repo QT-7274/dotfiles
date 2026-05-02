@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "ebd4f6d3-32db-4b20-b44d-6652b9fbce2b",
+  "path": "changelog-automation",
+  "path_key": "changelog-automation",
+  "enabled": true,
+  "tags": [
+    "CLI",
+    "Git",
+    "工作流"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "wshobson/agents/changelog-automation",
+    "subpath": "plugins/documentation-generation/skills/changelog-automation",
+    "branch": null
+  }
+}

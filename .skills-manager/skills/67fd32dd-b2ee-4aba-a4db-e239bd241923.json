@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "67fd32dd-b2ee-4aba-a4db-e239bd241923",
+  "path": "coding-standards",
+  "path_key": "coding-standards",
+  "enabled": true,
+  "tags": [
+    "代码质量"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "affaan-m/everything-claude-code/coding-standards",
+    "subpath": "skills/coding-standards",
+    "branch": null
+  }
+}

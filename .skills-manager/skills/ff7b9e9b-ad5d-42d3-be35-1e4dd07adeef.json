@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "ff7b9e9b-ad5d-42d3-be35-1e4dd07adeef",
+  "path": "agent-browser",
+  "path_key": "agent-browser",
+  "enabled": true,
+  "tags": [
+    "CLI 工具",
+    "UI 测试",
+    "浏览器自动化",
+    "网页爬取"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

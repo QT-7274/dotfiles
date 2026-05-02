@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "718d331b-f6b3-43ae-885a-0d17a574c1fc",
+  "path": "distill",
+  "path_key": "distill",
+  "enabled": true,
+  "tags": [
+    "UI 设计",
+    "代码质量",
+    "前端",
+    "视觉设计"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/distill",
+    "subpath": null,
+    "branch": null
+  }
+}

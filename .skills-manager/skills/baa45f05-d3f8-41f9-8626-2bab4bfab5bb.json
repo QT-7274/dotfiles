@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "baa45f05-d3f8-41f9-8626-2bab4bfab5bb",
+  "path": "soultrace",
+  "path_key": "soultrace",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "soultrace-ai/soultrace-skill/soultrace",
+    "subpath": "skills/soultrace",
+    "branch": null
+  }
+}

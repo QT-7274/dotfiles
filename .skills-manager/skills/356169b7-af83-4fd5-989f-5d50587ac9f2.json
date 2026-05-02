@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "356169b7-af83-4fd5-989f-5d50587ac9f2",
+  "path": "critique",
+  "path_key": "critique",
+  "enabled": true,
+  "tags": [
+    "UX 设计",
+    "前端",
+    "设计系统"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/critique",
+    "subpath": null,
+    "branch": null
+  }
+}

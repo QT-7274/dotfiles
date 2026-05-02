@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "28be8a31-f979-44e4-9270-b097adb5383a",
+  "path": "extract",
+  "path_key": "extract",
+  "enabled": true,
+  "tags": [
+    "代码开发",
+    "前端",
+    "设计系统"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/extract",
+    "subpath": null,
+    "branch": null
+  }
+}

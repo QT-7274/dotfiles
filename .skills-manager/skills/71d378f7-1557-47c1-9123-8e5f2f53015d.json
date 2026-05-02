@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "71d378f7-1557-47c1-9123-8e5f2f53015d",
+  "path": "teach-impeccable",
+  "path_key": "teach-impeccable",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "后端",
+    "架构",
+    "设计系统"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "pbakaus/impeccable/teach-impeccable",
+    "subpath": null,
+    "branch": null
+  }
+}

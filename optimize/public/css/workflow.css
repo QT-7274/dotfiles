@@ -1187,9 +1187,29 @@
   color: var(--color-ink);
 }
 
+/* Changelog: highlight reel */
+.changelog-highlights {
+  padding-bottom: var(--spacing-md);
+  border-bottom: 1px solid var(--color-mist);
+}
+.changelog-highlights-label {
+  font-family: var(--font-mono);
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: var(--color-ink);
+  margin: 0 0 var(--spacing-sm);
+}
+.changelog-highlights-label .changelog-date {
+  margin-left: var(--spacing-xs);
+}
+
 /* Changelog: collapsible older entries */
 .changelog-older {
-  margin-top: var(--spacing-sm);
+  margin-top: 0;
+}
+.changelog-older + .changelog-older {
+  margin-top: 0;
+  border-top: 1px solid var(--color-mist);
 }
 
 .changelog-older-toggle {
@@ -2835,12 +2855,12 @@
   margin-top: -2px;
 }
 
-/* ─ Panel: Visualize, then build — two plates from GPT Image 2 ─ */
+/* ─ Panel: Visualize, then ship: generated inputs plus live build ─ */
 .why-visual--vizfirst {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
-  align-items: start;
+  grid-template-columns: 0.88fr 0.68fr 1.18fr;
+  gap: clamp(10px, 1.5vw, 18px);
+  align-items: stretch;
   padding: 0;
   overflow: visible;
 }
@@ -2863,10 +2883,17 @@
 }
 
 .why-vz-plate-frame {
+  display: block;
   background: var(--color-cream);
   border: 1px solid var(--color-mist);
   overflow: hidden;
-  height: 240px;
+  height: 250px;
+  transition: border-color var(--duration-base) var(--ease-out), transform var(--duration-base) var(--ease-out);
+}
+
+.why-vz-plate:hover .why-vz-plate-frame {
+  border-color: var(--color-accent);
+  transform: translateY(-2px);
 }
 
 .why-vz-plate-frame img {
@@ -2877,8 +2904,13 @@
   object-position: top center;
 }
 
+.why-vz-plate--live .why-vz-plate-frame img {
+  object-position: top left;
+}
+
 @media (max-width: 720px) {
   .why-visual--vizfirst {
+    grid-template-columns: 1fr;
     gap: 12px;
   }
   .why-vz-plate-frame {
@@ -3414,4 +3446,3 @@
 @media (max-width: 860px) {
   .why-visual--antidote { grid-template-columns: 1fr; }
 }
-

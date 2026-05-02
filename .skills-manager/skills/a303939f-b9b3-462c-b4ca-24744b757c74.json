@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "a303939f-b9b3-462c-b4ca-24744b757c74",
+  "path": "using-superpowers",
+  "path_key": "using-superpowers",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "CLI",
+    "工作流",
+    "技能管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "obra/superpowers/using-superpowers",
+    "subpath": "skills/using-superpowers",
+    "branch": null
+  }
+}

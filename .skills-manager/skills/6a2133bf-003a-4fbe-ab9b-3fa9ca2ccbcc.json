@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "6a2133bf-003a-4fbe-ab9b-3fa9ca2ccbcc",
+  "path": "executing-plans",
+  "path_key": "executing-plans",
+  "enabled": true,
+  "tags": [
+    "代码开发",
+    "工作流",
+    "项目管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "obra/superpowers/executing-plans",
+    "subpath": "skills/executing-plans",
+    "branch": null
+  }
+}

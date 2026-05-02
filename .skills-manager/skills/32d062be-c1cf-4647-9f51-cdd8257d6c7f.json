@@ -1,0 +1,19 @@
+{
+  "schema_version": 1,
+  "skill_id": "32d062be-c1cf-4647-9f51-cdd8257d6c7f",
+  "path": "brainstorming",
+  "path_key": "brainstorming",
+  "enabled": true,
+  "tags": [
+    "AI 工作流",
+    "创意探索",
+    "设计系统",
+    "项目管理"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "obra/superpowers/brainstorming",
+    "subpath": "skills/brainstorming",
+    "branch": null
+  }
+}

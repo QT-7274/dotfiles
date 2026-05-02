@@ -1,0 +1,18 @@
+{
+  "schema_version": 1,
+  "skill_id": "17095adf-ea09-4db0-8bd0-28318cc32fd2",
+  "path": "openai-codex/codex/1.0.1/skills/codex-cli-runtime",
+  "path_key": "openai-codex/codex/1.0.1/skills/codex-cli-runtime",
+  "enabled": true,
+  "tags": [
+    "CLI 运行时",
+    "Codex",
+    "内部工具"
+  ],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}
