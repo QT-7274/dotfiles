@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "e9036ad4-2758-4b64-92f7-6d3dbed11ae1",
+  "name": "浏览器自动化与测试",
+  "description": "使用无头浏览器进行网页自动化、爬取与 UI 测试。",
+  "icon": "🤖",
+  "sort_order": 10
+}

@@ -12,7 +12,7 @@
   "source": {
     "type": "skillssh",
     "ref": "pbakaus/impeccable/arrange",
-    "subpath": null,
+    "subpath": "skill",
     "branch": null
   }
 }

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "73f97ad3-7b91-47ea-8ad9-1de4f76a540f",
+  "path": "to-issues",
+  "path_key": "to-issues",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

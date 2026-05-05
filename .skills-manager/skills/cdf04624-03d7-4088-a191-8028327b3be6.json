@@ -10,7 +10,7 @@
   "source": {
     "type": "skillssh",
     "ref": "pbakaus/impeccable/optimize",
-    "subpath": null,
+    "subpath": "skill",
     "branch": null
   }
 }

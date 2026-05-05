@@ -4,5 +4,5 @@
   "name": "Git、发布与写作",
   "description": "规范 Git 提交、自动化发布日志，并提升文档与内容的专业表达。",
   "icon": "📝",
-  "sort_order": 999
+  "sort_order": 9
 }

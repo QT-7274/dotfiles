@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "60214f46-d370-44d4-b20a-5382d34d30f3",
+  "path": "diagnose",
+  "path_key": "diagnose",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}

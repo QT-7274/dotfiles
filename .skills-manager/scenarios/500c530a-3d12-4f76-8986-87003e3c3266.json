@@ -1,0 +1,8 @@
+{
+  "schema_version": 1,
+  "scenario_id": "500c530a-3d12-4f76-8986-87003e3c3266",
+  "name": "调试与问题诊断",
+  "description": "系统化定位并修复 Bug、性能回归与测试失败问题。",
+  "icon": "🔧",
+  "sort_order": 4
+}

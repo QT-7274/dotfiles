@@ -1,8 +1,8 @@
 {
   "schema_version": 1,
   "scenario_id": "6ce9ddd3-2c4e-4351-a39a-4629bad40970",
-  "name": "后端与 API 开发",
+  "name": "后端与数据库相关",
   "description": "构建生产级后端服务、API 设计及 Node.js/NestJS 架构最佳实践。",
   "icon": "⚙️",
-  "sort_order": 999
+  "sort_order": 7
 }
