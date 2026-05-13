@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "15d343cb-b1c4-4a05-9e9c-880fe4b77c95",
+  "path": "tdd",
+  "path_key": "tdd",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/tdd",
+    "subpath": "skills/engineering/tdd",
+    "branch": null
+  }
+}

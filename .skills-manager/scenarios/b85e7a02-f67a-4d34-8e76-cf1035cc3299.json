@@ -4,5 +4,5 @@
   "name": "代码质量与工程规范",
   "description": "通过审计、调试、编码规范和验证流程确保代码健壮可维护。",
   "icon": "🛡️",
-  "sort_order": 5
+  "sort_order": 6
 }

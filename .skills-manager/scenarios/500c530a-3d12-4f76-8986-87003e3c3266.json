@@ -4,5 +4,5 @@
   "name": "调试与问题诊断",
   "description": "系统化定位并修复 Bug、性能回归与测试失败问题。",
   "icon": "🔧",
-  "sort_order": 4
+  "sort_order": 5
 }

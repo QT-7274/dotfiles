@@ -4,5 +4,5 @@
   "name": "后端与数据库相关",
   "description": "构建生产级后端服务、API 设计及 Node.js/NestJS 架构最佳实践。",
   "icon": "⚙️",
-  "sort_order": 7
+  "sort_order": 8
 }

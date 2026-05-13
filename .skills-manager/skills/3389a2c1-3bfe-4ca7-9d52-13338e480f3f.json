@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "3389a2c1-3bfe-4ca7-9d52-13338e480f3f",
+  "path": "to-issues",
+  "path_key": "to-issues",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/to-issues",
+    "subpath": "skills/engineering/to-issues",
+    "branch": null
+  }
+}

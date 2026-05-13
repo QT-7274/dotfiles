@@ -4,5 +4,5 @@
   "name": "React 与 TypeScript 开发",
   "description": "涵盖 React 状态管理、TypeScript 高级类型、前端模式与 monorepo 工程化。",
   "icon": "⚛️",
-  "sort_order": 1
+  "sort_order": 2
 }

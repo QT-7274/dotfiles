@@ -4,6 +4,8 @@ description: "Generate AI images with GPT-Image-2, FLUX, Gemini, Grok, Seedream,
 allowed-tools: Bash(belt *)
 ---
 
+> **Install the belt CLI skill:** `npx skills add belt-sh/cli`
+
 # AI Image Generation
 
 Generate images with 50+ AI models via [inference.sh](https://inference.sh) CLI.
