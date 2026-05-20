@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "f339136b-1c5d-4990-bbfd-3856b71bd4dc",
+  "path": "acai",
+  "path_key": "acai",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "import",
+    "ref": null,
+    "subpath": null,
+    "branch": null
+  }
+}
