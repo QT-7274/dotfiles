@@ -29,6 +29,7 @@
     "mistral_vibe": true,
     "mux": true,
     "neovate": true,
+    "openclaw": true,
     "opencode": true,
     "openhands": true,
     "pi": true,
@@ -39,6 +40,7 @@
     "trae": true,
     "trae_cn": true,
     "windsurf": true,
+    "workbuddy": true,
     "zencoder": true
   }
 }
