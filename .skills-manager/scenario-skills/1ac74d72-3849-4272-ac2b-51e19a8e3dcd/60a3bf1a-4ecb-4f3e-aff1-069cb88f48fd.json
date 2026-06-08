@@ -2,7 +2,7 @@
   "schema_version": 1,
   "scenario_id": "1ac74d72-3849-4272-ac2b-51e19a8e3dcd",
   "skill_id": "60a3bf1a-4ecb-4f3e-aff1-069cb88f48fd",
-  "sort_order": 19,
+  "sort_order": 18,
   "tools": {
     "adal": true,
     "amp": true,
@@ -39,6 +39,7 @@
     "trae": true,
     "trae_cn": true,
     "windsurf": true,
+    "workbuddy": true,
     "zencoder": true
   }
 }
