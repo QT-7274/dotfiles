@@ -4,7 +4,9 @@
   "path": "test-driven-development",
   "path_key": "test-driven-development",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

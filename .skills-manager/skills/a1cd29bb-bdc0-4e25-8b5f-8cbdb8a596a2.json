@@ -4,7 +4,9 @@
   "path": "frontend-ui-engineering",
   "path_key": "frontend-ui-engineering",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

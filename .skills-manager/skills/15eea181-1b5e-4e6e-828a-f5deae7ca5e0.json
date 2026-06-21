@@ -4,7 +4,9 @@
   "path": "code-review-and-quality",
   "path_key": "code-review-and-quality",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

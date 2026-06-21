@@ -4,7 +4,9 @@
   "path": "security-and-hardening",
   "path_key": "security-and-hardening",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

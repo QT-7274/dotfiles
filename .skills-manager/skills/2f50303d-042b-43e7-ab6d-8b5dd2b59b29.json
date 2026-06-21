@@ -4,7 +4,9 @@
   "path": "planning-and-task-breakdown",
   "path_key": "planning-and-task-breakdown",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

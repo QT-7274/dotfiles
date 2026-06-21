@@ -4,7 +4,9 @@
   "path": "browser-testing-with-devtools",
   "path_key": "browser-testing-with-devtools",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

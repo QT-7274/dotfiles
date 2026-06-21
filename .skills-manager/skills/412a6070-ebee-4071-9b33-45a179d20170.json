@@ -4,7 +4,9 @@
   "path": "shipping-and-launch",
   "path_key": "shipping-and-launch",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

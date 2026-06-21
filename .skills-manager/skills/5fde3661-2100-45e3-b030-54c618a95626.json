@@ -4,7 +4,9 @@
   "path": "git-workflow-and-versioning",
   "path_key": "git-workflow-and-versioning",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",

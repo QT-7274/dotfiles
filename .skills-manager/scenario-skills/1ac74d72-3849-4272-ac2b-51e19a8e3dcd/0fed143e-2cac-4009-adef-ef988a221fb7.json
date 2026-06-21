@@ -8,7 +8,7 @@
     "amp": true,
     "antigravity": true,
     "augment": true,
-    "claude_code": true,
+    "claude_code": false,
     "cline": true,
     "codebuddy": true,
     "codex": true,

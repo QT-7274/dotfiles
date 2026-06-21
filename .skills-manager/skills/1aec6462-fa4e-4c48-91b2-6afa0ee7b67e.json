@@ -4,7 +4,9 @@
   "path": "debugging-and-error-recovery",
   "path_key": "debugging-and-error-recovery",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Agent-skills"
+  ],
   "source": {
     "type": "git",
     "ref": "https://github.com/addyosmani/agent-skills.git",
