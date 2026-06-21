@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "5fde3661-2100-45e3-b030-54c618a95626",
+  "path": "git-workflow-and-versioning",
+  "path_key": "git-workflow-and-versioning",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/git-workflow-and-versioning",
+    "branch": null
+  }
+}

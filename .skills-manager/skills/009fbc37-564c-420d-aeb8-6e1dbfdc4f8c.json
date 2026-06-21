@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "009fbc37-564c-420d-aeb8-6e1dbfdc4f8c",
+  "path": "browser-testing-with-devtools",
+  "path_key": "browser-testing-with-devtools",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/browser-testing-with-devtools",
+    "branch": null
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "157f3632-7350-43f1-8352-afd8c54fe1d1",
+  "path": "spec-driven-development",
+  "path_key": "spec-driven-development",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/spec-driven-development",
+    "branch": null
+  }
+}

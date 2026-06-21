@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "f5928def-e949-4d1c-87b5-8a57e2ecf795",
+  "path": "code-simplification",
+  "path_key": "code-simplification",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/code-simplification",
+    "branch": null
+  }
+}

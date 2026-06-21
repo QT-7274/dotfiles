@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "48a73a4f-0a08-4ee8-9a20-42bbdd0e1b73",
+  "path": "documentation-and-adrs",
+  "path_key": "documentation-and-adrs",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/documentation-and-adrs",
+    "branch": null
+  }
+}

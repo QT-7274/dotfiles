@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "8b6ef5f8-4662-4179-85fb-a64cd8505eb5",
+  "path": "idea-refine",
+  "path_key": "idea-refine",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/idea-refine",
+    "branch": null
+  }
+}

@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "0fed143e-2cac-4009-adef-ef988a221fb7",
+  "path": "accessibility",
+  "path_key": "accessibility",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "addyosmani/web-quality-skills/accessibility",
+    "subpath": "skills/accessibility",
+    "branch": null
+  }
+}

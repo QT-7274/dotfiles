@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "1622b341-14a2-47f9-b4e8-fe3815f8a2f4",
+  "path": "performance",
+  "path_key": "performance",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "addyosmani/web-quality-skills/performance",
+    "subpath": "skills/performance",
+    "branch": null
+  }
+}

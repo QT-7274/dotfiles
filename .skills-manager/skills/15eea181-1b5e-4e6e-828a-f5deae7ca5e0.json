@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "15eea181-1b5e-4e6e-828a-f5deae7ca5e0",
+  "path": "code-review-and-quality",
+  "path_key": "code-review-and-quality",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "git",
+    "ref": "https://github.com/addyosmani/agent-skills.git",
+    "subpath": "skills/code-review-and-quality",
+    "branch": null
+  }
+}
