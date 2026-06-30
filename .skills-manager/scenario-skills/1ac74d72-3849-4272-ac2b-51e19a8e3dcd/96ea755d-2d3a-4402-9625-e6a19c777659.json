@@ -9,6 +9,7 @@
     "antigravity": true,
     "augment": true,
     "claude_code": true,
+    "claude_internal": true,
     "cline": true,
     "codebuddy": true,
     "codex": true,
