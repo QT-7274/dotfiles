@@ -1,6 +1,8 @@
 ---
 name: subagent-driven-development
 description: Use when executing implementation plans with independent tasks in the current session
+allowed-tools: 
+disable: true
 ---
 
 # Subagent-Driven Development

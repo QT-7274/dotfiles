@@ -3,6 +3,7 @@ name: cmux-browser
 description: Browser automation via cmux built-in browser commands. Use when the user needs to interact with websites through cmux's embedded browser surface, including navigating pages, filling forms, clicking buttons, taking screenshots, extracting data, testing web apps, or automating any browser task within the cmux environment. Triggers include requests to "open a website in cmux", "fill out a form", "click a button", "take a screenshot", "scrape data from a page", "test this web app", "login to a site", "automate browser actions", or any task requiring programmatic web interaction inside cmux. Prefer cmux-browser over agent-browser when the user is already using cmux and wants browser automation within the cmux window (browser split), or when they want stable CSS-selector-based element targeting instead of @eN refs. Also triggers when the user mentions "cmux browser", "cmux 浏览器", or wants to use cmux's built-in webview automation.
 allowed-tools: Bash(cmux browser:*)
 hidden: true
+disable: true
 ---
 
 # cmux-browser

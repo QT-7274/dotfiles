@@ -2,7 +2,7 @@
 name: cli-building
 description: Build command-line interfaces with async-first design, composable commands, and proper output formatting. Use when creating CLI tools, commands, or interactive terminal applications.
 allowed-tools: 
-disable: false
+disable: true
 ---
 
 # CLI Building

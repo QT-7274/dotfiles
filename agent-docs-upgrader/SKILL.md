@@ -1,6 +1,8 @@
 ---
 name: agent-docs-upgrader
 description: Audits, rewrites, and creates AGENTS.md and CLAUDE.md as concise AI-agent operating manuals for any codebase. Use when the user asks to improve, fix, modernize, align, create, review, or deduplicate AGENTS.md, CLAUDE.md, Claude Code instructions, Codex/Gemini agent docs, or project AI context files.
+allowed-tools: 
+disable: true
 ---
 
 # Agent Docs Upgrader

@@ -2,6 +2,8 @@
 name: codex-result-handling
 description: Internal guidance for presenting Codex helper output back to the user
 user-invocable: false
+allowed-tools: 
+disable: true
 ---
 
 # Codex Result Handling

@@ -2,6 +2,8 @@
 name: codex-cli-runtime
 description: Internal helper contract for calling the codex-companion runtime from Claude Code
 user-invocable: false
+allowed-tools: 
+disable: true
 ---
 
 # Codex Runtime

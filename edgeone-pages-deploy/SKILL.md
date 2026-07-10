@@ -1,6 +1,6 @@
 ---
 name: edgeone-pages-deploy
-description: >-
+description: This skill deploys frontend and full-stack projects to EdgeOne Pages (Tencent EdgeOne). It should be used when the user's primary intent is to deploy, publish, ship, host, launch, go live, or release a new version — e.g. "deploy my app", "publish this site", "push this live", "create a preview deployment", "deploy to EdgeOne", "ship to production", "go live", "release", "publish a new version", "redeploy", "上线", "发布", "发一版", "重新部署". Do NOT trigger when deployment is only mentioned as a secondary step (e.g. "write an API and deploy it" — primary intent is writing code, use edgeone-pages-dev). Do NOT trigger for post-deployment runtime errors (e.g. CORS issues, 500 errors after deploy — use edgeone-pages-dev for troubleshooting).
   This skill deploys frontend and full-stack projects to EdgeOne Pages (Tencent EdgeOne).
   It should be used when the user's primary intent is to deploy, publish, ship, host, launch,
   go live, or release a new version — e.g. "deploy my app", "publish this site", "push this live",
@@ -14,6 +14,8 @@ description: >-
 metadata:
   author: edgeone
   version: "2.0.0"
+allowed-tools: 
+disable: true
 ---
 
 # EdgeOne Pages Deployment Skill

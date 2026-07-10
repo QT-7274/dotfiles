@@ -6,7 +6,7 @@ metadata:
   author: Kadajett
   version: "1.1.0"
 allowed-tools: 
-disable: false
+disable: true
 ---
 
 # NestJS Best Practices

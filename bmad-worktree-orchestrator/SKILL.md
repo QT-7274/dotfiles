@@ -1,8 +1,8 @@
 ---
 name: bmad-worktree-orchestrator
-description: "Use when executing a multi-worktree parallel development workflow from BMAD planning artifacts (epics, architecture). Triggers: 'start worktree development', 'run worktree orchestration', 'execute worktree plan'."
-allowed-tools:
-disable: false
+description: Use when executing a multi-worktree parallel development workflow from BMAD planning artifacts (epics, architecture). Triggers: 'start worktree development', 'run worktree orchestration', 'execute worktree plan'.
+allowed-tools: 
+disable: true
 ---
 
 

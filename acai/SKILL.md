@@ -1,6 +1,8 @@
 ---
 name: acai
 description: Mandatory - you must load the acai skill to learn the acai.sh process for spec-driven development whether planning, implementing, or reviewing code.
+allowed-tools: 
+disable: true
 ---
 
 We follow spec-driven development using acai.sh conventions.

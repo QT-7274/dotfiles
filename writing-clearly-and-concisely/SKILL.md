@@ -2,7 +2,7 @@
 name: writing-clearly-and-concisely
 description: Use when writing prose humans will read—documentation, commit messages, error messages, explanations, reports, or UI text. Applies Strunk's timeless rules for clearer, stronger, more professional writing.
 allowed-tools: 
-disable: false
+disable: true
 ---
 
 # Writing Clearly and Concisely

@@ -5,6 +5,8 @@ license: MIT
 metadata:
   author: web-quality-skills
   version: "1.1"
+allowed-tools: 
+disable: true
 ---
 
 # Accessibility (a11y)
