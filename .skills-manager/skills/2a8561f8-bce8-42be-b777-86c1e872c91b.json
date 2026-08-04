@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "2a8561f8-bce8-42be-b777-86c1e872c91b",
+  "path": "request-refactor-plan",
+  "path_key": "request-refactor-plan",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/request-refactor-plan",
+    "subpath": "skills/deprecated/request-refactor-plan",
+    "branch": null
+  }
+}

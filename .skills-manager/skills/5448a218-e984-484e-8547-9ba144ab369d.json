@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "5448a218-e984-484e-8547-9ba144ab369d",
+  "path": "batch-grill-me",
+  "path_key": "batch-grill-me",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/batch-grill-me",
+    "subpath": "skills/in-progress/batch-grill-me",
+    "branch": null
+  }
+}

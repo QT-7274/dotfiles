@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "cadd70e8-048e-4607-971f-9708a455e0d5",
+  "path": "claude-handoff",
+  "path_key": "claude-handoff",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/claude-handoff",
+    "subpath": "skills/in-progress/claude-handoff",
+    "branch": null
+  }
+}

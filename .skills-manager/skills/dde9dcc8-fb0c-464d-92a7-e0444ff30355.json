@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "dde9dcc8-fb0c-464d-92a7-e0444ff30355",
+  "path": "ubiquitous-language",
+  "path_key": "ubiquitous-language",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/ubiquitous-language",
+    "subpath": "skills/deprecated/ubiquitous-language",
+    "branch": null
+  }
+}

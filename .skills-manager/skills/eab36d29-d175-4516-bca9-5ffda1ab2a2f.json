@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "skill_id": "eab36d29-d175-4516-bca9-5ffda1ab2a2f",
+  "path": "writing-fragments",
+  "path_key": "writing-fragments",
+  "enabled": true,
+  "tags": [],
+  "source": {
+    "type": "skillssh",
+    "ref": "mattpocock/skills/writing-fragments",
+    "subpath": "skills/in-progress/writing-fragments",
+    "branch": null
+  }
+}
