@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "bbf45696-e0d2-444d-867b-b774354b8eb6",
+  "path": "brandkit",
+  "path_key": "brandkit",
+  "enabled": true,
+  "tags": [
+    "Taste"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/brandkit",
+    "subpath": "skills/brandkit",
+    "branch": null
+  }
+}

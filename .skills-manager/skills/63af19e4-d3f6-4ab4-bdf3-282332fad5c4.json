@@ -1,0 +1,16 @@
+{
+  "schema_version": 1,
+  "skill_id": "63af19e4-d3f6-4ab4-bdf3-282332fad5c4",
+  "path": "imagegen-frontend-web",
+  "path_key": "imagegen-frontend-web",
+  "enabled": true,
+  "tags": [
+    "Taste"
+  ],
+  "source": {
+    "type": "skillssh",
+    "ref": "leonxlnx/taste-skill/imagegen-frontend-web",
+    "subpath": "skills/imagegen-frontend-web",
+    "branch": null
+  }
+}
