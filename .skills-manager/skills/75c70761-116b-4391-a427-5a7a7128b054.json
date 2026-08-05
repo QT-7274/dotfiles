@@ -5,6 +5,7 @@
   "path_key": "audit",
   "enabled": true,
   "tags": [
+    "Impeccable",
     "代码质量",
     "前端",
     "可访问性",

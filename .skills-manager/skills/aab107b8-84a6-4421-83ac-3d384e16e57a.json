@@ -5,6 +5,7 @@
   "path_key": "harden",
   "enabled": true,
   "tags": [
+    "Impeccable",
     "代码质量",
     "国际化",
     "工作流"
