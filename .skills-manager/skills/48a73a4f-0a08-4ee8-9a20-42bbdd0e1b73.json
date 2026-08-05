@@ -5,7 +5,8 @@
   "path_key": "documentation-and-adrs",
   "enabled": true,
   "tags": [
-    "Agent-skills"
+    "Agent-skills",
+    "工作流"
   ],
   "source": {
     "type": "git",

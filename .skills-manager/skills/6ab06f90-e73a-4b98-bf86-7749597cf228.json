@@ -5,7 +5,8 @@
   "path_key": "test-driven-development",
   "enabled": true,
   "tags": [
-    "Agent-skills"
+    "Agent-skills",
+    "工作流"
   ],
   "source": {
     "type": "git",

@@ -5,6 +5,7 @@
   "path_key": "verification-before-completion",
   "enabled": true,
   "tags": [
+    "Superpowers",
     "代码质量",
     "工作流"
   ],

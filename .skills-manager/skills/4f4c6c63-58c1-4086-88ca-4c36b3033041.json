@@ -5,7 +5,9 @@
   "path_key": "systematic-debugging",
   "enabled": true,
   "tags": [
-    "代码质量"
+    "Superpowers",
+    "代码质量",
+    "工作流"
   ],
   "source": {
     "type": "skillssh",

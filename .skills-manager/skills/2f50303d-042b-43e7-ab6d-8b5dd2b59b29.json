@@ -5,7 +5,8 @@
   "path_key": "planning-and-task-breakdown",
   "enabled": true,
   "tags": [
-    "Agent-skills"
+    "Agent-skills",
+    "工作流"
   ],
   "source": {
     "type": "git",
