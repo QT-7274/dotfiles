@@ -4,7 +4,10 @@
   "path": "edit-article",
   "path_key": "edit-article",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/edit-article",

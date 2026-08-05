@@ -4,7 +4,10 @@
   "path": "loop-me",
   "path_key": "loop-me",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/loop-me",

@@ -4,7 +4,10 @@
   "path": "setup-ts-deep-modules",
   "path_key": "setup-ts-deep-modules",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/setup-ts-deep-modules",

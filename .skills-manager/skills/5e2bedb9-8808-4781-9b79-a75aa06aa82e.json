@@ -4,7 +4,10 @@
   "path": "obsidian-vault",
   "path_key": "obsidian-vault",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/obsidian-vault",

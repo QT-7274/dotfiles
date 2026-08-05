@@ -4,7 +4,10 @@
   "path": "scaffold-exercises",
   "path_key": "scaffold-exercises",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/scaffold-exercises",

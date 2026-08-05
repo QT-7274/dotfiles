@@ -4,7 +4,10 @@
   "path": "code-review",
   "path_key": "code-review",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/code-review",

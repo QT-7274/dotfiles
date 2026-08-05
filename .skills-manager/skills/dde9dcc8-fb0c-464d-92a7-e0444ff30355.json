@@ -4,7 +4,10 @@
   "path": "ubiquitous-language",
   "path_key": "ubiquitous-language",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "Matt",
+    "工作流"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/ubiquitous-language",
