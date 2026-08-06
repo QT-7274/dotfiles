@@ -11,7 +11,7 @@
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/wizard",
-    "subpath": "skills/in-progress/wizard",
+    "subpath": "skills/engineering/wizard",
     "branch": null
   }
 }

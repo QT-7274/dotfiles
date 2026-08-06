@@ -11,7 +11,7 @@
   "source": {
     "type": "skillssh",
     "ref": "mattpocock/skills/to-questionnaire",
-    "subpath": "skills/in-progress/to-questionnaire",
+    "subpath": "skills/productivity/to-questionnaire",
     "branch": null
   }
 }
