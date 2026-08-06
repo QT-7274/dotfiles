@@ -4,7 +4,9 @@
   "path": "follow-builders",
   "path_key": "follow-builders",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工具"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "xiaoxuerenww/follow-builders/follow-builders",

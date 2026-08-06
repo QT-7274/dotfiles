@@ -4,7 +4,9 @@
   "path": "performance",
   "path_key": "performance",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "addyosmani/web-quality-skills/performance",

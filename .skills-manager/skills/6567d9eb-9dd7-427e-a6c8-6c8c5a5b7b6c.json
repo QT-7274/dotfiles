@@ -4,7 +4,9 @@
   "path": "seo-audit",
   "path_key": "seo-audit",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "coreyhaines31/marketingskills/seo-audit",

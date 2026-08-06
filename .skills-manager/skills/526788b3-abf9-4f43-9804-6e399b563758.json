@@ -5,7 +5,8 @@
   "path_key": "worktree-orchestrator",
   "enabled": true,
   "tags": [
-    "工作流"
+    "工作流",
+    "工具"
   ],
   "source": {
     "type": "import",

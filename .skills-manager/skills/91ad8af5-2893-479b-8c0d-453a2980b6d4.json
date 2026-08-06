@@ -4,7 +4,9 @@
   "path": "writing-humanizer-zh",
   "path_key": "writing-humanizer-zh",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "写作"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "hairyf/skills/writing-humanizer-zh",

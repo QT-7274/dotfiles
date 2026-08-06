@@ -4,7 +4,9 @@
   "path": "git-commit",
   "path_key": "git-commit",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "github/awesome-copilot/git-commit",

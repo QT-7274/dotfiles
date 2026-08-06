@@ -4,7 +4,9 @@
   "path": "cmux-browser",
   "path_key": "cmux-browser",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工具"
+  ],
   "source": {
     "type": "local",
     "ref": null,

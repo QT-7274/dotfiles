@@ -4,7 +4,9 @@
   "path": "frontend-patterns",
   "path_key": "frontend-patterns",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "affaan-m/everything-claude-code/frontend-patterns",

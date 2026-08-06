@@ -4,7 +4,9 @@
   "path": "agent-browser",
   "path_key": "agent-browser",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工具"
+  ],
   "source": {
     "type": "import",
     "ref": null,

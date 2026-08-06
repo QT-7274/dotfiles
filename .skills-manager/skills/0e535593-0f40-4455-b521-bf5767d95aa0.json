@@ -4,7 +4,9 @@
   "path": "crafting-effective-readmes",
   "path_key": "crafting-effective-readmes",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "写作"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "softaworks/agent-toolkit/crafting-effective-readmes",

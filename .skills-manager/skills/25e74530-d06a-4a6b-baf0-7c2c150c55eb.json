@@ -4,7 +4,9 @@
   "path": "supabase-postgres-best-practices",
   "path_key": "supabase-postgres-best-practices",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "supabase/agent-skills/supabase-postgres-best-practices",

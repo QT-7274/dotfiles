@@ -4,7 +4,9 @@
   "path": "remotion-best-practices",
   "path_key": "remotion-best-practices",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "设计"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "remotion-dev/skills/remotion-best-practices",

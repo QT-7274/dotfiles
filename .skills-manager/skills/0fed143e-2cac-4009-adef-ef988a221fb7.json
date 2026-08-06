@@ -4,7 +4,9 @@
   "path": "accessibility",
   "path_key": "accessibility",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "addyosmani/web-quality-skills/accessibility",

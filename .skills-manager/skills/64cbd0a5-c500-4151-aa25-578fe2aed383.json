@@ -4,7 +4,9 @@
   "path": "writing-clearly-and-concisely",
   "path_key": "writing-clearly-and-concisely",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "写作"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "softaworks/agent-toolkit/writing-clearly-and-concisely",

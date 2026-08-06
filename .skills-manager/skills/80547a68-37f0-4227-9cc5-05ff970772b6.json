@@ -4,7 +4,9 @@
   "path": "typescript-expert",
   "path_key": "typescript-expert",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "sickn33/antigravity-awesome-skills/typescript-expert",

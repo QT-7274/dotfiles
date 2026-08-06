@@ -5,7 +5,8 @@
   "path_key": "typescript-advanced-types",
   "enabled": true,
   "tags": [
-    "wshobson"
+    "wshobson",
+    "工程"
   ],
   "source": {
     "type": "skillssh",

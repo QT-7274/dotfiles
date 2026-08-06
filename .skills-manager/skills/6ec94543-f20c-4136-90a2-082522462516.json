@@ -4,7 +4,9 @@
   "path": "cli-building",
   "path_key": "cli-building",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工程"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "siviter-xyz/dot-agent/cli-building",

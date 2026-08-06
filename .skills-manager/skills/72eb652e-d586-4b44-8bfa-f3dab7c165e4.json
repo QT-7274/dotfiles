@@ -4,7 +4,9 @@
   "path": "create-subagents",
   "path_key": "create-subagents",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工具"
+  ],
   "source": {
     "type": "skillssh",
     "ref": "glittercowboy/taches-cc-resources/create-subagents",

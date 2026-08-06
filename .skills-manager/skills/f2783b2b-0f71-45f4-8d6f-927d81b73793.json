@@ -4,7 +4,9 @@
   "path": "claude-code-internal-plugins",
   "path_key": "claude-code-internal-plugins",
   "enabled": true,
-  "tags": [],
+  "tags": [
+    "工具"
+  ],
   "source": {
     "type": "import",
     "ref": null,

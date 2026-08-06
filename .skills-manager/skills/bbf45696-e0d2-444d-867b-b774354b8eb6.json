@@ -5,7 +5,8 @@
   "path_key": "brandkit",
   "enabled": true,
   "tags": [
-    "Taste"
+    "Taste",
+    "设计"
   ],
   "source": {
     "type": "skillssh",
