@@ -5,10 +5,7 @@
   "path_key": "planning-with-files",
   "enabled": true,
   "tags": [
-    "AI 工作流",
-    "工作流",
-    "跨平台",
-    "项目管理"
+    "工作流"
   ],
   "source": {
     "type": "skillssh",

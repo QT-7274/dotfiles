@@ -4,11 +4,7 @@
   "path": "openai-codex/codex/1.0.1/skills/codex-cli-runtime",
   "path_key": "openai-codex/codex/1.0.1/skills/codex-cli-runtime",
   "enabled": true,
-  "tags": [
-    "CLI 运行时",
-    "Codex",
-    "内部工具"
-  ],
+  "tags": [],
   "source": {
     "type": "import",
     "ref": null,

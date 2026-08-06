@@ -4,12 +4,7 @@
   "path": "skill-creator",
   "path_key": "skill-creator",
   "enabled": true,
-  "tags": [
-    "AI 工作流",
-    "性能",
-    "技能管理",
-    "项目管理"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "anthropics/skills/skill-creator",

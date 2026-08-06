@@ -4,9 +4,7 @@
   "path": "coding-standards",
   "path_key": "coding-standards",
   "enabled": true,
-  "tags": [
-    "代码质量"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "affaan-m/everything-claude-code/coding-standards",

@@ -4,12 +4,7 @@
   "path": "claude-plugins-official",
   "path_key": "claude-plugins-official",
   "enabled": true,
-  "tags": [
-    "CLI",
-    "MCP",
-    "代码开发",
-    "技能管理"
-  ],
+  "tags": [],
   "source": {
     "type": "import",
     "ref": null,

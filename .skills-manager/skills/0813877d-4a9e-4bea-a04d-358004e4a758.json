@@ -4,12 +4,7 @@
   "path": "openai-codex/codex/1.0.1/skills/gpt-5-4-prompting",
   "path_key": "openai-codex/codex/1.0.1/skills/gpt-5-4-prompting",
   "enabled": true,
-  "tags": [
-    "Codex",
-    "GPT",
-    "内部工具",
-    "提示词工程"
-  ],
+  "tags": [],
   "source": {
     "type": "import",
     "ref": null,

@@ -5,8 +5,6 @@
   "path_key": "worktree-orchestrator",
   "enabled": true,
   "tags": [
-    "AI 工作流",
-    "Git",
     "工作流"
   ],
   "source": {

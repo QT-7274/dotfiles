@@ -5,8 +5,6 @@
   "path_key": "changelog-automation",
   "enabled": true,
   "tags": [
-    "CLI",
-    "Git",
     "wshobson",
     "工作流"
   ],

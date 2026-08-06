@@ -4,11 +4,7 @@
   "path": "codex-internal-patch",
   "path_key": "codex-internal-patch",
   "enabled": true,
-  "tags": [
-    "AI 工作流",
-    "代码开发",
-    "内部工具"
-  ],
+  "tags": [],
   "source": {
     "type": "import",
     "ref": null,

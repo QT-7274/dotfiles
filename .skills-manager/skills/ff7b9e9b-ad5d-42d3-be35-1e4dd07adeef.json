@@ -4,12 +4,7 @@
   "path": "agent-browser",
   "path_key": "agent-browser",
   "enabled": true,
-  "tags": [
-    "CLI 工具",
-    "UI 测试",
-    "浏览器自动化",
-    "网页爬取"
-  ],
+  "tags": [],
   "source": {
     "type": "import",
     "ref": null,

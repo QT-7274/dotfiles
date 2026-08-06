@@ -4,11 +4,7 @@
   "path": "vercel-react-best-practices",
   "path_key": "vercel-react-best-practices",
   "enabled": true,
-  "tags": [
-    "React",
-    "代码质量",
-    "前端"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "vercel-labs/agent-skills/vercel-react-best-practices",

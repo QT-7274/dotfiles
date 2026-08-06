@@ -5,10 +5,7 @@
   "path_key": "monorepo-management",
   "enabled": true,
   "tags": [
-    "wshobson",
-    "前端",
-    "架构",
-    "跨平台"
+    "wshobson"
   ],
   "source": {
     "type": "skillssh",

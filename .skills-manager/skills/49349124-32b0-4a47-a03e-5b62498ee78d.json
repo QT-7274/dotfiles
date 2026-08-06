@@ -5,10 +5,7 @@
   "path_key": "full-output-enforcement",
   "enabled": true,
   "tags": [
-    "AI 工作流",
-    "Taste",
-    "代码开发",
-    "代码质量"
+    "Taste"
   ],
   "source": {
     "type": "skillssh",

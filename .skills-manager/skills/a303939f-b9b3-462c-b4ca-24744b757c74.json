@@ -5,11 +5,8 @@
   "path_key": "using-superpowers",
   "enabled": true,
   "tags": [
-    "AI 工作流",
-    "CLI",
     "Superpowers",
-    "工作流",
-    "技能管理"
+    "工作流"
   ],
   "source": {
     "type": "skillssh",

@@ -5,9 +5,7 @@
   "path_key": "nodejs-backend-patterns",
   "enabled": true,
   "tags": [
-    "API 设计",
-    "wshobson",
-    "后端"
+    "wshobson"
   ],
   "source": {
     "type": "skillssh",

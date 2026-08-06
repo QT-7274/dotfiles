@@ -5,12 +5,8 @@
   "path_key": "brainstorming",
   "enabled": true,
   "tags": [
-    "AI 工作流",
     "Superpowers",
-    "创意探索",
-    "工作流",
-    "设计系统",
-    "项目管理"
+    "工作流"
   ],
   "source": {
     "type": "skillssh",

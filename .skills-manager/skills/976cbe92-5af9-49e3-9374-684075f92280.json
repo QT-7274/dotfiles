@@ -4,10 +4,7 @@
   "path": "git-commit",
   "path_key": "git-commit",
   "enabled": true,
-  "tags": [
-    "Git",
-    "代码质量"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "github/awesome-copilot/git-commit",

@@ -4,10 +4,7 @@
   "path": "frontend-design",
   "path_key": "frontend-design",
   "enabled": true,
-  "tags": [
-    "UI 设计",
-    "前端"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "anthropics/skills/frontend-design",

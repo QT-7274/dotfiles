@@ -4,11 +4,7 @@
   "path": "remotion-best-practices",
   "path_key": "remotion-best-practices",
   "enabled": true,
-  "tags": [
-    "React",
-    "动效设计",
-    "视频创作"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "remotion-dev/skills/remotion-best-practices",

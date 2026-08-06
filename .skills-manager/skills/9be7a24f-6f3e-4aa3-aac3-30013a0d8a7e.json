@@ -5,7 +5,6 @@
   "path_key": "bmad-worktree-orchestrator",
   "enabled": true,
   "tags": [
-    "Git",
     "工作流"
   ],
   "source": {

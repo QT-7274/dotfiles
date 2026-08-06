@@ -4,11 +4,7 @@
   "path": "frontend-patterns",
   "path_key": "frontend-patterns",
   "enabled": true,
-  "tags": [
-    "React",
-    "前端",
-    "状态管理"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "affaan-m/everything-claude-code/frontend-patterns",

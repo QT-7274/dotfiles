@@ -4,11 +4,7 @@
   "path": "follow-builders",
   "path_key": "follow-builders",
   "enabled": true,
-  "tags": [
-    "AI 工作流",
-    "创意探索",
-    "视频创作"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "xiaoxuerenww/follow-builders/follow-builders",

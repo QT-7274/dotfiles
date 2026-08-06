@@ -5,10 +5,7 @@
   "path_key": "api-design-principles",
   "enabled": true,
   "tags": [
-    "API 设计",
-    "wshobson",
-    "后端",
-    "架构"
+    "wshobson"
   ],
   "source": {
     "type": "skillssh",

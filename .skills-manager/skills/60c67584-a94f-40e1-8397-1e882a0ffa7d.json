@@ -4,12 +4,7 @@
   "path": "web-design-guidelines",
   "path_key": "web-design-guidelines",
   "enabled": true,
-  "tags": [
-    "UI 设计",
-    "代码质量",
-    "前端",
-    "可访问性"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "vercel-labs/agent-skills/web-design-guidelines",

@@ -4,12 +4,7 @@
   "path": "ui-ux-pro-max",
   "path_key": "ui-ux-pro-max",
   "enabled": true,
-  "tags": [
-    "UI 设计",
-    "UX 设计",
-    "前端",
-    "设计系统"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "nextlevelbuilder/ui-ux-pro-max-skill/ui-ux-pro-max",

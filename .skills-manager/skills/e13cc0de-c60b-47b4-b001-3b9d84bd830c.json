@@ -4,12 +4,7 @@
   "path": "cmux-browser",
   "path_key": "cmux-browser",
   "enabled": true,
-  "tags": [
-    "CSS 选择器",
-    "UI 测试",
-    "cmux",
-    "浏览器自动化"
-  ],
+  "tags": [],
   "source": {
     "type": "local",
     "ref": null,

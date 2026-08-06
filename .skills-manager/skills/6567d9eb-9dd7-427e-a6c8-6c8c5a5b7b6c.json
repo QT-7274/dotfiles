@@ -4,12 +4,7 @@
   "path": "seo-audit",
   "path_key": "seo-audit",
   "enabled": true,
-  "tags": [
-    "SEO",
-    "技术审查",
-    "搜索优化",
-    "网站诊断"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "coreyhaines31/marketingskills/seo-audit",

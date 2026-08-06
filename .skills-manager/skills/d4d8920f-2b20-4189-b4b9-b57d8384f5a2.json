@@ -4,11 +4,7 @@
   "path": "nestjs-best-practices",
   "path_key": "nestjs-best-practices",
   "enabled": true,
-  "tags": [
-    "代码质量",
-    "后端",
-    "架构"
-  ],
+  "tags": [],
   "source": {
     "type": "skillssh",
     "ref": "kadajett/agent-nestjs-skills/nestjs-best-practices",
